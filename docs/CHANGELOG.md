@@ -1,3 +1,15 @@
+# 0.1.0-alpha.4
+
+- Pestaña creativa propia con armas, martillos, accesorios, llaves y todos los cofres.
+- Importados 40 modelos de los cinco paquetes proporcionados; texturas originales y conversión OBJ para rotaciones de formatos más recientes.
+- Martillos de colores de nivel diamante con minería 3×3×1, respeto de rotura cancelada y Shift para minería individual.
+- Flame Spear: espada de diamante y bola de fuego, 15 s. Void Staff: espada de netherita y ataque sónico, 30 s. Gladiator Sword: espada de netherita y tres efectos I durante 30 s, espera 120 s.
+- Objetos del paquete Altar con estadísticas de diamante y habilidades moderadas; accesorios y emblemas decorativos.
+- Cinco cofres de Crates and Stuff con apertura directa y cuatro cofres animados con llave por rareza.
+- Consumo de llave confirmado al recibir loot, sorteo congelado, registro persistente y bloqueo de reintentos ambiguos.
+- Tipo y orientación de cofre guardados; migración de los cofres originales. Todas las variantes se excluyen de Lootr.
+- Vista de zona con contorno, esquinas de colores, coordenadas y puntos de aparición, con opción de mostrar/ocultar.
+
 # 0.1.0-alpha.3
 
 - Editor de loot visual inspirado en el gacha de Zian Utilities: iconos, porcentaje, cantidades, probabilidad con −/+ y eliminación por fila.

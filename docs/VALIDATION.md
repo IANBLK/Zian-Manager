@@ -18,3 +18,7 @@ La automatización reproducible está en tools/manager-smoke.py. No se ha probad
 Interfaz reorganizada y editor de loot inspirado en el gacha. Compilación y 25 pruebas automatizadas verificadas. Las reglas de selección y entrega no cambian. Los datos del editor incluyen iconos, cantidades, pesos y catálogos para selectores. La presentación necesita comprobación visual en el cliente del usuario; no se afirma una prueba visual automatizada. El protocolo exige actualizar cliente y servidor para evitar mezclar interfaces antiguas.
 
 Alpha.3: servidor local con Lootr y reinicio superados, incluyendo generación de datos de los editores de loot, mobs, zonas y NPC.
+
+## Alpha.4
+
+32 pruebas unitarias. Verificación de 40 modelos: coordenadas finitas, UV/índices válidos, hashes de PNG originales y jerarquías completas con datos de animación. Servidor dedicado local con Lootr: daño 7/8/8, ataques y esperas 15/30/120 s, efectos I por 30 s, martillo 3×3×1 con durabilidad y bloque protegido, llave correcta consumida una vez, vista previa sin consumo, y restauración/reinicio manteniendo tipo y orientación. El renderizado final y la guía de zonas no se han confirmado visualmente con un cliente real.

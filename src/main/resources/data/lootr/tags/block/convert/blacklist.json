@@ -1,6 +1,15 @@
 {
   "replace": false,
   "values": [
-    "zianmanager:dungeon_chest"
+    "zianmanager:dungeon_chest",
+    "zianmanager:loot_common_crate",
+    "zianmanager:loot_rare_crate",
+    "zianmanager:loot_legendary_crate",
+    "zianmanager:loot_cosmetic_crate",
+    "zianmanager:loot_vote_crate",
+    "zianmanager:locked_common_crate",
+    "zianmanager:locked_rare_crate",
+    "zianmanager:locked_epic_crate",
+    "zianmanager:locked_legendary_crate"
   ]
 }

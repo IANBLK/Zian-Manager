@@ -2,9 +2,13 @@
 
 **Administra dungeons dentro del juego:** mobs personalizados, jefes, zonas con oleadas, loot personal y NPC de diálogo.
 
-**0.1.0-alpha.3 · Minecraft 1.21.1 · NeoForge 21.1.252 · Java 21**
+**0.1.0-alpha.4 · Minecraft 1.21.1 · NeoForge 21.1.252 · Java 21**
 
 Instala el mismo JAR en cliente y servidor. Es independiente de Cobblemon, RCT API y RCT Mod. Lootr y LuckPerms son opcionales.
+
+## 🛠️ Nuevo en alpha.4
+
+Pestaña creativa **Zian Manager**, 40 modelos importados, martillos 3×3×1, armas con habilidades y esperas, nueve variantes de cofre con loot personal (cuatro requieren llave), y vista de esquinas/contorno/puntos de aparición. [Consulta la guía de objetos y zonas](docs/EQUIPMENT.md).
 
 ## ✨ Funciones
 
@@ -117,7 +121,7 @@ Esto confirma la revisión; no genera objetos de nuevo. Un encuentro con un mob 
 
 ## 🧪 Validación y límites
 
-25 pruebas automáticas de selección, persistencia y entregas. Pruebas locales de servidor dedicado con dos jugadores simulados, oleadas compartidas, reaparición, NPC, protección del cofre, loot personal y reinicio. También probado con **Lootr 1.11.37.122**.
+32 pruebas automáticas de selección, persistencia y entregas. Pruebas locales de servidor dedicado con dos jugadores simulados, oleadas compartidas, reaparición, NPC, protección del cofre, loot personal y reinicio. También probado con **Lootr 1.11.37.122**.
 
 Falta una prueba visual en tu cliente. Esta alpha no está validada en Youer ni con Cataclysm. El selector permite entidades instaladas que hereden de `Mob`, pero sus ataques, fases y atributos especiales pueden requerir adaptaciones. El cofre es un modelo estático, sin animación de tapa.
 

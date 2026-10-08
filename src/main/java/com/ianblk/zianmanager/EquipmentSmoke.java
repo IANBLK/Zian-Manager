@@ -1,0 +1,41 @@
+package com.ianblk.zianmanager;
+import net.minecraft.server.level.*;
+import net.minecraft.world.item.*;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.*;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.*;
+import net.minecraft.core.*;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.level.BlockEvent;
+import java.util.*;
+import java.util.function.Consumer;
+/** Local fixture assertions only; invoked from the opt-in localhost smoke suite. */
+public final class EquipmentSmoke {
+ public static final UUID KEY_CHEST=UUID.fromString("00000000-0000-0000-0000-000000000115");
+ private static BlockPos wall,protectedBlock,behind,keyChest;private static UUID player;private static boolean listening;
+ private static final Consumer<BlockEvent.BreakEvent> PROTECT=e->{if(e.getPlayer().getUUID().equals(player) && e.getPos().equals(protectedBlock))e.setCanceled(true);};
+ public static void setup(ManagerRuntime runtime,ServerPlayer p)throws Exception{
+  player=p.getUUID();var level=p.serverLevel();var spawn=level.getSharedSpawnPos();int x=spawn.getX(),y=spawn.getY()+2,z=spawn.getZ();
+  for(var ref:ManagerEquipment.ALL.values())if(new ItemStack(ref.get()).isEmpty())throw new IllegalStateException("Missing imported item");
+  var flame=new ItemStack(ManagerEquipment.item("flame_spear"));var staff=new ItemStack(ManagerEquipment.item("void_staff"));var sword=new ItemStack(ManagerEquipment.item("gladiator_sword"));
+  checkDamage(flame,7);checkDamage(staff,8);checkDamage(sword,8);
+  p.moveTo(x+16.5,y,z,0,0);p.setItemInHand(InteractionHand.MAIN_HAND,flame);long fireBefore=countBolts(level);flame.getItem().use(level,p,InteractionHand.MAIN_HAND);flame.getItem().use(level,p,InteractionHand.MAIN_HAND);if(countBolts(level)!=fireBefore+1 || !p.getCooldowns().isOnCooldown(flame.getItem()))throw new IllegalStateException("Flame ability/cooldown failed");
+  var target=net.minecraft.world.entity.EntityType.ZOMBIE.create(level);target.setNoAi(true);target.getAttribute(Attributes.MAX_HEALTH).setBaseValue(40);target.setHealth(40);target.moveTo(x+16.5,y,z+6,0,0);level.addFreshEntity(target);p.setItemInHand(InteractionHand.MAIN_HAND,staff);staff.getItem().use(level,p,InteractionHand.MAIN_HAND);float after=target.getHealth();staff.getItem().use(level,p,InteractionHand.MAIN_HAND);if(after!=30 || target.getHealth()!=after || !p.getCooldowns().isOnCooldown(staff.getItem()))throw new IllegalStateException("Sonic attack/cooldown failed");target.discard();
+  p.setItemInHand(InteractionHand.MAIN_HAND,sword);sword.getItem().use(level,p,InteractionHand.MAIN_HAND);for(var effect:List.of(MobEffects.REGENERATION,MobEffects.ABSORPTION,MobEffects.DAMAGE_BOOST))if(!p.hasEffect(effect) || p.getEffect(effect).getDuration()!=600 || p.getEffect(effect).getAmplifier()!=0)throw new IllegalStateException("Gladiator effects must be level I for 30 seconds");if(!p.getCooldowns().isOnCooldown(sword.getItem()))throw new IllegalStateException("Gladiator cooldown missing");
+  long now=System.currentTimeMillis();var powers=p.getPersistentData().getCompound("ZianManagerPowers");for(var power:List.of(ManagerEquipment.Power.FLAME,ManagerEquipment.Power.SONIC,ManagerEquipment.Power.GLADIATOR)){long wait=powers.getLong(power.name())-now;if(wait<=power.seconds*1000L-3000 || wait>power.seconds*1000L)throw new IllegalStateException("Ability cooldown duration incorrect");}
+  wall=new BlockPos(x+21,y+2,z+20);behind=wall.south();protectedBlock=wall.offset(-1,-1,0);if(!listening){NeoForge.EVENT_BUS.addListener(net.neoforged.bus.api.EventPriority.HIGHEST,PROTECT);listening=true;}
+  for(int dx=-1;dx<=1;dx++)for(int dy=-1;dy<=1;dy++)level.setBlockAndUpdate(wall.offset(dx,dy,0),Blocks.STONE.defaultBlockState());level.setBlockAndUpdate(behind,Blocks.STONE.defaultBlockState());p.moveTo(x+21.5,y,z+18,0,0);p.setItemInHand(InteractionHand.MAIN_HAND,new ItemStack(ManagerEquipment.item("blue_hammer")));if(!p.gameMode.destroyBlock(wall))throw new IllegalStateException("Hammer failed to break center");
+  keyChest=new BlockPos(x+14,y,z+8);var block=ManagerBlocks.CRATES.get("locked_common_crate").get();level.setBlockAndUpdate(keyChest,block.defaultBlockState().setValue(BlockStateProperties.HORIZONTAL_FACING,Direction.EAST));runtime.store().put(new com.ianblk.zianmanager.core.Definitions.ChestSpec(KEY_CHEST,"minecraft:overworld",keyChest.getX(),keyChest.getY(),keyChest.getZ(),"smoke_mob",10,"zianmanager:locked_common_crate","east"));
+  try{runtime.loot().reserve(p,"chest."+KEY_CHEST,"smoke_mob",10,keyChest);throw new IllegalStateException("Locked crate opened without its key");}catch(IllegalArgumentException expected){}
+  p.getInventory().add(new ItemStack(ManagerEquipment.item("rare_key")));try{runtime.loot().reserve(p,"chest."+KEY_CHEST,"smoke_mob",10,keyChest);throw new IllegalStateException("Wrong key accepted");}catch(IllegalArgumentException expected){}
+  p.getInventory().add(new ItemStack(ManagerEquipment.item("common_key"),2));var claim=runtime.loot().reserve(p,"chest."+KEY_CHEST,"smoke_mob",10,keyChest);if(p.getInventory().countItem(ManagerEquipment.item("common_key"))!=2)throw new IllegalStateException("Preview consumed key");if(!runtime.loot().reserve(p,"chest."+KEY_CHEST,"smoke_mob",10,keyChest).id().equals(claim.id()))throw new IllegalStateException("Preview rerolled reward");runtime.loot().deliver(p,claim.id());runtime.loot().deliver(p,claim.id());if(p.getInventory().countItem(ManagerEquipment.item("common_key"))!=1 || p.getInventory().countItem(ManagerEquipment.item("rare_key"))!=1)throw new IllegalStateException("Key consumed incorrectly");
+  level.setBlockAndUpdate(keyChest,Blocks.AIR.defaultBlockState());
+ }
+ public static void verify(ManagerRuntime runtime,ServerPlayer p){var level=p.serverLevel();for(int dx=-1;dx<=1;dx++)for(int dy=-1;dy<=1;dy++){var pos=wall.offset(dx,dy,0);if(pos.equals(protectedBlock)){if(!level.getBlockState(pos).is(Blocks.STONE))throw new IllegalStateException("Hammer bypassed block protection");}else if(!level.getBlockState(pos).isAir())throw new IllegalStateException("Hammer did not mine its complete plane");}if(!level.getBlockState(behind).is(Blocks.STONE))throw new IllegalStateException("Hammer mined deeper than one block");if(p.getMainHandItem().getDamageValue()!=8)throw new IllegalStateException("Hammer durability must follow real block breaks");verifyRestart(runtime,p);ZianManager.LOGGER.info("Zian Manager equipment smoke passed: tier damage, abilities/cooldowns, protected 3x3x1, matching single-use key and preview preservation");}
+ public static void verifyRestart(ManagerRuntime runtime,ServerPlayer p){var c=runtime.store().data().chests().get(KEY_CHEST);if(c==null || !c.block().equals("zianmanager:locked_common_crate"))throw new IllegalStateException("Crate kind missing from saved configuration");var pos=new BlockPos(c.x(),c.y(),c.z());var state=p.serverLevel().getBlockState(pos);if(!state.is(ManagerBlocks.CRATES.get("locked_common_crate").get()) || state.getValue(BlockStateProperties.HORIZONTAL_FACING)!=Direction.EAST)throw new IllegalStateException("Crate restoration changed kind/orientation");if(runtime.loot().remaining(p,"chest."+KEY_CHEST,10)<=0)throw new IllegalStateException("Key chest receipt/cooldown missing");}
+ private static long countBolts(ServerLevel level){long count=0;for(var e:level.getAllEntities())if(e instanceof ManagerEquipment.FlameBolt)count++;return count;}
+ private static void checkDamage(ItemStack stack,double expected){double damage=1;for(var entry:stack.get(net.minecraft.core.component.DataComponents.ATTRIBUTE_MODIFIERS).modifiers())if(entry.attribute().equals(Attributes.ATTACK_DAMAGE))damage+=entry.modifier().amount();if(damage!=expected)throw new IllegalStateException("Weapon base damage is "+damage+", expected "+expected);}
+}

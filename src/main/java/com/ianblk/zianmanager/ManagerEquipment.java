@@ -1,0 +1,77 @@
+package com.ianblk.zianmanager;
+import com.ianblk.zianmanager.core.MiningPlane;
+import net.minecraft.core.*;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.*;
+import net.minecraft.world.*;
+import net.minecraft.world.effect.*;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.SmallFireball;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.*;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.sounds.*;
+import net.minecraft.core.particles.ParticleTypes;
+import net.neoforged.bus.api.*;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.registries.*;
+import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.neoforge.event.entity.player.*;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import java.util.*;
+public final class ManagerEquipment {
+ private static final DeferredRegister.Items ITEMS=DeferredRegister.createItems("zianmanager");
+ private static final DeferredRegister<EntityType<?>> ENTITIES=DeferredRegister.create(Registries.ENTITY_TYPE,"zianmanager");
+ public static final Map<String,DeferredItem<? extends Item>> ALL=new LinkedHashMap<>();
+ public static final DeferredHolder<EntityType<?>,EntityType<FlameBolt>> BOLT=ENTITIES.register("flame_bolt",()->EntityType.Builder.<FlameBolt>of(FlameBolt::new,MobCategory.MISC).sized(0.3125f,0.3125f).clientTrackingRange(8).updateInterval(1).build("zianmanager:flame_bolt"));
+ public enum Power{NONE(0),FLAME(15),SONIC(30),GLADIATOR(120),REGEN(120),NIGHT(120),TIDE(120);public final int seconds;Power(int seconds){this.seconds=seconds;}}
+ private record Hit(BlockPos pos,Direction face,long at){}
+ private record Job(ServerPlayer player,BlockPos pos,BlockState before,Direction face,Item item){}
+ private static final Map<UUID,Hit> HITS=new HashMap<>();private static final Map<UUID,Job> JOBS=new HashMap<>();private static final Set<UUID> MINING=new HashSet<>();
+ private static final String COOLDOWNS="ZianManagerPowers";
+ static{
+  for(String color:List.of("blue","green","grey","red"))ALL.put(color+"_hammer",ITEMS.register(color+"_hammer",()->new Hammer(new Item.Properties().attributes(DiggerItem.createAttributes(Tiers.DIAMOND,1,-2.8f)))));
+  sword("flame_spear",Tiers.DIAMOND,Power.FLAME);sword("void_staff",Tiers.NETHERITE,Power.SONIC);sword("gladiator_sword",Tiers.NETHERITE,Power.GLADIATOR);
+  sword("altar_ancientblade",Tiers.DIAMOND,Power.REGEN);sword("altar_dragonrend",Tiers.DIAMOND,Power.NONE);sword("altar_withersym",Tiers.DIAMOND,Power.NONE);sword("altar_omen",Tiers.DIAMOND,Power.NIGHT);sword("altar_tide",Tiers.DIAMOND,Power.TIDE);
+  ALL.put("altar_amaxe",ITEMS.register("altar_amaxe",()->new AxeItem(Tiers.DIAMOND,new Item.Properties().attributes(AxeItem.createAttributes(Tiers.DIAMOND,5,-3.0f)))));
+  ALL.put("altar_ampick",ITEMS.register("altar_ampick",()->new PickaxeItem(Tiers.DIAMOND,new Item.Properties().attributes(DiggerItem.createAttributes(Tiers.DIAMOND,1,-2.8f)))));
+  ALL.put("shield1",ITEMS.register("shield1",()->new ShieldItem(new Item.Properties().durability(336))));
+  ALL.put("straw_hat",ITEMS.register("straw_hat",()->new Hat(new Item.Properties().stacksTo(1))));
+  for(String id:List.of("common_key","rare_key","epic_key","legendary_key","altar_arrowdragonrend","altar_clockdragonrend","altar_dragonheart","altar_handle","altar_harness","altar_hotbarsym","altar_soul","altar_void1","altar_void2","altar_void3","altar_warden"))ALL.put(id,ITEMS.registerSimpleItem(id,new Item.Properties()));
+ }
+ private static void sword(String id,Tier tier,Power power){ALL.put(id,ITEMS.register(id,()->new AbilitySword(tier,new Item.Properties().attributes(SwordItem.createAttributes(tier,3,-2.4f)),power)));}
+ public static Item item(String id){return ALL.get(id).get();}
+ public static void register(IEventBus bus){ITEMS.register(bus);ENTITIES.register(bus);
+  NeoForge.EVENT_BUS.addListener((PlayerInteractEvent.LeftClickBlock e)->{if(e.getEntity() instanceof ServerPlayer p && e.getFace()!=null)HITS.put(p.getUUID(),new Hit(e.getPos(),e.getFace(),p.serverLevel().getGameTime()));});
+  NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST,(BlockEvent.BreakEvent e)->{if(!(e.getPlayer() instanceof ServerPlayer p) || !(p.getMainHandItem().getItem() instanceof Hammer) || MINING.contains(p.getUUID()) || p.isShiftKeyDown() || !e.getState().is(BlockTags.MINEABLE_WITH_PICKAXE) || e.getState().hasBlockEntity())return;var hit=HITS.get(p.getUUID());Direction face=hit!=null && hit.pos.equals(e.getPos()) && p.serverLevel().getGameTime()-hit.at<200?hit.face:Math.abs(p.getXRot())>45?Direction.UP:p.getDirection().getOpposite();JOBS.put(p.getUUID(),new Job(p,e.getPos().immutable(),e.getState(),face,p.getMainHandItem().getItem()));});
+  NeoForge.EVENT_BUS.addListener((ServerTickEvent.Post e)->{for(var job:List.copyOf(JOBS.values())){JOBS.remove(job.player.getUUID());mine(job);} });
+  NeoForge.EVENT_BUS.addListener((PlayerEvent.Clone e)->e.getEntity().getPersistentData().put(COOLDOWNS,e.getOriginal().getPersistentData().getCompound(COOLDOWNS).copy()));
+  NeoForge.EVENT_BUS.addListener((PlayerEvent.PlayerLoggedInEvent e)->{if(e.getEntity() instanceof ServerPlayer p)syncCooldowns(p);});
+  NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.server.ServerStoppedEvent e)->{HITS.clear();JOBS.clear();MINING.clear();});
+ }
+ private static void mine(Job j){var p=j.player;var world=p.serverLevel();if(!p.isAlive() || p.isRemoved() || p.getMainHandItem().getItem()!=j.item || world.getBlockState(j.pos).is(j.before.getBlock()))return;MINING.add(p.getUUID());try{for(var offset:MiningPlane.offsets(j.face.getAxis().name())){if(p.getMainHandItem().getItem()!=j.item)break;var pos=j.pos.offset(offset[0],offset[1],offset[2]);var state=world.getBlockState(pos);if(world.getChunkSource().hasChunk(pos.getX()>>4,pos.getZ()>>4) && state.is(BlockTags.MINEABLE_WITH_PICKAXE) && !state.hasBlockEntity() && state.getDestroySpeed(world,pos)>=0 && (p.isCreative() || state.canHarvestBlock(world,pos,p)))p.gameMode.destroyBlock(pos);}}finally{MINING.remove(p.getUUID());}}
+ public static final class Hammer extends PickaxeItem {public Hammer(Properties p){super(Tiers.DIAMOND,p);} @Override public void appendHoverText(ItemStack s,TooltipContext c,List<Component> lines,TooltipFlag f){lines.add(Component.literal("Minería 3×3×1 · Shift: solo un bloque"));}}
+ public static final class Hat extends Item implements Equipable {public Hat(Properties p){super(p);}public EquipmentSlot getEquipmentSlot(){return EquipmentSlot.HEAD;}@Override public InteractionResultHolder<ItemStack> use(Level l,Player p,InteractionHand h){return swapWithEquipmentSlot(this,l,p,h);}}
+ public static final class AbilitySword extends SwordItem {
+  public final Power power;public AbilitySword(Tier t,Properties p,Power power){super(t,p);this.power=power;}
+  @Override public InteractionResultHolder<ItemStack> use(Level level,Player player,InteractionHand hand){var stack=player.getItemInHand(hand);if(power==Power.NONE)return InteractionResultHolder.pass(stack);if(level.isClientSide)return InteractionResultHolder.success(stack);if(!(player instanceof ServerPlayer p))return InteractionResultHolder.fail(stack);long now=System.currentTimeMillis(),wait=p.getPersistentData().getCompound(COOLDOWNS).getLong(power.name())-now;if(wait>0){p.getCooldowns().addCooldown(this,(int)((wait+49)/50));p.displayClientMessage(Component.literal("Disponible en "+((wait+999)/1000)+" segundos"),true);return InteractionResultHolder.fail(stack);}var data=p.getPersistentData().getCompound(COOLDOWNS);data.putLong(power.name(),now+power.seconds*1000L);p.getPersistentData().put(COOLDOWNS,data);p.getCooldowns().addCooldown(this,power.seconds*20);p.server.getPlayerList().save(p);
+   if(power==Power.FLAME){var bolt=BOLT.get().create(p.serverLevel());if(bolt==null)return InteractionResultHolder.fail(stack);bolt.setOwner(p);bolt.setPos(p.getEyePosition().add(p.getLookAngle().scale(0.7)));bolt.setDeltaMovement(p.getLookAngle().scale(1.2));p.serverLevel().addFreshEntity(bolt);level.playSound(null,p.blockPosition(),SoundEvents.BLAZE_SHOOT,SoundSource.PLAYERS,1,1);}
+   else if(power==Power.SONIC)sonic(p);
+   else if(power==Power.GLADIATOR){p.addEffect(new MobEffectInstance(MobEffects.REGENERATION,600,0));p.addEffect(new MobEffectInstance(MobEffects.ABSORPTION,600,0));p.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST,600,0));}
+   else if(power==Power.REGEN)p.addEffect(new MobEffectInstance(MobEffects.REGENERATION,100,0));
+   else if(power==Power.NIGHT)p.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION,600,0));
+   else if(power==Power.TIDE)p.addEffect(new MobEffectInstance(MobEffects.DOLPHINS_GRACE,200,0));
+   stack.hurtAndBreak(1,p,hand==InteractionHand.MAIN_HAND?EquipmentSlot.MAINHAND:EquipmentSlot.OFFHAND);return InteractionResultHolder.success(stack);
+  }
+  @Override public void appendHoverText(ItemStack s,TooltipContext c,List<Component> lines,TooltipFlag f){if(power!=Power.NONE)lines.add(Component.literal("Clic derecho: habilidad · espera "+power.seconds+" s"));}
+ }
+ private static void syncCooldowns(ServerPlayer p){long now=System.currentTimeMillis();for(var ref:ALL.values())if(ref.get() instanceof AbilitySword item){long wait=p.getPersistentData().getCompound(COOLDOWNS).getLong(item.power.name())-now;if(wait>0)p.getCooldowns().addCooldown(item,(int)Math.min(Integer.MAX_VALUE,(wait+49)/50));}}
+ public static void sonic(ServerPlayer p){var start=p.getEyePosition();var direction=p.getLookAngle().normalize();LivingEntity target=null;double nearest=16;for(var e:p.serverLevel().getEntitiesOfClass(LivingEntity.class,p.getBoundingBox().expandTowards(direction.scale(15)).inflate(1.5),e->e!=p && e.isAlive() && !e.isSpectator())){double along=e.getBoundingBox().getCenter().subtract(start).dot(direction);if(along<0 || along>15 || along>=nearest || !e.getBoundingBox().inflate(0.5).clip(start,start.add(direction.scale(15))).isPresent())continue;if(e instanceof Player other && (!p.server.isPvpAllowed() || !p.canHarmPlayer(other)))continue;target=e;nearest=along;}for(int i=1;i<=15;i++){var v=start.add(direction.scale(i));p.serverLevel().sendParticles(ParticleTypes.SONIC_BOOM,v.x,v.y,v.z,1,0,0,0,0);}p.serverLevel().playSound(null,p.blockPosition(),SoundEvents.WARDEN_SONIC_BOOM,SoundSource.PLAYERS,1,1);if(target!=null && target.hurt(p.serverLevel().damageSources().sonicBoom(p),10)){double resistance=target.getAttributeValue(net.minecraft.world.entity.ai.attributes.Attributes.KNOCKBACK_RESISTANCE);target.push(direction.x*2.5*(1-resistance),0.5*(1-resistance),direction.z*2.5*(1-resistance));}}
+ public static final class FlameBolt extends SmallFireball {public FlameBolt(EntityType<? extends FlameBolt> type,Level level){super(type,level);} @Override protected void onHitBlock(BlockHitResult hit){discard();} @Override public void tick(){super.tick();if(tickCount>100)discard();}}
+}

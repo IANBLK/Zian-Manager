@@ -52,13 +52,13 @@ public final class ManagerRuntime {
             if(ledger!=null && e.getEntity() instanceof Mob mob && mob.getPersistentData().contains("ZianManagerRun"))deaths.put(mob.getUUID(),new Death(mob,e.getSource()));
         });
         NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST,(BlockEvent.BreakEvent e)->{
-            if(!e.getState().is(ManagerBlocks.CHEST.get()))return;
+            if(!ManagerBlocks.isChest(e.getState()))return;
             if(!(e.getPlayer() instanceof ServerPlayer player) || !player.isCreative() || !admin(player) || store==null){e.setCanceled(true);return;}
             try{var chest=store.data().chests().values().stream().filter(c->c.dimension().equals(dimension(player)) && new BlockPos(c.x(),c.y(),c.z()).equals(e.getPos())).findFirst().orElse(null);if(chest!=null)store.remove("chest",chest.uuid().toString());}
             catch(Exception error){e.setCanceled(true);ZianManager.LOGGER.error("Cannot unregister chest; break denied",error);}
         });
         NeoForge.EVENT_BUS.addListener((PlayerInteractEvent.RightClickBlock e)->{
-            if(e.getEntity() instanceof ServerPlayer player && player.isShiftKeyDown() && e.getLevel().getBlockState(e.getPos()).is(ManagerBlocks.CHEST.get()) && admin(player)){
+            if(e.getEntity() instanceof ServerPlayer player && player.isShiftKeyDown() && ManagerBlocks.isChest(e.getLevel().getBlockState(e.getPos())) && admin(player)){
                 e.setCanceled(true);e.setCancellationResult(net.minecraft.world.InteractionResult.SUCCESS);openChest(player,e.getPos());
             }
         });
@@ -97,12 +97,12 @@ public final class ManagerRuntime {
             if(chest==null)throw new IllegalArgumentException("Cofre sin configurar. El administrador debe usar Shift + clic derecho.");
             long wait=loot.remaining(player,"chest."+chest.uuid(),chest.minutes());if(wait>0)throw new IllegalArgumentException("Loot disponible en "+((wait+59999)/60000)+" minuto(s)");
             var claim=loot.reserve(player,"chest."+chest.uuid(),chest.loot(),chest.minutes(),pos);
-            viewClaim(player,chest,claim,pos);
+            player.serverLevel().blockEvent(pos,player.serverLevel().getBlockState(pos).getBlock(),1,1);viewClaim(player,chest,claim,pos);
         }catch(Exception error){player.sendSystemMessage(Component.literal(error.getMessage()));}
     }
     private void viewClaim(ServerPlayer player,ChestSpec chest,RewardClaim claim,BlockPos pos){
         UUID token=UUID.randomUUID();sessions.put(player.getUUID(),new Session(token,"claim",claim.id().toString(),System.currentTimeMillis()+300000,pos));
-        var out=new JsonObject();out.addProperty("type","claim");out.addProperty("token",token.toString());out.addProperty("id",claim.id().toString());out.addProperty("title","Cofre Zian · Loot personal");out.addProperty("notice","Recibir todo · espera después de entregar: "+chest.minutes()+" min");
+        var out=new JsonObject();out.addProperty("type","claim");out.addProperty("token",token.toString());out.addProperty("id",claim.id().toString());out.addProperty("title","Cofre Zian · Loot personal");out.addProperty("notice","Recibir todo · espera después de entregar: "+chest.minutes()+" min"+loot.keyNotice(claim.id()));
         var list=new JsonArray();for(var part:claim.parts()){var entry=new JsonObject();var item=LootService.item(player,part.data());entry.addProperty("name",item.getCount()+" × "+item.getHoverName().getString()+" · "+part.phase());entry.addProperty("item",BuiltInRegistries.ITEM.getKey(item.getItem()).toString());list.add(entry);}out.add("entries",list);ManagerNetwork.send(player,out.toString());
     }
     public void view(ServerPlayer player,String type,String id,BlockPos context,String notice){
@@ -124,7 +124,7 @@ public final class ManagerRuntime {
             if(l!=null){int total=l.entries().stream().mapToInt(LootEntry::weight).sum();for(int i=0;i<l.entries().size();i++){var entry=l.entries().get(i);var e=new JsonObject();e.addProperty("id",""+i);e.addProperty("icon",BuiltInRegistries.ITEM.getKey(LootService.item(player,entry.item()).getItem()).toString());e.addProperty("display",LootService.item(player,entry.item()).getHoverName().getString());e.addProperty("weight",entry.weight());e.addProperty("min",entry.min());e.addProperty("max",entry.max());e.addProperty("name",i+": "+LootService.item(player,entry.item()).getHoverName().getString()+" · "+String.format(java.util.Locale.ROOT,"%.1f%%",100.0*entry.weight()/total)+" · "+entry.min()+"–"+entry.max());list.add(e);}}
         }else if(type.equals("zone")){
             var z=store.data().zones().get(id);field(f,"id",id.isEmpty()?"zona_"+UUID.randomUUID().toString().substring(0,8):id);field(f,"team",z==null?"":String.join(",",z.team()));field(f,"waves",z==null?1:z.waves());field(f,"pauseSeconds",z==null?5:z.pauseSeconds());field(f,"respawnSeconds",z==null?600:z.respawnSeconds());field(f,"completionLoot",z==null?"":z.completionLoot());field(f,"enabled",z!=null && z.enabled());
-            if(z!=null){out.addProperty("notice",notice+" · Puntos: "+z.points().size()+" · Esquinas: "+(z.first()!=null)+"/"+(z.second()!=null)+" · "+(ledger.get(id)==null?"Sin encuentro":ledger.get(id).phase()));}
+            if(z!=null){out.add("zonePreview",com.ianblk.zianmanager.core.AtomicJson.GSON.toJsonTree(z));out.addProperty("notice",notice+" · Puntos: "+z.points().size()+" · Esquinas: "+(z.first()!=null)+"/"+(z.second()!=null)+" · "+(ledger.get(id)==null?"Sin encuentro":ledger.get(id).phase()));}
         }else if(type.equals("chest")){
             var c=id.isEmpty()?null:store.data().chests().get(UUID.fromString(id));field(f,"loot",c==null?"":c.loot());field(f,"minutes",c==null?10:c.minutes());if(context==null && c!=null){context=new BlockPos(c.x(),c.y(),c.z());sessions.put(player.getUUID(),new Session(token,type,id,System.currentTimeMillis()+300000,context));}
             out.addProperty("notice","Shift + clic derecho: editar · retirada: creativo con permiso admin");
@@ -141,7 +141,7 @@ public final class ManagerRuntime {
         sessions.remove(player.getUUID());String id=session.id;final String selected=id;String notice="Guardado";
         try{ready();var f=fields(action.json());
             if(session.type.equals("claim")){
-                if(!action.operation().equals("claim") || session.pos==null || player.distanceToSqr(Vec3(session.pos))>36 || !player.serverLevel().getBlockState(session.pos).is(ManagerBlocks.CHEST.get()) || !ManagerPermissions.allows(player.createCommandSourceStack(),"loot",false))throw new IllegalArgumentException("Cofre no disponible");
+                if(!action.operation().equals("claim") || session.pos==null || player.distanceToSqr(Vec3(session.pos))>36 || !ManagerBlocks.isChest(player.serverLevel().getBlockState(session.pos)) || !ManagerPermissions.allows(player.createCommandSourceStack(),"loot",false))throw new IllegalArgumentException("Cofre no disponible");
                 loot.deliver(player,UUID.fromString(id));return;
             }
             if(session.type.equals("dialogue")){
@@ -191,8 +191,8 @@ public final class ManagerRuntime {
                 var zone=new ZoneSpec(chosen,old==null?dimension(player):old.dimension(),first,second,points,team,num(f,"waves",1),num(f,"pauseSeconds",5),num(f,"respawnSeconds",600),str(f,"completionLoot",""),Boolean.parseBoolean(str(f,"enabled","false")));
                 store.put(zone);id=chosen;if(operation.equals("cancel"))cancel(chosen);if(operation.equals("test")){if(!zone.enabled())throw new IllegalArgumentException("Habilita la zona y sus puntos");begin(zone,Set.of(player.getUUID()),1,UUID.randomUUID());}
             }else if(session.type.equals("chest")){
-                if(session.pos==null || player.distanceToSqr(Vec3(session.pos))>64 || !player.serverLevel().getBlockState(session.pos).is(ManagerBlocks.CHEST.get()))throw new IllegalArgumentException("Acércate al cofre y usa Shift + clic derecho");
-                String preset=str(f,"loot","");if(!store.data().loot().containsKey(preset))throw new IllegalArgumentException("Loot inexistente");UUID uuid=id.isEmpty()?UUID.randomUUID():UUID.fromString(id);store.put(new ChestSpec(uuid,dimension(player),session.pos.getX(),session.pos.getY(),session.pos.getZ(),preset,num(f,"minutes",10)));id=uuid.toString();
+                if(session.pos==null || player.distanceToSqr(Vec3(session.pos))>64 || !ManagerBlocks.isChest(player.serverLevel().getBlockState(session.pos)))throw new IllegalArgumentException("Acércate al cofre y usa Shift + clic derecho");
+                String preset=str(f,"loot","");if(!store.data().loot().containsKey(preset))throw new IllegalArgumentException("Loot inexistente");UUID uuid=id.isEmpty()?UUID.randomUUID():UUID.fromString(id);store.put(new ChestSpec(uuid,dimension(player),session.pos.getX(),session.pos.getY(),session.pos.getZ(),preset,num(f,"minutes",10),BuiltInRegistries.BLOCK.getKey(player.serverLevel().getBlockState(session.pos).getBlock()).toString(),player.serverLevel().getBlockState(session.pos).getValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING).getName()));id=uuid.toString();
             }else if(session.type.equals("npc")){
                 UUID uuid=id.isEmpty()?UUID.randomUUID():UUID.fromString(id);var old=store.data().npcs().get(uuid);Point point=old==null || operation.equals("move")?here(player):old.point();var npc=new NpcSpec(uuid,old==null?dimension(player):old.dimension(),point,str(f,"name","Guía"),str(f,"text","Bienvenido"),str(f,"skin","heraldo_real"),str(f,"button","Continuar"),str(f,"command",""),num(f,"cooldownSeconds",60));store.put(npc);id=uuid.toString();placeNpc(npc);if(operation.equals("reset_npc_actions")){npcCommands.reset(uuid);notice="Usos del NPC restablecidos por el administrador";}
             }
@@ -256,7 +256,7 @@ public final class ManagerRuntime {
         if(event.getServer()!=server || store==null)return;for(var death:List.copyOf(deaths.values()))died(death);deaths.clear();if(++ticks%20!=0)return;long now=System.currentTimeMillis();sessions.values().removeIf(s->s.until<now);
         try{
             previews.entrySet().removeIf(e->{if(e.getValue().tickCount>400 || e.getValue().isRemoved()){e.getValue().discard();return true;}return false;});
-            for(var chest:store.data().chests().values()){var level=level(chest.dimension());var pos=new BlockPos(chest.x(),chest.y(),chest.z());if(level!=null && level.getChunkSource().hasChunk(pos.getX()>>4,pos.getZ()>>4) && !level.getBlockState(pos).is(ManagerBlocks.CHEST.get()))level.setBlockAndUpdate(pos,ManagerBlocks.CHEST.get().defaultBlockState());}
+            for(var chest:store.data().chests().values()){var level=level(chest.dimension());var pos=new BlockPos(chest.x(),chest.y(),chest.z());if(level!=null && level.getChunkSource().hasChunk(pos.getX()>>4,pos.getZ()>>4) && !level.getBlockState(pos).is(ManagerBlocks.chestState(chest.block()).getBlock()))level.setBlockAndUpdate(pos,ManagerBlocks.chestState(chest.block()).setValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING,net.minecraft.core.Direction.byName(chest.facing())));}
             if(ticks%100==0)store.data().npcs().values().forEach(this::placeNpc);
             for(var zone:store.data().zones().values()){
                 if(!zone.enabled())continue;Set<UUID> players=new LinkedHashSet<>();for(var player:server.getPlayerList().getPlayers())if(!player.isSpectator() && !player.isCreative() && zone.contains(dimension(player),player.getX(),player.getY(),player.getZ()))players.add(player.getUUID());if(players.isEmpty())continue;

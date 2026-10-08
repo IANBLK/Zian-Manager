@@ -1,0 +1,37 @@
+{
+  "parent": "minecraft:block/block",
+  "loader": "neoforge:obj",
+  "model": "zianmanager:models/imported/altar_arrowdragonrend.obj",
+  "automatic_culling": false,
+  "flip_v": false,
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "particle": "zianmanager:imported/altar_arrowdragonrend/0"
+  },
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [
+        -90.25,
+        0,
+        0
+      ],
+      "translation": [
+        -5.75,
+        -2,
+        -14
+      ],
+      "scale": [
+        2.88477,
+        1,
+        2.99805
+      ]
+    },
+    "ground": {
+      "translation": [
+        -0.25,
+        5.5,
+        -1.75
+      ]
+    }
+  }
+}

@@ -44,7 +44,7 @@ public final class ManagerSmoke {
                 var c=store.data().chests().get(CHEST);if(c==null || !level.getBlockState(new BlockPos(c.x(),c.y(),c.z())).is(ManagerBlocks.CHEST.get()))throw new IllegalStateException("Chest missing after restart");
                 if(runtime.loot().remaining(first,"chest."+CHEST,10)<=0 || !runtime.loot().pending(firstId).isEmpty())throw new IllegalStateException("Personal cooldown/receipt missing after restart");
                 if(store.data().npcs().get(NPC)==null || !(level.getEntity(NPC) instanceof ManagerNpcs.DialogueNpc))throw new IllegalStateException("Dialogue NPC missing after restart");
-                runtime.view(first,"loot","smoke_chest",null,"");runtime.view(first,"mob","smoke_guard",null,"");runtime.view(first,"zone","smoke_room",null,"");runtime.view(first,"npc",NPC.toString(),null,"");
+                EquipmentSmoke.verifyRestart(runtime,first);runtime.view(first,"loot","smoke_chest",null,"");runtime.view(first,"mob","smoke_guard",null,"");runtime.view(first,"zone","smoke_room",null,"");runtime.view(first,"npc",NPC.toString(),null,"");
                 ZianManager.LOGGER.info("Zian Manager native smoke passed: restart preserves chest, NPC, personal loot and cooldown; Lootr={}",net.neoforged.fml.ModList.get().isLoaded("lootr"));done=true;return;
             }
             runtime.cancel("smoke_room");
@@ -64,6 +64,7 @@ public final class ManagerSmoke {
             if(server.getRecipeManager().getRecipes().stream().anyMatch(r->r.value().getResultItem(server.registryAccess()).is(ManagerBlocks.CHEST_ITEM.get())))throw new IllegalStateException("Chest has a crafting recipe");
             int before=first.getInventory().items.stream().mapToInt(ItemStack::getCount).sum();runtime.loot().grant(first,"chest."+CHEST,"smoke_chest",10,chest);int after=first.getInventory().items.stream().mapToInt(ItemStack::getCount).sum();if(after-before!=10 || !runtime.loot().pending(firstId).isEmpty())throw new IllegalStateException("Ten-item personal chest delivery failed");
             runtime.loot().grant(second,"chest."+CHEST,"smoke_chest",10,chest);runtime.loot().grant(first,"chest."+CHEST,"smoke_chest",10,chest);if(first.getInventory().items.stream().mapToInt(ItemStack::getCount).sum()!=after)throw new IllegalStateException("Personal chest duplicate payout");
+            EquipmentSmoke.setup(runtime,first);
             store.put(new NpcSpec(NPC,"minecraft:overworld",new Point(x+10,y,z,90),"Guía de prueba","Bienvenido a la dungeon."));
             var points=List.of(new Point(x+2.5,y,z+4.5,0),new Point(x+5.5,y,z+4.5,0),new Point(x+8.5,y,z+4.5,0));
             store.put(new ZoneSpec("smoke_room","minecraft:overworld",new Point(x-2,y,z-2,0),new Point(x+12,y+6,z+8,0),points,List.of("smoke_guard","smoke_guard","smoke_guard"),2,1,10,"smoke_boss",true));
@@ -72,6 +73,7 @@ public final class ManagerSmoke {
         var run=runtime.encounter("smoke_room");
         if(phase==1 && ++ticks>120){
             if(!level.getBlockState(chest).is(ManagerBlocks.CHEST.get()))throw new IllegalStateException("Registered chest did not recover");
+            EquipmentSmoke.verify(runtime,first);
             if(!(level.getEntity(NPC) instanceof ManagerNpcs.DialogueNpc npc) || !npc.skin().equals("heraldo_real"))throw new IllegalStateException("Human NPC / synced slim skin missing");
             var configured=store.data().npcs().get(NPC);store.put(new NpcSpec(NPC,configured.dimension(),configured.point(),configured.name(),configured.text(),"heraldo_real","Recibir", "minecraft:give {player} minecraft:paper 1",60));
             first.moveTo(npc.getX(),npc.getY(),npc.getZ()+1,0,0);runtime.openDialogue(first,store.data().npcs().get(NPC));

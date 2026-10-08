@@ -1,0 +1,89 @@
+{
+  "parent": "minecraft:block/block",
+  "loader": "neoforge:obj",
+  "model": "zianmanager:models/imported/straw_hat.obj",
+  "automatic_culling": false,
+  "flip_v": false,
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "particle": "zianmanager:imported/straw_hat/0"
+  },
+  "display": {
+    "thirdperson_righthand": {
+      "translation": [
+        0,
+        7.75,
+        0
+      ]
+    },
+    "thirdperson_lefthand": {
+      "translation": [
+        0,
+        7.75,
+        0
+      ]
+    },
+    "firstperson_righthand": {
+      "translation": [
+        0,
+        7.75,
+        0
+      ]
+    },
+    "firstperson_lefthand": {
+      "translation": [
+        0,
+        7.75,
+        0
+      ]
+    },
+    "ground": {
+      "translation": [
+        0,
+        4,
+        0
+      ]
+    },
+    "gui": {
+      "rotation": [
+        87.42,
+        -39.25,
+        -1.63
+      ],
+      "translation": [
+        0,
+        0,
+        0.25
+      ],
+      "scale": [
+        1.18359,
+        1.18359,
+        1.18359
+      ]
+    },
+    "head": {
+      "translation": [
+        0,
+        23.5,
+        0
+      ],
+      "scale": [
+        2.65234,
+        2.65234,
+        2.65234
+      ]
+    },
+    "fixed": {
+      "rotation": [
+        -89.75,
+        0,
+        0
+      ],
+      "translation": [
+        0,
+        0,
+        -7
+      ]
+    }
+  }
+}

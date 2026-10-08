@@ -1,0 +1,10 @@
+newmtl texture_0
+Kd 1 1 1
+Ka 1 1 1
+d 1
+map_Kd zianmanager:imported/locked_common_crate/0
+newmtl texture_1
+Kd 1 1 1
+Ka 1 1 1
+d 1
+map_Kd zianmanager:imported/locked_common_crate/1

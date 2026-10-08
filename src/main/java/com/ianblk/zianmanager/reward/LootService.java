@@ -18,9 +18,9 @@ import java.util.*;
 
 /** Adapted from ZianRCT's durable intent and inventory readback delivery. */
 public final class LootService {
-    private final MinecraftServer server;private final ManagerStore store;private final RewardJournal journal;
+    private final MinecraftServer server;private final ManagerStore store;private final RewardJournal journal;private final com.ianblk.zianmanager.core.KeyLedger keys;
     public LootService(MinecraftServer server,ManagerStore store) throws java.io.IOException{
-        this.server=server;this.store=store;journal=RewardJournal.open(server.getWorldPath(LevelResource.ROOT).resolve("data/zianmanager/claims.json"));
+        this.server=server;this.store=store;keys=new com.ianblk.zianmanager.core.KeyLedger(server.getWorldPath(LevelResource.ROOT).resolve("data/zianmanager/keys.json"));journal=RewardJournal.open(server.getWorldPath(LevelResource.ROOT).resolve("data/zianmanager/claims.json"));
     }
     public long remaining(ServerPlayer player,String key,int minutes){
         var last=journal.latest(player.getUUID(),key);if(last==null)return 0;if(!last.complete())return -1;
@@ -41,11 +41,12 @@ public final class LootService {
         if(out.isEmpty())throw new IllegalArgumentException("La tabla no produjo objetos. Revisa su configuración.");return out;
     }
     public RewardClaim reserve(ServerPlayer player,String key,String preset,int minutes,BlockPos pos) throws Exception{
-        var old=journal.latest(player.getUUID(),key);if(old!=null && !old.complete())return old;
+        var old=journal.latest(player.getUUID(),key);if(old!=null && !old.complete()){bindKey(player,old,key);previewKey(player,old);return old;}
         if(old!=null && (minutes==0 || remaining(player,key,minutes)>0))return old;
+        String required=requiredKey(key);if(!required.isEmpty() && !hasKey(player,required))throw new IllegalArgumentException("Necesitas "+net.minecraft.core.registries.BuiltInRegistries.ITEM.get(net.minecraft.resources.ResourceLocation.parse(required)).getDescription().getString()+" para abrir este cofre.");
         List<String> items=roll(player,preset,pos).stream().map(s->s.save(player.registryAccess()).toString()).toList();
         var definition=new RewardDefinition("",0,items,minutes==0?RewardDefinition.Mode.UNIQUE:RewardDefinition.Mode.REPEAT,minutes);
-        journal.reserveAt(player.getUUID(),key,definition,System.currentTimeMillis(),UUID.randomUUID());return journal.latest(player.getUUID(),key);
+        journal.reserveAt(player.getUUID(),key,definition,System.currentTimeMillis(),UUID.randomUUID());var claim=journal.latest(player.getUUID(),key);bindKey(player,claim,key);return claim;
     }
     public void grant(ServerPlayer player,String key,String preset,int minutes,BlockPos pos) throws Exception{
         if(!com.ianblk.zianmanager.permission.ManagerPermissions.allows(player.createCommandSourceStack(),"loot",false))return;
@@ -55,6 +56,10 @@ public final class LootService {
     public List<RewardClaim> pending(UUID uuid){return journal.forPlayer(uuid).stream().filter(c->!c.complete()).toList();}
     public void deliver(ServerPlayer player,UUID id) throws Exception{
         if(!com.ianblk.zianmanager.permission.ManagerPermissions.allows(player.createCommandSourceStack(),"loot",false))throw new IllegalArgumentException("No tienes permiso para recibir loot Zian");
+        var existing=journal.get(id);if(existing==null || !existing.player().equals(player.getUUID()))throw new IllegalArgumentException("Reclamación inexistente");
+        if(existing.complete())return;if(existing.review()){player.sendSystemMessage(Component.literal("Entrega en revisión; no se consumirá otra llave."));return;}bindKey(player,existing,existing.trainer());
+        var cost=keys.get(id);if(cost!=null && !cost.phase().equals("PAID")){var first=existing.parts().stream().filter(p->p.phase()!=RewardClaim.Phase.DELIVERED).findFirst().orElseThrow();if(!player.isAlive() || !fits(player,item(player,first.data()))){player.sendSystemMessage(Component.literal("Libera espacio; la llave no se ha consumido."));return;}}
+        keys.take(id,player.getUUID(),new com.ianblk.zianmanager.core.KeyLedger.Port(){public boolean available(String key){return hasKey(player,key);}public boolean consumeAndSave(String key)throws Exception{var wanted=net.minecraft.core.registries.BuiltInRegistries.ITEM.get(net.minecraft.resources.ResourceLocation.parse(key));for(int i=0;i<player.getInventory().getContainerSize();i++)if(player.getInventory().getItem(i).is(wanted)){player.getInventory().removeItem(i,1);player.getInventory().setChanged();player.inventoryMenu.broadcastChanges();var expected=player.saveWithoutId(new CompoundTag()).get("Inventory");server.getPlayerList().save(player);var file=server.getWorldPath(LevelResource.PLAYER_DATA_DIR).resolve(player.getUUID()+".dat");try(var channel=java.nio.channels.FileChannel.open(file,StandardOpenOption.WRITE)){channel.force(true);}return expected.equals(NbtIo.readCompressed(file,NbtAccounter.create(8L*1024*1024)).get("Inventory"));}return false;}});
         RewardDelivery.deliver(journal,player.getUUID(),id,new RewardDelivery.Port(){
             public String unavailable(RewardClaim.Part part){
                 if(!player.isAlive() || player.isRemoved())return "player_unavailable";
@@ -72,6 +77,12 @@ public final class LootService {
         });
         var claim=journal.get(id);player.sendSystemMessage(Component.literal(claim.complete()?"Loot entregado.":claim.review()?"Entrega en revisión. No se repetirá automáticamente.":"Loot pendiente. Libera espacio y usa /zianmanager pending."));
     }
+    private String requiredKey(String key){if(!key.startsWith("chest."))return "";try{var chest=store.data().chests().get(UUID.fromString(key.substring(6)));return chest==null?"":com.ianblk.zianmanager.ManagerBlocks.keyFor(chest.block());}catch(IllegalArgumentException error){return "";}}
+    private void bindKey(ServerPlayer player,RewardClaim claim,String key)throws Exception{if(key.startsWith("chest."))keys.bind(claim.id(),player.getUUID(),requiredKey(key));}
+    private static boolean hasKey(ServerPlayer player,String key){var wanted=net.minecraft.core.registries.BuiltInRegistries.ITEM.get(net.minecraft.resources.ResourceLocation.parse(key));for(int i=0;i<player.getInventory().getContainerSize();i++)if(player.getInventory().getItem(i).is(wanted))return true;return false;}
+    private void previewKey(ServerPlayer player,RewardClaim claim){var cost=keys.get(claim.id());if(cost!=null && !cost.key().isEmpty() && cost.phase().equals("RESERVED") && !hasKey(player,cost.key()))throw new IllegalArgumentException("Necesitas la llave correspondiente; tu loot pendiente está conservado.");}
+    public String keyNotice(UUID id){var c=keys.get(id);return c==null || c.key().isBlank()?"":c.phase().equals("PAID")?" · Llave ya consumida":" · Se consume 1 llave al recibir";}
+    public void resolveKey(UUID claim,UUID player,UUID admin,String evidence)throws Exception{if(evidence==null || evidence.length()<8 || evidence.length()>400)throw new IllegalArgumentException("Escribe evidencia de 8–400 caracteres");keys.resolve(claim,player,admin+": "+evidence);com.ianblk.zianmanager.ZianManager.LOGGER.info("[ZIAN-MANAGER] action=key_review_resolve admin={} player={} claim={}",admin,player,claim);}
     public void resolve(UUID player,UUID id,int part,UUID admin,String evidence) throws Exception{journal.resolve(player,id,part,admin,"confirmed_compensated",evidence);}
     public static ItemStack item(ServerPlayer player,String data){try{return ItemStack.parseOptional(player.registryAccess(),TagParser.parseTag(data));}catch(Exception e){throw new IllegalArgumentException("Objeto ilegible",e);}}
     private static boolean fits(ServerPlayer player,ItemStack stack){int space=0;for(int i=0;i<36;i++){var slot=player.getInventory().getItem(i);space+=slot.isEmpty()?stack.getMaxStackSize():ItemStack.isSameItemSameComponents(slot,stack)?Math.max(0,slot.getMaxStackSize()-slot.getCount()):0;if(space>=stack.getCount())return true;}return false;}

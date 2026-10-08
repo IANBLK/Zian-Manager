@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "zianmanager:flame_spear",
+    "zianmanager:void_staff",
+    "zianmanager:gladiator_sword",
+    "zianmanager:altar_ancientblade",
+    "zianmanager:altar_dragonrend",
+    "zianmanager:altar_withersym",
+    "zianmanager:altar_omen",
+    "zianmanager:altar_amaxe"
+  ]
+}

@@ -1,3 +1,15 @@
+# 0.1.0-alpha.7
+
+- Encantamientos normales según categoría: martillos/pico, hacha, espadas/lanzas/bastón y tridente Rompeolas.
+- Lanza Ígnea: reutilización 1 s; Bastón del Vacío: 10 s; todas las esperas anteriores de 120 s: 90 s.
+- Aumentado daño base: Gladiador 10, Ancestral 9, Dragón 9, Marchito 9 y Lanza del Presagio 10.
+- Ancestral: Regeneración I y diez corazones de absorción temporal, 30 s.
+- Dragón: Fuerza I y Absorción I, 30 s. Marchito: Wither I por golpe confirmado durante 5 s y Fuerza II con clic derecho durante 30 s.
+- Presagio renombrado como lanza: Regeneración I y Absorción II por 30 s, sin visión nocturna.
+- Rompeolas ahora es un tridente lanzable; Regeneración I y Fuerza I por 30 s. Su habilidad no bloquea lanzar; el proyectil conserva objeto, encantamientos y modelo.
+- Zonas centradas: Crear zona de dungeon usa el bloque bajo el jugador; radio X/Z, altura y profundidad editables con −/+ y vista previa en vivo.
+- Conservación del centro al ampliar y de las zonas anteriores al cargar.
+
 # 0.1.0-alpha.6
 
 - Retirados los trece objetos señalados del catálogo creativo, visores compatibles y nuevos sorteos de loot.

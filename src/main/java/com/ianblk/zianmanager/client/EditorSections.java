@@ -6,7 +6,7 @@ public final class EditorSections {
  public static Map<String,List<String>> groups(String type){var m=new LinkedHashMap<String,List<String>>();switch(type){
   case "mob"->{m.put("Básico",List.of("name","entity","boss","loot"));m.put("Combate",List.of("health","damage","armor","toughness","knockback"));m.put("Equipo",List.of("slot"));m.put("Efectos",List.of());m.put("Avanzado",List.of("id","effects"));}
   case "loot"->{m.put("Tabla",List.of("id","category","rolls"));m.put("Objetos",List.of("weight","min","max"));m.put("Avanzado",List.of("table"));}
-  case "zone"->{m.put("General",List.of("id","team","enabled"));m.put("Ubicación",List.of());m.put("Oleadas",List.of("waves","pauseSeconds","respawnSeconds","completionLoot"));}
+  case "zone"->{m.put("General",List.of("id","team","enabled"));m.put("Ubicación",List.of());m.put("Tamaño",List.of("radiusX","radiusZ","above","below"));m.put("Oleadas",List.of("waves","pauseSeconds","respawnSeconds","completionLoot"));}
   case "npc"->{m.put("Apariencia",List.of("name","skin"));m.put("Diálogo",List.of("text"));m.put("Acción",List.of("button","command","cooldownSeconds"));}
   case "chest"->m.put("Cofre",List.of("loot","minutes"));
  }return Collections.unmodifiableMap(m);}

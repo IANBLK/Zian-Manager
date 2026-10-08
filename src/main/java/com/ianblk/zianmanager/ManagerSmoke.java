@@ -64,7 +64,7 @@ public final class ManagerSmoke {
             if(server.getRecipeManager().getRecipes().stream().anyMatch(r->r.value().getResultItem(server.registryAccess()).is(ManagerBlocks.CRATES.get("loot_common_crate").get().asItem())))throw new IllegalStateException("Chest has a crafting recipe");
             int before=first.getInventory().items.stream().mapToInt(ItemStack::getCount).sum();runtime.loot().grant(first,"chest."+CHEST,"smoke_chest",10,chest);int after=first.getInventory().items.stream().mapToInt(ItemStack::getCount).sum();if(after-before!=10 || !runtime.loot().pending(firstId).isEmpty())throw new IllegalStateException("Ten-item personal chest delivery failed");
             runtime.loot().grant(second,"chest."+CHEST,"smoke_chest",10,chest);runtime.loot().grant(first,"chest."+CHEST,"smoke_chest",10,chest);if(first.getInventory().items.stream().mapToInt(ItemStack::getCount).sum()!=after)throw new IllegalStateException("Personal chest duplicate payout");
-            EquipmentSmoke.setup(runtime,first);EquipmentSmoke.directOverflow(runtime,first,false);EquipmentSmoke.directOverflow(runtime,second,true);
+            CenteredZoneSmoke.verify(runtime,first);EquipmentSmoke.setup(runtime,first);EquipmentSmoke.directOverflow(runtime,first,false);EquipmentSmoke.directOverflow(runtime,second,true);
             store.put(new NpcSpec(NPC,"minecraft:overworld",new Point(x+10,y,z,90),"Guía de prueba","Bienvenido a la dungeon."));
             var points=List.of(new Point(x+2.5,y,z+4.5,0),new Point(x+5.5,y,z+4.5,0),new Point(x+8.5,y,z+4.5,0));
             store.put(new ZoneSpec("smoke_room","minecraft:overworld",new Point(x-2,y,z-2,0),new Point(x+12,y+6,z+8,0),points,List.of("smoke_guard","smoke_guard","smoke_guard"),2,1,10,"smoke_boss",true));

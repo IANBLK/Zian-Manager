@@ -30,3 +30,7 @@ Alpha.3: servidor local con Lootr y reinicio superados, incluyendo generación d
 ## Alpha.6
 
 Compilación y 36 pruebas unitarias superadas. Auditoría de 27 modelos activos y exclusión del arte de 13 objetos retirados del JAR. Prueba local con Lootr y reinicio: se conserva apertura sin interfaz, sobrantes al suelo, prevención de repetición, llaves y habilidades. El resumen del chat se construye únicamente con los componentes confirmados y conserva los nombres traducibles del objeto para el cliente.
+
+## Alpha.7
+
+41 pruebas unitarias. Prueba local con Lootr: creación de zona desde el bloque del suelo, radio 3 = 7×7, ampliación sin mover centro y cancelación conservando el centro. Verificados daños 7/8/10/9/9/9/10/9, efectos y niveles por 30 s, diez corazones de absorción, Wither de 5 s, aceptación de encantamientos de espada/minería/tridente y lanzamiento de Rompeolas conservando Lealtad y el objeto. La espera de la habilidad no activa el bloqueo de uso normal del tridente. También superadas apertura directa, llaves, sobrantes al suelo, oleadas y reinicio. La nueva vista previa y el aspecto del proyectil necesitan confirmación visual en el cliente.

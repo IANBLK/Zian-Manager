@@ -1,4 +1,4 @@
-# Objetos, armas, cofres y zonas — alpha.6
+# Objetos, armas, cofres y zonas — alpha.7
 
 ## Pestaña creativa
 
@@ -6,22 +6,22 @@ La pestaña **Zian Manager** contiene los 27 modelos activos: 4 martillos, 3 arm
 
 No se añaden recetas: están destinados al editor de loot, comandos y creativo.
 
-## Armas y martillos
+## Armas, martillos y encantamientos
 
-- `flame_spear`: daño base 7, equivalente a espada de diamante. Clic derecho: pequeña bola de fuego de 5 de daño, quema entidades como la del blaze; no incendia bloques. Reutilización: **15 s**.
-- `void_staff`: daño base 8, equivalente a espada de netherita. Clic derecho: ataque sónico de 10 de daño a un objetivo en la dirección de la mirada, alcance 15 bloques; atraviesa paredes y usa la fuente de daño del warden. Respeta PvP y daño cancelado. Reutilización: **30 s**.
-- `gladiator_sword`: daño base 8. Clic derecho: Regeneración I, Absorción I y Fuerza I durante **30 s**. Reutilización: **120 s**.
-- `blue_hammer`, `green_hammer`, `grey_hammer`, `red_hammer`: herramienta de nivel diamante, minería **3×3×1** perpendicular a la cara golpeada. **Shift** mina solo un bloque. Cada bloque pasa por la rotura normal del servidor, consume su durabilidad y produce sus drops normales; no rompe bloques con entidad de bloque ni bloques que la herramienta no puede cosechar.
+Los valores de daño siguientes son **daño base total**, antes de encantamientos y efectos de Fuerza.
 
-Las habilidades se calculan en el servidor y sus esperas se guardan por jugador y tipo de habilidad. Cambiar de copia del arma, volver a entrar o morir no reinicia deliberadamente la espera. La minería del martillo es su función habitual, sin habilidad de clic derecho.
+- **Lanza Ígnea** (`flame_spear`): 7 de daño. Bola de fuego con clic derecho, espera **1 s**. Encantamientos de espada.
+- **Bastón del Vacío** (`void_staff`): 8 de daño. Ataque sónico con clic derecho, espera **10 s**. Encantamientos de espada.
+- **Espada del Gladiador** (`gladiator_sword`): **10 de daño**. Conserva Regeneración I, Absorción I y Fuerza I durante 30 s. Espera **90 s**. Encantamientos de espada.
+- **Espada Ancestral** (`altar_ancientblade`): **9 de daño**. Regeneración I por 30 s y **10 corazones temporales** de absorción por 30 s (Absorción V). Espera **90 s**. Encantamientos de espada.
+- **Filo del Dragón** (`altar_dragonrend`): **9 de daño**. Clic derecho: Fuerza I y Absorción I por 30 s. Espera **90 s**. Encantamientos de espada.
+- **Filo Marchito** (`altar_withersym`): **9 de daño**. Cada golpe cuerpo a cuerpo confirmado aplica Wither I por 5 s. Clic derecho: Fuerza II por 30 s. Espera **90 s**. Encantamientos de espada.
+- **Lanza del Presagio** (`altar_omen`): **10 de daño**, mantiene el ID para datos existentes. Clic derecho: Regeneración I y Absorción II por 30 s; ya no da visión nocturna. Espera **90 s**. Encantamientos de espada.
+- **Tridente Rompeolas** (`altar_tide`): **9 de daño cuerpo a cuerpo**, lanzamiento de tridente y encantamientos de tridente, como Lealtad, Empalamiento, Canalización y Propulsión. Clic derecho: Regeneración I y Fuerza I por 30 s, espera **90 s**. Mantener y soltar clic derecho permite lanzarlo; la espera de la habilidad no bloquea los lanzamientos. Se conserva el modelo original del objeto y del proyectil.
+- **Martillos** (`blue_hammer`, `green_hammer`, `grey_hammer`, `red_hammer`): nivel diamante, minería **3×3×1** y encantamientos de pico. **Shift** mina solo un bloque. La rotura normal del servidor respeta protecciones, drops y durabilidad de cada bloque.
+- **Hacha y pico de amatista** (`altar_amaxe`, `altar_ampick`): atributos de diamante y encantamientos normales de hacha/pico.
 
-## Objetos Altar con balance moderado
-
-- Espada ancestral (`altar_ancientblade`): nivel diamante, Regeneración I durante 5 s, espera 120 s.
-- Espada del presagio (`altar_omen`): nivel diamante, Visión nocturna I durante 30 s, espera 120 s.
-- Rompeolas (`altar_tide`): nivel diamante, Gracia del delfín I durante 10 s, espera 120 s.
-- Filo del dragón (`altar_dragonrend`) y Filo marchito (`altar_withersym`): espadas de diamante, sin ataques adicionales.
-- Hacha y pico de amatista (`altar_amaxe`, `altar_ampick`): atributos de sus equivalentes de diamante.
+Todas las habilidades que antes esperaban 120 s ahora esperan **90 s**. Las duraciones de efecto de 30 s se conservan. Compatibilidad e incompatibilidad entre encantamientos, disponibilidad en mesa/yunque y requisitos de Propulsión siguen las reglas normales de Minecraft. Las habilidades se ejecutan en el servidor y las esperas se guardan por jugador y tipo de habilidad.
 
 ## Cofres de loot
 
@@ -58,9 +58,17 @@ Una interrupción ambigua pausa el consumo para revisión; no se descuenta otra 
 
 Este comando no crea objetos ni llaves; confirma la revisión de su consumo. Los cofres quedan excluidos de la conversión de Lootr.
 
-## Vista de zonas
+## Zonas desde un centro
 
-En **Zonas → Ubicación** marca las dos esquinas y los puntos de aparición. **Cerrar y ver zona** permite caminar viendo el contorno azul, el **punto 1 verde**, el **punto 2 rojo** y los **mobs dorados**, con coordenadas. **Mostrar / ocultar zona** activa o desactiva la guía. Solo se muestra la última zona que seleccionaste, en su dimensión, durante diez minutos; volver al editor la actualiza.
+1. Abre **Zonas de dungeon → Crear nuevo** y configura su nombre y equipo.
+2. Colócate sobre el bloque que quieres como centro y, en **Ubicación**, pulsa **Crear zona de dungeon**. Se utiliza el bloque bajo tus pies.
+3. En **Tamaño**, ajusta los bloques a cada lado en **X** y **Z**, los bloques por encima y por debajo. Puedes escribir valores o usar **− / +**. Radio 3 significa 3 bloques por lado más el central: **7×7**.
+4. La vista se actualiza mientras editas los valores válidos. **Aplicar tamaño** guarda el área; **Cerrar y ver zona** permite caminar y observarla. El HUD distingue una vista previa sin guardar.
+5. El centro aparece en dorado, el contorno en azul y las apariciones de mobs con marcadores. Añade un punto libre por cada mob desde Ubicación; activa la zona cuando esté lista.
+
+Cambiar el tamaño conserva el centro. Pulsar nuevamente **Crear zona de dungeon** mueve el centro al bloque bajo tu posición actual. Un encuentro activo debe detenerse antes de editar el área; los puntos deben permanecer dentro de una zona habilitada. **Mostrar / ocultar** conserva el control de la guía, que se muestra en su dimensión durante diez minutos.
+
+Las zonas anteriores mantienen sus límites y progreso al cargar. Puedes convertirlas al modo centrado creando el centro o aplicando tamaño; no se redimensionan automáticamente al actualizar el mod.
 
 ## Modelos y validación
 

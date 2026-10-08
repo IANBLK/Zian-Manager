@@ -2,7 +2,7 @@
 
 **Administra dungeons dentro del juego:** mobs personalizados, jefes, zonas con oleadas, loot personal y NPC de diálogo.
 
-**0.1.0-alpha.6 · Minecraft 1.21.1 · NeoForge 21.1.252 · Java 21**
+**0.1.0-alpha.7 · Minecraft 1.21.1 · NeoForge 21.1.252 · Java 21**
 
 Instala el mismo JAR en cliente y servidor. Es independiente de Cobblemon, RCT API y RCT Mod. Lootr y LuckPerms son opcionales.
 
@@ -36,7 +36,7 @@ Abre `/zianmanager`. El inicio muestra **Mobs y jefes**, **Tablas de recompensas
 ### Mobs, zonas y personajes
 
 - **Mobs y jefes:** pestañas **Básico**, **Combate**, **Equipo**, **Efectos** y **Avanzado**. Elige entidad y recompensas con selectores. Para equipar, elige la ranura y copia el objeto en mano. El selector de efectos permite elegir nombre, nivel y duración; el formato manual sigue disponible en Avanzado. La vista previa dura 20 segundos, es inmóvil y no da loot.
-- **Zonas:** pestañas **General**, **Ubicación** y **Oleadas**. El selector de equipo añade de 3 a 6 mobs, incluso repetidos. Marca las esquinas y un punto libre por mob desde tu posición. Configura pausas, reaparición y recompensa de finalización. Activa la zona cuando esté lista. Puedes probar o detener el encuentro desde Oleadas.
+- **Zonas:** pestañas **General**, **Ubicación**, **Tamaño** y **Oleadas**. El selector de equipo añade de 3 a 6 mobs, incluso repetidos. Crea la zona desde el bloque bajo tus pies, ajusta su tamaño alrededor del centro y añade un punto libre por mob. Configura pausas, reaparición y recompensa de finalización. Activa la zona cuando esté lista. Puedes probar o detener el encuentro desde Oleadas.
 - **Personajes:** pestañas **Apariencia**, **Diálogo** y **Acción**. Elige la skin, escribe el diálogo en varias líneas y configura el botón/comando opcional. Puedes mover el personaje a tu posición y restablecer sus usos después de revisar entregas.
 - **Cofres:** el botón **Obtener cofre** evita escribir otro comando. Colócalo y usa **Shift + clic derecho**; selecciona la tabla y su renovación.
 
@@ -123,7 +123,7 @@ Esto confirma la revisión; no genera objetos de nuevo. Un encuentro con un mob 
 
 ## 🧪 Validación y límites
 
-36 pruebas automáticas de selección, persistencia y entregas. Pruebas locales de servidor dedicado con dos jugadores simulados, oleadas compartidas, reaparición, NPC, protección del cofre, loot personal y reinicio. También probado con **Lootr 1.11.37.122**.
+41 pruebas automáticas de selección, persistencia y entregas. Pruebas locales de servidor dedicado con dos jugadores simulados, oleadas compartidas, reaparición, NPC, protección del cofre, loot personal y reinicio. También probado con **Lootr 1.11.37.122**.
 
 Falta una prueba visual en tu cliente. Esta alpha no está validada en Youer ni con Cataclysm. El selector permite entidades instaladas que hereden de `Mob`, pero sus ataques, fases y atributos especiales pueden requerir adaptaciones. El cofre es un modelo estático, sin animación de tapa.
 
@@ -141,3 +141,5 @@ La prueba usa un mundo aislado bajo `build/`, localhost y puertos 25586/25587. D
 **Alpha.5:** retirado el cofre original del creativo; sus bloques e inventarios se migran al cofre común conservando los registros. Corregidas las rutas de iconos/texturas y separados los datos de animación de los modelos del juego.
 
 **Alpha.6:** retirados los trece accesorios y objetos decorativos señalados por el usuario del creativo, visores compatibles y sorteos nuevos. Cada entrega de cofre informa en el chat cantidades, nombres y destino (inventario/suelo).
+
+**Alpha.7:** balance y efectos revisados según lo solicitado; encantamientos de espada/pico/hacha/tridente, Rompeolas lanzable y zonas creadas desde un centro con tamaño editable y vista previa en vivo. Las esperas de 120 s pasan a 90 s; Lanza Ígnea 1 s y Bastón del Vacío 10 s.

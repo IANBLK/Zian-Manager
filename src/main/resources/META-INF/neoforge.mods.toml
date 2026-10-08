@@ -1,0 +1,25 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+license="MIT"
+[[mods]]
+modId="zianmanager"
+version="${mod_version}"
+displayName="Zian Manager"
+authors="IANBLK"
+description="Dungeon mob templates, shared encounter zones, waves, personal loot chests and dialogue NPCs."
+[[dependencies.zianmanager]]
+modId="minecraft"
+type="required"
+versionRange="[1.21.1]"
+side="BOTH"
+[[dependencies.zianmanager]]
+modId="neoforge"
+type="required"
+versionRange="[21.1,)"
+side="BOTH"
+[[dependencies.zianmanager]]
+modId="lootr"
+type="optional"
+versionRange="[0,)"
+ordering="AFTER"
+side="BOTH"

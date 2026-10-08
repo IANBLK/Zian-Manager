@@ -26,3 +26,7 @@ Alpha.3: servidor local con Lootr y reinicio superados, incluyendo generación d
 ## Alpha.5
 
 36 pruebas unitarias. Auditoría de materiales/PNG verifica rutas bajo textures/item para el atlas, hashes originales y ausencia de datos de animación bajo models. Servidor local con Lootr: apertura sin sesión de GUI, inventario lleno en supervivencia y creativo, sobrante exacto al suelo, clic repetido sin duplicación, habilidades/llaves/minería y reinicio. Migración diferida de bloques antiguos evita acceder a un chunk mientras aún se está cargando. Falta confirmar visualmente la corrección en el cliente real del usuario.
+
+## Alpha.6
+
+Compilación y 36 pruebas unitarias superadas. Auditoría de 27 modelos activos y exclusión del arte de 13 objetos retirados del JAR. Prueba local con Lootr y reinicio: se conserva apertura sin interfaz, sobrantes al suelo, prevención de repetición, llaves y habilidades. El resumen del chat se construye únicamente con los componentes confirmados y conserva los nombres traducibles del objeto para el cliente.

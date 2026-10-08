@@ -28,6 +28,8 @@ import java.util.*;
 public final class ManagerEquipment {
  private static final DeferredRegister.Items ITEMS=DeferredRegister.createItems("zianmanager");
  private static final DeferredRegister<EntityType<?>> ENTITIES=DeferredRegister.create(Registries.ENTITY_TYPE,"zianmanager");
+ public static final Set<String> RETIRED=Set.of("altar_void3","altar_void2","altar_void1","altar_soul","altar_hotbarsym","altar_handle","altar_warden","altar_harness","altar_dragonheart","altar_clockdragonrend","altar_arrowdragonrend","straw_hat","shield1");
+ public static boolean retired(Item item){return RETIRED.contains(net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(item).getPath()) && net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(item).getNamespace().equals("zianmanager");}
  public static final Map<String,DeferredItem<? extends Item>> ALL=new LinkedHashMap<>();
  public static final DeferredHolder<EntityType<?>,EntityType<FlameBolt>> BOLT=ENTITIES.register("flame_bolt",()->EntityType.Builder.<FlameBolt>of(FlameBolt::new,MobCategory.MISC).sized(0.3125f,0.3125f).clientTrackingRange(8).updateInterval(1).build("zianmanager:flame_bolt"));
  public enum Power{NONE(0),FLAME(15),SONIC(30),GLADIATOR(120),REGEN(120),NIGHT(120),TIDE(120);public final int seconds;Power(int seconds){this.seconds=seconds;}}
@@ -41,10 +43,9 @@ public final class ManagerEquipment {
   sword("altar_ancientblade",Tiers.DIAMOND,Power.REGEN);sword("altar_dragonrend",Tiers.DIAMOND,Power.NONE);sword("altar_withersym",Tiers.DIAMOND,Power.NONE);sword("altar_omen",Tiers.DIAMOND,Power.NIGHT);sword("altar_tide",Tiers.DIAMOND,Power.TIDE);
   ALL.put("altar_amaxe",ITEMS.register("altar_amaxe",()->new AxeItem(Tiers.DIAMOND,new Item.Properties().attributes(AxeItem.createAttributes(Tiers.DIAMOND,5,-3.0f)))));
   ALL.put("altar_ampick",ITEMS.register("altar_ampick",()->new PickaxeItem(Tiers.DIAMOND,new Item.Properties().attributes(DiggerItem.createAttributes(Tiers.DIAMOND,1,-2.8f)))));
-  ALL.put("shield1",ITEMS.register("shield1",()->new ShieldItem(new Item.Properties().durability(336))));
-  ALL.put("straw_hat",ITEMS.register("straw_hat",()->new Hat(new Item.Properties().stacksTo(1))));
-  for(String id:List.of("common_key","rare_key","epic_key","legendary_key","altar_arrowdragonrend","altar_clockdragonrend","altar_dragonheart","altar_handle","altar_harness","altar_hotbarsym","altar_soul","altar_void1","altar_void2","altar_void3","altar_warden"))ALL.put(id,ITEMS.registerSimpleItem(id,new Item.Properties()));
+  for(String id:List.of("common_key","rare_key","epic_key","legendary_key"))ALL.put(id,ITEMS.registerSimpleItem(id,new Item.Properties()));
  }
+ static{for(String id:RETIRED)ITEMS.registerSimpleItem(id,new Item.Properties());}
  private static void sword(String id,Tier tier,Power power){ALL.put(id,ITEMS.register(id,()->new AbilitySword(tier,new Item.Properties().attributes(SwordItem.createAttributes(tier,3,-2.4f)),power)));}
  public static Item item(String id){return ALL.get(id).get();}
  public static void register(IEventBus bus){ITEMS.register(bus);ENTITIES.register(bus);

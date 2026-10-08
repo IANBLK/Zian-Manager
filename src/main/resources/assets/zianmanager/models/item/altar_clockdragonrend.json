@@ -1,11 +1,1 @@
-{
-  "parent": "minecraft:block/block",
-  "loader": "neoforge:obj",
-  "model": "zianmanager:models/imported/altar_clockdragonrend.obj",
-  "automatic_culling": false,
-  "flip_v": false,
-  "render_type": "minecraft:cutout",
-  "textures": {
-    "particle": "zianmanager:item/imported/altar_clockdragonrend/0"
-  }
-}
+{"parent": "minecraft:item/generated", "textures": {"layer0": "minecraft:item/barrier"}}

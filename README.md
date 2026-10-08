@@ -2,13 +2,13 @@
 
 **Administra dungeons dentro del juego:** mobs personalizados, jefes, zonas con oleadas, loot personal y NPC de diálogo.
 
-**0.1.0-alpha.5 · Minecraft 1.21.1 · NeoForge 21.1.252 · Java 21**
+**0.1.0-alpha.6 · Minecraft 1.21.1 · NeoForge 21.1.252 · Java 21**
 
 Instala el mismo JAR en cliente y servidor. Es independiente de Cobblemon, RCT API y RCT Mod. Lootr y LuckPerms son opcionales.
 
 ## 🛠️ Objetos y zonas
 
-Pestaña creativa **Zian Manager**, 40 modelos importados, martillos 3×3×1, armas con habilidades y esperas, nueve variantes de cofre con loot personal (cuatro requieren llave), y vista de esquinas/contorno/puntos de aparición. [Consulta la guía de objetos y zonas](docs/EQUIPMENT.md).
+Pestaña creativa **Zian Manager**, 27 modelos activos, martillos 3×3×1, armas con habilidades y esperas, nueve variantes de cofre con loot personal (cuatro requieren llave), y vista de esquinas/contorno/puntos de aparición. [Consulta la guía de objetos y zonas](docs/EQUIPMENT.md).
 
 ## ✨ Funciones
 
@@ -139,3 +139,5 @@ La prueba usa un mundo aislado bajo `build/`, localhost y puertos 25586/25587. D
 [Procedencia](docs/REUSE.md) · [Textura y prompt](art/PROMPT.md) · MIT © IANBLK
 
 **Alpha.5:** retirado el cofre original del creativo; sus bloques e inventarios se migran al cofre común conservando los registros. Corregidas las rutas de iconos/texturas y separados los datos de animación de los modelos del juego.
+
+**Alpha.6:** retirados los trece accesorios y objetos decorativos señalados por el usuario del creativo, visores compatibles y sorteos nuevos. Cada entrega de cofre informa en el chat cantidades, nombres y destino (inventario/suelo).

@@ -1,1 +1,19 @@
-{"replace": false, "values": ["zianmanager:dungeon_chest"]}
+{
+  "replace": false,
+  "values": [
+    "zianmanager:dungeon_chest",
+    "zianmanager:altar_void3",
+    "zianmanager:altar_void2",
+    "zianmanager:altar_void1",
+    "zianmanager:altar_soul",
+    "zianmanager:altar_hotbarsym",
+    "zianmanager:altar_handle",
+    "zianmanager:altar_warden",
+    "zianmanager:altar_harness",
+    "zianmanager:altar_dragonheart",
+    "zianmanager:altar_clockdragonrend",
+    "zianmanager:altar_arrowdragonrend",
+    "zianmanager:straw_hat",
+    "zianmanager:shield1"
+  ]
+}

@@ -1,3 +1,10 @@
+# 0.1.0-alpha.6
+
+- Retirados los trece objetos señalados del catálogo creativo, visores compatibles y nuevos sorteos de loot.
+- Conservados únicamente identificadores mínimos para leer datos anteriores; eliminados sus modelos y texturas activos.
+- Chat de recompensas: muestra nombre, cantidad y destino de cada objeto después de confirmar la entrega.
+- Se conserva apertura sin GUI, animaciones, llaves, inventario/sobrante al suelo y protección contra repetición.
+
 # 0.1.0-alpha.5
 
 - Corregidos los iconos y texturas ausentes: materiales y PNG ahora están en la carpeta de ítems que se incorpora al atlas de Minecraft.

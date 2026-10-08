@@ -18,7 +18,9 @@ def rotate(v,r):
   if i==2:x,y=x*c-y*s,x*s+y*c
  return [x,y,z]
 FACE={'down':[(0,0,1),(0,0,0),(1,0,0),(1,0,1)],'up':[(0,1,0),(0,1,1),(1,1,1),(1,1,0)],'north':[(1,1,0),(1,0,0),(0,0,0),(0,1,0)],'south':[(0,1,1),(0,0,1),(1,0,1),(1,1,1)],'west':[(0,1,0),(0,0,0),(0,0,1),(0,1,1)],'east':[(1,1,1),(1,0,1),(1,0,0),(1,1,0)]}
+RETIRED={'altar_void1', 'altar_hotbarsym', 'altar_handle', 'shield1', 'altar_void3', 'altar_dragonheart', 'altar_clockdragonrend', 'altar_arrowdragonrend', 'altar_soul', 'altar_warden', 'straw_hat', 'altar_void2', 'altar_harness'}
 def model(id,d,textures,source,free=False):
+ if id in RETIRED:return
  # Cube and group data are retained for animated block rendering.
  groups={g['uuid']:g for g in d.get('groups',[]) if 'uuid' in g};cubes={e.get('uuid',str(i)):e for i,e in enumerate(d['elements'])}
  def node(obj):
@@ -96,6 +98,7 @@ for pack,prefix in [('Fantasy Weapons Pack 1.zip',''),('crate_pack_2.zip','locke
   for n in sorted(z.namelist(),key=len):
    if not n.endswith('.bbmodel') or '/keys/.bbmodels/' in n:continue
    stem=Path(n).stem
+   if stem in RETIRED:continue
    if stem in seen:continue
    seen.add(stem);d=json.loads(z.read(n));free=d.get('meta',{}).get('model_format')=='free';id=(prefix+stem) if free else stem
    tx=[]
@@ -105,7 +108,9 @@ for pack,prefix in [('Fantasy Weapons Pack 1.zip',''),('crate_pack_2.zip','locke
 with ZipFile(DOWNLOADS/'altarbygwambassn2.zip') as z:
  for n in z.namelist():
   if n.startswith('assets/minecraft/models/custom/') and n.endswith('.json'):
-   d=json.loads(z.read(n));id='altar_'+Path(n).stem;tx=[];lookup={}
+   d=json.loads(z.read(n));id='altar_'+Path(n).stem
+   if id in RETIRED:continue
+   tx=[];lookup={}
    for key,value in d['textures'].items():
     if key=='particle':continue
     src='assets/minecraft/textures/'+value.removeprefix('minecraft:')+'.png';p=z.read(src);uv=[16,16];lookup[key]=len(tx);tx.append(texture(id,len(tx),p,uv))

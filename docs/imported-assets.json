@@ -291,47 +291,6 @@
       "free": true
     },
     {
-      "id": "shield1",
-      "source": "Crates and Stuff Model Pack Update 4.zip :: Crates and Stuff Model Pack/BBModels/shield1.bbmodel",
-      "cubes": 9,
-      "vertices": 216,
-      "textures": [
-        {
-          "path": "zianmanager:textures/item/imported/shield1/0.png",
-          "material": "zianmanager:item/imported/shield1/0",
-          "width": 32,
-          "height": 32,
-          "sha256": "e7735b7ab6aba7fe1ec5fec670f2e29697302ea31edeaad6aac8243c54b45cf5"
-        },
-        {
-          "path": "zianmanager:textures/item/imported/shield1/1.png",
-          "material": "zianmanager:item/imported/shield1/1",
-          "width": 16,
-          "height": 16,
-          "sha256": "c6e2c3444f2bf54a91779d499cc0bc1c2d5495f17a87d3a998b2fb6cec0e74e6"
-        }
-      ],
-      "animations": 0,
-      "free": false
-    },
-    {
-      "id": "straw_hat",
-      "source": "Crates and Stuff Model Pack Update 4.zip :: Crates and Stuff Model Pack/BBModels/straw_hat.bbmodel",
-      "cubes": 2,
-      "vertices": 48,
-      "textures": [
-        {
-          "path": "zianmanager:textures/item/imported/straw_hat/0.png",
-          "material": "zianmanager:item/imported/straw_hat/0",
-          "width": 32,
-          "height": 32,
-          "sha256": "3341c1b9cb162f1261bd7357c617018201527abaab081302207d1b6915d3fee0"
-        }
-      ],
-      "animations": 0,
-      "free": false
-    },
-    {
       "id": "loot_rare_crate",
       "source": "Crates and Stuff Model Pack Update 4.zip :: Crates and Stuff Model Pack/BBModels/rare_crate.bbmodel",
       "cubes": 21,
@@ -503,6 +462,139 @@
       "free": false
     },
     {
+      "id": "altar_dragonrend",
+      "source": "altarbygwambassn2.zip :: assets/minecraft/models/custom/dragonrend.json",
+      "cubes": 16,
+      "vertices": 384,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/altar_dragonrend/0.png",
+          "material": "zianmanager:item/imported/altar_dragonrend/0",
+          "width": 16,
+          "height": 16,
+          "sha256": "15c8934c1a55c575ede4e6a07c4ae6cca85cd8f97cc27d3ee547bff7d8dfe705"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    },
+    {
+      "id": "altar_omen",
+      "source": "altarbygwambassn2.zip :: assets/minecraft/models/custom/omen.json",
+      "cubes": 12,
+      "vertices": 288,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/altar_omen/0.png",
+          "material": "zianmanager:item/imported/altar_omen/0",
+          "width": 16,
+          "height": 16,
+          "sha256": "8b892d7c60c35b51106a6c65c0f2eb2918359307dc711a9301d919f0b40095a9"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    },
+    {
+      "id": "altar_tide",
+      "source": "altarbygwambassn2.zip :: assets/minecraft/models/custom/tide.json",
+      "cubes": 18,
+      "vertices": 432,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/altar_tide/0.png",
+          "material": "zianmanager:item/imported/altar_tide/0",
+          "width": 16,
+          "height": 16,
+          "sha256": "f601abb860b2b32b59b830c42e6dd1b0f74e5a5c5952b39919fdcb6871333578"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    },
+    {
+      "id": "altar_withersym",
+      "source": "altarbygwambassn2.zip :: assets/minecraft/models/custom/withersym.json",
+      "cubes": 21,
+      "vertices": 504,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/altar_withersym/0.png",
+          "material": "zianmanager:item/imported/altar_withersym/0",
+          "width": 16,
+          "height": 16,
+          "sha256": "a1d9b5ebbef097939fd042fb83bde3085ba235f9727794e65a3b92c5534240c9"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    }
+  ],
+  "archives": [
+    {
+      "name": "Multicolored Hammer Pack.zip",
+      "sha256": "ad615a48f6ee0b15ba92bb8bdf8bc5f2ad99a6bce4b94798606c62f325aefbe6"
+    },
+    {
+      "name": "Fantasy Weapons Pack 1.zip",
+      "sha256": "deae0d0a90c4db00dc09d457c423daf73d249c27662ae8fcd705bf1cbe840a75"
+    },
+    {
+      "name": "crate_pack_2.zip",
+      "sha256": "bf463d7098da446cb9434090c6827f45858377ec4aa7cf7fb4ada6010fc9939d"
+    },
+    {
+      "name": "Crates and Stuff Model Pack Update 4.zip",
+      "sha256": "175de4afdaa864a626f77a99fb1a72e41cec45a5fd90325cc3a6970b48ac6b63"
+    },
+    {
+      "name": "altarbygwambassn2.zip",
+      "sha256": "53f4153c5ae8146700c7a024e1a92e4498d3950e6f68036ae0f2df0689a38d83"
+    }
+  ],
+  "retired_models": [
+    {
+      "id": "shield1",
+      "source": "Crates and Stuff Model Pack Update 4.zip :: Crates and Stuff Model Pack/BBModels/shield1.bbmodel",
+      "cubes": 9,
+      "vertices": 216,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/shield1/0.png",
+          "material": "zianmanager:item/imported/shield1/0",
+          "width": 32,
+          "height": 32,
+          "sha256": "e7735b7ab6aba7fe1ec5fec670f2e29697302ea31edeaad6aac8243c54b45cf5"
+        },
+        {
+          "path": "zianmanager:textures/item/imported/shield1/1.png",
+          "material": "zianmanager:item/imported/shield1/1",
+          "width": 16,
+          "height": 16,
+          "sha256": "c6e2c3444f2bf54a91779d499cc0bc1c2d5495f17a87d3a998b2fb6cec0e74e6"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    },
+    {
+      "id": "straw_hat",
+      "source": "Crates and Stuff Model Pack Update 4.zip :: Crates and Stuff Model Pack/BBModels/straw_hat.bbmodel",
+      "cubes": 2,
+      "vertices": 48,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/straw_hat/0.png",
+          "material": "zianmanager:item/imported/straw_hat/0",
+          "width": 32,
+          "height": 32,
+          "sha256": "3341c1b9cb162f1261bd7357c617018201527abaab081302207d1b6915d3fee0"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    },
+    {
       "id": "altar_arrowdragonrend",
       "source": "altarbygwambassn2.zip :: assets/minecraft/models/custom/arrowdragonrend.json",
       "cubes": 1,
@@ -548,23 +640,6 @@
           "width": 16,
           "height": 16,
           "sha256": "b3655a1e071b1d78bb4afe584c9285e6049cfef8a7f6eca4d3a0c6ac23c397d1"
-        }
-      ],
-      "animations": 0,
-      "free": false
-    },
-    {
-      "id": "altar_dragonrend",
-      "source": "altarbygwambassn2.zip :: assets/minecraft/models/custom/dragonrend.json",
-      "cubes": 16,
-      "vertices": 384,
-      "textures": [
-        {
-          "path": "zianmanager:textures/item/imported/altar_dragonrend/0.png",
-          "material": "zianmanager:item/imported/altar_dragonrend/0",
-          "width": 16,
-          "height": 16,
-          "sha256": "15c8934c1a55c575ede4e6a07c4ae6cca85cd8f97cc27d3ee547bff7d8dfe705"
         }
       ],
       "animations": 0,
@@ -622,23 +697,6 @@
       "free": false
     },
     {
-      "id": "altar_omen",
-      "source": "altarbygwambassn2.zip :: assets/minecraft/models/custom/omen.json",
-      "cubes": 12,
-      "vertices": 288,
-      "textures": [
-        {
-          "path": "zianmanager:textures/item/imported/altar_omen/0.png",
-          "material": "zianmanager:item/imported/altar_omen/0",
-          "width": 16,
-          "height": 16,
-          "sha256": "8b892d7c60c35b51106a6c65c0f2eb2918359307dc711a9301d919f0b40095a9"
-        }
-      ],
-      "animations": 0,
-      "free": false
-    },
-    {
       "id": "altar_soul",
       "source": "altarbygwambassn2.zip :: assets/minecraft/models/custom/soul.json",
       "cubes": 16,
@@ -650,23 +708,6 @@
           "width": 16,
           "height": 16,
           "sha256": "27a7d5ed18ff3944866af14c27c2f3e9cf55736eda0f4391883d16d44d53355b"
-        }
-      ],
-      "animations": 0,
-      "free": false
-    },
-    {
-      "id": "altar_tide",
-      "source": "altarbygwambassn2.zip :: assets/minecraft/models/custom/tide.json",
-      "cubes": 18,
-      "vertices": 432,
-      "textures": [
-        {
-          "path": "zianmanager:textures/item/imported/altar_tide/0.png",
-          "material": "zianmanager:item/imported/altar_tide/0",
-          "width": 16,
-          "height": 16,
-          "sha256": "f601abb860b2b32b59b830c42e6dd1b0f74e5a5c5952b39919fdcb6871333578"
         }
       ],
       "animations": 0,
@@ -739,45 +780,6 @@
       ],
       "animations": 0,
       "free": false
-    },
-    {
-      "id": "altar_withersym",
-      "source": "altarbygwambassn2.zip :: assets/minecraft/models/custom/withersym.json",
-      "cubes": 21,
-      "vertices": 504,
-      "textures": [
-        {
-          "path": "zianmanager:textures/item/imported/altar_withersym/0.png",
-          "material": "zianmanager:item/imported/altar_withersym/0",
-          "width": 16,
-          "height": 16,
-          "sha256": "a1d9b5ebbef097939fd042fb83bde3085ba235f9727794e65a3b92c5534240c9"
-        }
-      ],
-      "animations": 0,
-      "free": false
-    }
-  ],
-  "archives": [
-    {
-      "name": "Multicolored Hammer Pack.zip",
-      "sha256": "ad615a48f6ee0b15ba92bb8bdf8bc5f2ad99a6bce4b94798606c62f325aefbe6"
-    },
-    {
-      "name": "Fantasy Weapons Pack 1.zip",
-      "sha256": "deae0d0a90c4db00dc09d457c423daf73d249c27662ae8fcd705bf1cbe840a75"
-    },
-    {
-      "name": "crate_pack_2.zip",
-      "sha256": "bf463d7098da446cb9434090c6827f45858377ec4aa7cf7fb4ada6010fc9939d"
-    },
-    {
-      "name": "Crates and Stuff Model Pack Update 4.zip",
-      "sha256": "175de4afdaa864a626f77a99fb1a72e41cec45a5fd90325cc3a6970b48ac6b63"
-    },
-    {
-      "name": "altarbygwambassn2.zip",
-      "sha256": "53f4153c5ae8146700c7a024e1a92e4498d3950e6f68036ae0f2df0689a38d83"
     }
   ]
 }

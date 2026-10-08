@@ -33,8 +33,8 @@ public final class LootService {
             var key=ResourceKey.create(Registries.LOOT_TABLE,ResourceLocation.parse(definition.table()));
             var table=server.reloadableRegistries().getLootTable(key);
             var params=new LootParams.Builder(player.serverLevel()).withParameter(LootContextParams.ORIGIN,Vec3.atCenterOf(pos)).withOptionalParameter(LootContextParams.THIS_ENTITY,player).withLuck(player.getLuck()).create(LootContextParamSets.CHEST);
-            out.addAll(table.getRandomItems(params));Collections.shuffle(out,random);if(out.size()>definition.rolls())out.subList(definition.rolls(),out.size()).clear();
-        }else for(var entry:WeightedLoot.select(definition.entries(),definition.rolls(),random)){
+            out.addAll(table.getRandomItems(params));out.removeIf(stack->com.ianblk.zianmanager.ManagerEquipment.retired(stack.getItem()));Collections.shuffle(out,random);if(out.size()>definition.rolls())out.subList(definition.rolls(),out.size()).clear();
+        }else for(var entry:WeightedLoot.select(definition.entries().stream().filter(entry->!com.ianblk.zianmanager.ManagerEquipment.retired(item(player,entry.item()).getItem())).toList(),definition.rolls(),random)){
             var stack=item(player,entry.item());stack.setCount(entry.min()+random.nextInt(entry.max()-entry.min()+1));
             if(stack.isEmpty() || stack.getCount()>stack.getMaxStackSize())throw new IllegalArgumentException("Cantidad incompatible con el objeto");out.add(stack);
         }
@@ -79,18 +79,23 @@ public final class LootService {
         var claim=journal.get(id);player.sendSystemMessage(Component.literal(claim.complete()?"Loot entregado.":claim.review()?"Entrega en revisión. No se repetirá automáticamente.":"Loot pendiente. Libera espacio y usa /zianmanager pending."));
     }
     private void directChest(ServerPlayer player,UUID id)throws Exception{
-        var drops=new ArrayList<net.minecraft.world.entity.item.ItemEntity>();var expectedDrops=new ArrayList<ItemStack>();
+        var drops=new ArrayList<net.minecraft.world.entity.item.ItemEntity>();var expectedDrops=new ArrayList<ItemStack>();var notices=new ArrayList<DeliveredNotice>();
         BatchDelivery.deliver(journal,player.getUUID(),id,new BatchDelivery.Port(){
             public String unavailable(RewardClaim.Part part){if(!player.isAlive() || player.isRemoved())return "player_unavailable";try{return item(player,part.data()).isEmpty()?"item_unavailable":null;}catch(Exception error){return "invalid_item";}}
-            public void apply(RewardClaim.Part part,int index)throws Exception{var stack=item(player,part.data());insertDirect(player,stack);if(!stack.isEmpty()){
+            public void apply(RewardClaim.Part part,int index)throws Exception{var stack=item(player,part.data());var original=stack.copy();insertDirect(player,stack);notices.add(new DeliveredNotice(index,original,original.getCount()-stack.getCount(),stack.getCount()));if(!stack.isEmpty()){
                 var uuid=UUID.nameUUIDFromBytes(("zianmanager:ground:"+id+":"+index).getBytes(java.nio.charset.StandardCharsets.UTF_8));if(player.serverLevel().getEntity(uuid)!=null)throw new IllegalStateException("Salida de loot ya existente; requiere revisión");
                 var drop=new net.minecraft.world.entity.item.ItemEntity(player.serverLevel(),player.getX(),player.getY()+0.5,player.getZ(),stack.copy());drop.setUUID(uuid);drop.setTarget(player.getUUID());drop.setDefaultPickUpDelay();drop.getPersistentData().putString("ZianManagerClaim",id.toString());
                 if(!player.serverLevel().addFreshEntity(drop))throw new IllegalStateException("Otro mod rechazó el objeto en el suelo");drops.add(drop);expectedDrops.add(stack.copy());
             }}
             public boolean commit()throws Exception{player.getInventory().setChanged();player.inventoryMenu.broadcastChanges();var expected=player.saveWithoutId(new CompoundTag()).get("Inventory");server.getPlayerList().save(player);var file=server.getWorldPath(LevelResource.PLAYER_DATA_DIR).resolve(player.getUUID()+".dat");try(var channel=java.nio.channels.FileChannel.open(file,StandardOpenOption.WRITE)){channel.force(true);}if(!drops.isEmpty())player.serverLevel().save(null,true,false);var saved=NbtIo.readCompressed(file,NbtAccounter.create(8L*1024*1024));if(!expected.equals(saved.get("Inventory")))return false;for(int i=0;i<drops.size();i++)if(drops.get(i).isRemoved() || player.serverLevel().getEntity(drops.get(i).getUUID())!=drops.get(i) || !ItemStack.matches(drops.get(i).getItem(),expectedDrops.get(i)))return false;return true;}
         });
-        var claim=journal.get(id);player.displayClientMessage(Component.literal(claim.complete()?(drops.isEmpty()?"Loot recibido.":"Loot recibido; el sobrante está en el suelo."):claim.review()?"Entrega en revisión; no se repetirá automáticamente.":"Loot pendiente."),true);
+        var claim=journal.get(id);var summary=Component.literal("[Cofre] Recibiste: ").withStyle(net.minecraft.ChatFormatting.GOLD);boolean announced=false;
+        for(var notice:notices)if(claim.parts().get(notice.index()).phase()==RewardClaim.Phase.DELIVERED){if(notice.inventory()>0){if(announced)summary.append(Component.literal(", ").withStyle(net.minecraft.ChatFormatting.GRAY));summary.append(noticePart(notice.item(),notice.inventory(),"inventario",net.minecraft.ChatFormatting.GREEN));announced=true;}if(notice.ground()>0){if(announced)summary.append(Component.literal(", ").withStyle(net.minecraft.ChatFormatting.GRAY));summary.append(noticePart(notice.item(),notice.ground(),"suelo",net.minecraft.ChatFormatting.YELLOW));announced=true;}}
+        if(announced)player.sendSystemMessage(summary.append(Component.literal(".").withStyle(net.minecraft.ChatFormatting.GRAY)));
+        player.displayClientMessage(Component.literal(claim.complete()?(drops.isEmpty()?"Loot recibido.":"Loot recibido; el sobrante está en el suelo."):claim.review()?"Entrega en revisión; no se repetirá automáticamente.":"Loot pendiente."),true);
     }
+    private record DeliveredNotice(int index,ItemStack item,int inventory,int ground){}
+    private static Component noticePart(ItemStack stack,int count,String location,net.minecraft.ChatFormatting color){return Component.literal(count+" × ").withStyle(color).append(stack.getHoverName().copy().withStyle(color)).append(Component.literal(" ("+location+")").withStyle(net.minecraft.ChatFormatting.GRAY));}
     private static void insertDirect(ServerPlayer player,ItemStack stack){
         var inventory=player.getInventory();for(int i=0;i<36 && !stack.isEmpty();i++){var slot=inventory.getItem(i);if(!slot.isEmpty() && ItemStack.isSameItemSameComponents(slot,stack)){int amount=Math.min(stack.getCount(),Math.max(0,Math.min(slot.getMaxStackSize(),inventory.getMaxStackSize())-slot.getCount()));slot.grow(amount);stack.shrink(amount);}}
         for(int i=0;i<36 && !stack.isEmpty();i++)if(inventory.getItem(i).isEmpty()){int amount=Math.min(stack.getCount(),Math.min(stack.getMaxStackSize(),inventory.getMaxStackSize()));inventory.setItem(i,stack.copyWithCount(amount));stack.shrink(amount);}

@@ -1,8 +1,8 @@
-# Objetos, armas, cofres y zonas — alpha.5
+# Objetos, armas, cofres y zonas — alpha.6
 
 ## Pestaña creativa
 
-La pestaña **Zian Manager** contiene los 40 modelos importados: 4 martillos, 3 armas de fantasía, 4 llaves, 9 cofres, 2 accesorios y 18 objetos del paquete Altar. Todos usan IDs propios `zianmanager:`; no reemplazan objetos, sonidos ni interfaces de Minecraft.
+La pestaña **Zian Manager** contiene los 27 modelos activos: 4 martillos, 3 armas de fantasía, 4 llaves, 9 cofres y 7 armas/herramientas del paquete Altar. Todos usan IDs propios `zianmanager:`; no reemplazan objetos, sonidos ni interfaces de Minecraft.
 
 No se añaden recetas: están destinados al editor de loot, comandos y creativo.
 
@@ -22,8 +22,6 @@ Las habilidades se calculan en el servidor y sus esperas se guardan por jugador 
 - Rompeolas (`altar_tide`): nivel diamante, Gracia del delfín I durante 10 s, espera 120 s.
 - Filo del dragón (`altar_dragonrend`) y Filo marchito (`altar_withersym`): espadas de diamante, sin ataques adicionales.
 - Hacha y pico de amatista (`altar_amaxe`, `altar_ampick`): atributos de sus equivalentes de diamante.
-- Los emblemas, fragmentos, reloj, flecha ornamental, arnés y altar son objetos decorativos, sin ataques especiales. No incorporan sistemas de invocación ni funciones de Minecraft 1.21.11.
-- Sombrero de paja (`straw_hat`): se equipa en la cabeza, sin armadura adicional. Escudo ornamental (`shield1`): bloqueo normal de escudo.
 
 ## Cofres de loot
 
@@ -73,3 +71,9 @@ Las pruebas locales verifican daño, habilidades, espera, martillo, llaves y per
 ## Compatibilidad del cofre retirado
 
 El cofre original ya no se ofrece en creativo ni en visores que respetan la etiqueta de ocultación. Los bloques antiguos pasan a `loot_common_crate` y los objetos antiguos del inventario se convierten al entrar. Se mantiene únicamente su ID interno de compatibilidad para evitar perder datos de mundos anteriores; no se incluye su textura antigua. UUID, loot y esperas de los cofres configurados se conservan.
+
+## Objetos retirados y aviso de loot
+
+Se retiran `altar_void1`, `altar_void2`, `altar_void3`, `altar_soul`, `altar_hotbarsym`, `altar_handle`, `altar_warden`, `altar_harness`, `altar_dragonheart`, `altar_clockdragonrend`, `altar_arrowdragonrend`, `straw_hat` y `shield1`. No se ofrecen en creativo ni en visores compatibles; el editor impide añadirlos y los sorteos nuevos ignoran entradas antiguas de esos objetos. Sus identificadores mínimos de compatibilidad mantienen legibles inventarios y reclamaciones ya guardadas, sin sus modelos ni habilidades anteriores.
+
+Después de confirmar una entrega, el chat muestra cada objeto con su cantidad y destino: inventario o suelo. Las cantidades solo describen componentes confirmados; un clic repetido durante la renovación no vuelve a entregar ni anuncia otra entrega.

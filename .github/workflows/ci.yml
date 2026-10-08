@@ -17,6 +17,8 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '9.8.0'
+      - name: Verify imported model assets
+        run: python tools/verify-model-assets.py
       - name: Compile and test
         run: gradle --no-daemon build
       - name: Native server and restart

@@ -18,6 +18,8 @@ import net.neoforged.bus.api.IEventBus;
 import net.minecraft.nbt.CompoundTag;
 
 public final class ManagerBlocks {
+    private record Migration(net.minecraft.server.level.ServerLevel level,BlockPos pos){}
+    private static final java.util.Queue<Migration> MIGRATIONS=new java.util.concurrent.ConcurrentLinkedQueue<>();
     private static final DeferredRegister.Blocks BLOCKS=DeferredRegister.createBlocks("zianmanager");
     public static final java.util.Map<String,DeferredBlock<DungeonChest>> CRATES=new java.util.LinkedHashMap<>();
     private static final DeferredRegister.Items ITEMS=DeferredRegister.createItems("zianmanager");
@@ -29,7 +31,12 @@ public final class ManagerBlocks {
     public static boolean isChest(BlockState state){return state.getBlock() instanceof DungeonChest;}
     public static BlockState chestState(String id){var resource=net.minecraft.resources.ResourceLocation.parse(id);var block=net.minecraft.core.registries.BuiltInRegistries.BLOCK.get(resource);if(!(block instanceof DungeonChest))throw new IllegalArgumentException("Tipo de cofre inválido");return block.defaultBlockState();}
     public static String keyFor(String block){String id=net.minecraft.resources.ResourceLocation.parse(block).getPath();return id.startsWith("locked_")?"zianmanager:"+id.substring(7).replace("_crate","_key"):"";}
-    public static void register(IEventBus bus){BLOCKS.register(bus);ITEMS.register(bus);ENTITIES.register(bus);}
+    public static void register(IEventBus bus){BLOCKS.register(bus);ITEMS.register(bus);ENTITIES.register(bus);
+        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.level.ChunkEvent.Load e)->{if(e.getLevel() instanceof net.minecraft.server.level.ServerLevel level && e.getChunk() instanceof net.minecraft.world.level.chunk.LevelChunk chunk){var positions=chunk.getBlockEntities().values().stream().filter(be->be.getBlockState().is(CHEST.get())).map(be->be.getBlockPos().immutable()).toList();for(var pos:positions)MIGRATIONS.add(new Migration(level,pos));}});
+        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.tick.ServerTickEvent.Post e)->{Migration entry;while((entry=MIGRATIONS.poll())!=null){var level=entry.level();var pos=entry.pos();if(level.getChunkSource().hasChunk(pos.getX()>>4,pos.getZ()>>4) && level.getBlockState(pos).is(CHEST.get()))level.setBlockAndUpdate(pos,CRATES.get("loot_common_crate").get().defaultBlockState().setValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING,level.getBlockState(pos).getValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING)));}});
+        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.server.ServerStoppedEvent e)->MIGRATIONS.clear());
+        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent e)->{if(e.getEntity() instanceof net.minecraft.server.level.ServerPlayer player){for(int i=0;i<player.getInventory().getContainerSize();i++){var stack=player.getInventory().getItem(i);if(stack.is(CHEST_ITEM.get()))player.getInventory().setItem(i,stack.transmuteCopy(CRATES.get("loot_common_crate").get().asItem()));}player.getInventory().setChanged();}});
+    }
     public static final class ChestEntity extends BlockEntity {
         public long animationStarted=-1000;
         public ChestEntity(BlockPos pos,BlockState state){super(CHEST_ENTITY.get(),pos,state);}
@@ -39,7 +46,7 @@ public final class ManagerBlocks {
     public static final class DungeonChest extends BaseEntityBlock {
         public static final MapCodec<DungeonChest> CODEC=simpleCodec(DungeonChest::new);
         public final String model;
-        public DungeonChest(Properties p){this(p,"");}
+        public DungeonChest(Properties p){this(p,"loot_common_crate");}
         public DungeonChest(Properties p,String model){super(p);this.model=model;registerDefaultState(stateDefinition.any().setValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING,Direction.NORTH));}
         @Override protected void createBlockStateDefinition(StateDefinition.Builder<Block,BlockState> builder){builder.add(net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING);}
         @Override public BlockState getStateForPlacement(net.minecraft.world.item.context.BlockPlaceContext context){return defaultBlockState().setValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING,context.getHorizontalDirection().getOpposite());}

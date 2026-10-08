@@ -74,7 +74,7 @@ public final class ManagerRuntime {
         });
     }
     private void start(MinecraftServer value){server=value;ticks=0;try{
-        var base=server.getWorldPath(LevelResource.ROOT).resolve("data/zianmanager");store=new ManagerStore(base.resolve("definitions.json"));ledger=new EncounterLedger(base.resolve("encounters.json"));loot=new LootService(server,store);npcCommands=new NpcCommands(base.resolve("npc_commands.json"));
+        var base=server.getWorldPath(LevelResource.ROOT).resolve("data/zianmanager");store=new ManagerStore(base.resolve("definitions.json"));ledger=new EncounterLedger(base.resolve("encounters.json"));for(var c:List.copyOf(store.data().chests().values()))if(c.block().equals("zianmanager:dungeon_chest"))store.put(new ChestSpec(c.uuid(),c.dimension(),c.x(),c.y(),c.z(),c.loot(),c.minutes(),"zianmanager:loot_common_crate",c.facing()));loot=new LootService(server,store);npcCommands=new NpcCommands(base.resolve("npc_commands.json"));
         ZianManager.LOGGER.info("Zian Manager ready: {} mobs, {} zones, {} loot tables; chest protected, personal loot",store.data().mobs().size(),store.data().zones().size(),store.data().loot().size());
     }catch(Exception error){store=null;ledger=null;loot=null;npcCommands=null;ZianManager.LOGGER.error("Zian Manager unavailable; source files preserved",error);}}
     private void ready(){if(server==null || store==null || ledger==null || loot==null)throw new IllegalStateException("Zian Manager no está listo; revisa sus archivos");}
@@ -97,13 +97,8 @@ public final class ManagerRuntime {
             if(chest==null)throw new IllegalArgumentException("Cofre sin configurar. El administrador debe usar Shift + clic derecho.");
             long wait=loot.remaining(player,"chest."+chest.uuid(),chest.minutes());if(wait>0)throw new IllegalArgumentException("Loot disponible en "+((wait+59999)/60000)+" minuto(s)");
             var claim=loot.reserve(player,"chest."+chest.uuid(),chest.loot(),chest.minutes(),pos);
-            player.serverLevel().blockEvent(pos,player.serverLevel().getBlockState(pos).getBlock(),1,1);viewClaim(player,chest,claim,pos);
+            if(claim.review()){player.sendSystemMessage(Component.literal("Entrega pendiente de revisión; no se repetirá."));return;}player.serverLevel().blockEvent(pos,player.serverLevel().getBlockState(pos).getBlock(),1,1);loot.deliver(player,claim.id());
         }catch(Exception error){player.sendSystemMessage(Component.literal(error.getMessage()));}
-    }
-    private void viewClaim(ServerPlayer player,ChestSpec chest,RewardClaim claim,BlockPos pos){
-        UUID token=UUID.randomUUID();sessions.put(player.getUUID(),new Session(token,"claim",claim.id().toString(),System.currentTimeMillis()+300000,pos));
-        var out=new JsonObject();out.addProperty("type","claim");out.addProperty("token",token.toString());out.addProperty("id",claim.id().toString());out.addProperty("title","Cofre Zian · Loot personal");out.addProperty("notice","Recibir todo · espera después de entregar: "+chest.minutes()+" min"+loot.keyNotice(claim.id()));
-        var list=new JsonArray();for(var part:claim.parts()){var entry=new JsonObject();var item=LootService.item(player,part.data());entry.addProperty("name",item.getCount()+" × "+item.getHoverName().getString()+" · "+part.phase());entry.addProperty("item",BuiltInRegistries.ITEM.getKey(item.getItem()).toString());list.add(entry);}out.add("entries",list);ManagerNetwork.send(player,out.toString());
     }
     public void view(ServerPlayer player,String type,String id,BlockPos context,String notice){
         UUID token=UUID.randomUUID();sessions.put(player.getUUID(),new Session(token,type,id,System.currentTimeMillis()+300000,context));

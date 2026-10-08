@@ -36,7 +36,7 @@ public final class ManagerNetwork {
         public Type<View> type(){return TYPE;}
     }
     public static void register(IEventBus bus){bus.addListener((RegisterPayloadHandlersEvent event)->{
-        var channel=event.registrar("manager3");
+        var channel=event.registrar("manager4");
         channel.playToServer(Request.TYPE,Request.CODEC,(v,c)->c.enqueueWork(()->{if(c.player() instanceof ServerPlayer player)ManagerRuntime.get().request(player,v.section,v.id);}));
         channel.playToServer(Action.TYPE,Action.CODEC,(v,c)->c.enqueueWork(()->{if(c.player() instanceof ServerPlayer player)ManagerRuntime.get().action(player,v);}));
         channel.playToClient(View.TYPE,View.CODEC,(v,c)->c.enqueueWork(()->com.ianblk.zianmanager.client.ManagerClient.accept(v.json)));

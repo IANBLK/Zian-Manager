@@ -1,3 +1,12 @@
+# 0.1.0-alpha.5
+
+- Corregidos los iconos y texturas ausentes: materiales y PNG ahora están en la carpeta de ítems que se incorpora al atlas de Minecraft.
+- Datos de animación movidos fuera de models para evitar errores del cargador de modelos.
+- Retirado el cofre original del creativo y de los visores de recetas compatibles; migración diferida de bloques e inventarios al cofre común.
+- Apertura directa: loot al inventario y sobrantes al suelo, sin pantalla de premios, también en creativo.
+- Consumo único de llave y confirmación conjunta del inventario y las entidades del mundo; sin reintentos automáticos de entregas ambiguas.
+- Se mantienen tablas, UUID de cofre, renovaciones y registros de los mundos existentes.
+
 # 0.1.0-alpha.4
 
 - Pestaña creativa propia con armas, martillos, accesorios, llaves y todos los cofres.

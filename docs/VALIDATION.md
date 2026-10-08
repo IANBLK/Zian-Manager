@@ -22,3 +22,7 @@ Alpha.3: servidor local con Lootr y reinicio superados, incluyendo generación d
 ## Alpha.4
 
 32 pruebas unitarias. Verificación de 40 modelos: coordenadas finitas, UV/índices válidos, hashes de PNG originales y jerarquías completas con datos de animación. Servidor dedicado local con Lootr: daño 7/8/8, ataques y esperas 15/30/120 s, efectos I por 30 s, martillo 3×3×1 con durabilidad y bloque protegido, llave correcta consumida una vez, vista previa sin consumo, y restauración/reinicio manteniendo tipo y orientación. El renderizado final y la guía de zonas no se han confirmado visualmente con un cliente real.
+
+## Alpha.5
+
+36 pruebas unitarias. Auditoría de materiales/PNG verifica rutas bajo textures/item para el atlas, hashes originales y ausencia de datos de animación bajo models. Servidor local con Lootr: apertura sin sesión de GUI, inventario lleno en supervivencia y creativo, sobrante exacto al suelo, clic repetido sin duplicación, habilidades/llaves/minería y reinicio. Migración diferida de bloques antiguos evita acceder a un chunk mientras aún se está cargando. Falta confirmar visualmente la corrección en el cliente real del usuario.

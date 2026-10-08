@@ -3611,8 +3611,8 @@
   ],
   "textures": [
     {
-      "path": "zianmanager:textures/imported/loot_vote_crate/0.png",
-      "material": "zianmanager:imported/loot_vote_crate/0",
+      "path": "zianmanager:textures/item/imported/loot_vote_crate/0.png",
+      "material": "zianmanager:item/imported/loot_vote_crate/0",
       "width": 128,
       "height": 128,
       "sha256": "45f6ff84d14fb80ee35c4bdc598712cf297cbee60699e3e073b41b783fbcc018"

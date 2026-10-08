@@ -6,7 +6,7 @@
   "flip_v": false,
   "render_type": "minecraft:cutout",
   "textures": {
-    "particle": "zianmanager:imported/altar_warden/0"
+    "particle": "zianmanager:item/imported/altar_warden/0"
   },
   "display": {
     "thirdperson_righthand": {

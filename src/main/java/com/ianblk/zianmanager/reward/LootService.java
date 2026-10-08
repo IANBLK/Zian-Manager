@@ -57,9 +57,10 @@ public final class LootService {
     public void deliver(ServerPlayer player,UUID id) throws Exception{
         if(!com.ianblk.zianmanager.permission.ManagerPermissions.allows(player.createCommandSourceStack(),"loot",false))throw new IllegalArgumentException("No tienes permiso para recibir loot Zian");
         var existing=journal.get(id);if(existing==null || !existing.player().equals(player.getUUID()))throw new IllegalArgumentException("Reclamación inexistente");
-        if(existing.complete())return;if(existing.review()){player.sendSystemMessage(Component.literal("Entrega en revisión; no se consumirá otra llave."));return;}bindKey(player,existing,existing.trainer());
-        var cost=keys.get(id);if(cost!=null && !cost.phase().equals("PAID")){var first=existing.parts().stream().filter(p->p.phase()!=RewardClaim.Phase.DELIVERED).findFirst().orElseThrow();if(!player.isAlive() || !fits(player,item(player,first.data()))){player.sendSystemMessage(Component.literal("Libera espacio; la llave no se ha consumido."));return;}}
+        if(existing.complete())return;if(!player.isAlive() || player.isRemoved()){player.sendSystemMessage(Component.literal("Jugador no disponible para recibir loot."));return;}if(existing.review()){player.sendSystemMessage(Component.literal("Entrega en revisión; no se consumirá otra llave."));return;}bindKey(player,existing,existing.trainer());
+        var cost=keys.get(id);if(!existing.trainer().startsWith("chest.") && cost!=null && !cost.phase().equals("PAID")){var first=existing.parts().stream().filter(p->p.phase()!=RewardClaim.Phase.DELIVERED).findFirst().orElseThrow();if(!player.isAlive() || !fits(player,item(player,first.data()))){player.sendSystemMessage(Component.literal("Libera espacio; la llave no se ha consumido."));return;}}
         keys.take(id,player.getUUID(),new com.ianblk.zianmanager.core.KeyLedger.Port(){public boolean available(String key){return hasKey(player,key);}public boolean consumeAndSave(String key)throws Exception{var wanted=net.minecraft.core.registries.BuiltInRegistries.ITEM.get(net.minecraft.resources.ResourceLocation.parse(key));for(int i=0;i<player.getInventory().getContainerSize();i++)if(player.getInventory().getItem(i).is(wanted)){player.getInventory().removeItem(i,1);player.getInventory().setChanged();player.inventoryMenu.broadcastChanges();var expected=player.saveWithoutId(new CompoundTag()).get("Inventory");server.getPlayerList().save(player);var file=server.getWorldPath(LevelResource.PLAYER_DATA_DIR).resolve(player.getUUID()+".dat");try(var channel=java.nio.channels.FileChannel.open(file,StandardOpenOption.WRITE)){channel.force(true);}return expected.equals(NbtIo.readCompressed(file,NbtAccounter.create(8L*1024*1024)).get("Inventory"));}return false;}});
+        if(existing.trainer().startsWith("chest.")){directChest(player,id);return;}
         RewardDelivery.deliver(journal,player.getUUID(),id,new RewardDelivery.Port(){
             public String unavailable(RewardClaim.Part part){
                 if(!player.isAlive() || player.isRemoved())return "player_unavailable";
@@ -76,6 +77,23 @@ public final class LootService {
             }
         });
         var claim=journal.get(id);player.sendSystemMessage(Component.literal(claim.complete()?"Loot entregado.":claim.review()?"Entrega en revisión. No se repetirá automáticamente.":"Loot pendiente. Libera espacio y usa /zianmanager pending."));
+    }
+    private void directChest(ServerPlayer player,UUID id)throws Exception{
+        var drops=new ArrayList<net.minecraft.world.entity.item.ItemEntity>();var expectedDrops=new ArrayList<ItemStack>();
+        BatchDelivery.deliver(journal,player.getUUID(),id,new BatchDelivery.Port(){
+            public String unavailable(RewardClaim.Part part){if(!player.isAlive() || player.isRemoved())return "player_unavailable";try{return item(player,part.data()).isEmpty()?"item_unavailable":null;}catch(Exception error){return "invalid_item";}}
+            public void apply(RewardClaim.Part part,int index)throws Exception{var stack=item(player,part.data());insertDirect(player,stack);if(!stack.isEmpty()){
+                var uuid=UUID.nameUUIDFromBytes(("zianmanager:ground:"+id+":"+index).getBytes(java.nio.charset.StandardCharsets.UTF_8));if(player.serverLevel().getEntity(uuid)!=null)throw new IllegalStateException("Salida de loot ya existente; requiere revisión");
+                var drop=new net.minecraft.world.entity.item.ItemEntity(player.serverLevel(),player.getX(),player.getY()+0.5,player.getZ(),stack.copy());drop.setUUID(uuid);drop.setTarget(player.getUUID());drop.setDefaultPickUpDelay();drop.getPersistentData().putString("ZianManagerClaim",id.toString());
+                if(!player.serverLevel().addFreshEntity(drop))throw new IllegalStateException("Otro mod rechazó el objeto en el suelo");drops.add(drop);expectedDrops.add(stack.copy());
+            }}
+            public boolean commit()throws Exception{player.getInventory().setChanged();player.inventoryMenu.broadcastChanges();var expected=player.saveWithoutId(new CompoundTag()).get("Inventory");server.getPlayerList().save(player);var file=server.getWorldPath(LevelResource.PLAYER_DATA_DIR).resolve(player.getUUID()+".dat");try(var channel=java.nio.channels.FileChannel.open(file,StandardOpenOption.WRITE)){channel.force(true);}if(!drops.isEmpty())player.serverLevel().save(null,true,false);var saved=NbtIo.readCompressed(file,NbtAccounter.create(8L*1024*1024));if(!expected.equals(saved.get("Inventory")))return false;for(int i=0;i<drops.size();i++)if(drops.get(i).isRemoved() || player.serverLevel().getEntity(drops.get(i).getUUID())!=drops.get(i) || !ItemStack.matches(drops.get(i).getItem(),expectedDrops.get(i)))return false;return true;}
+        });
+        var claim=journal.get(id);player.displayClientMessage(Component.literal(claim.complete()?(drops.isEmpty()?"Loot recibido.":"Loot recibido; el sobrante está en el suelo."):claim.review()?"Entrega en revisión; no se repetirá automáticamente.":"Loot pendiente."),true);
+    }
+    private static void insertDirect(ServerPlayer player,ItemStack stack){
+        var inventory=player.getInventory();for(int i=0;i<36 && !stack.isEmpty();i++){var slot=inventory.getItem(i);if(!slot.isEmpty() && ItemStack.isSameItemSameComponents(slot,stack)){int amount=Math.min(stack.getCount(),Math.max(0,Math.min(slot.getMaxStackSize(),inventory.getMaxStackSize())-slot.getCount()));slot.grow(amount);stack.shrink(amount);}}
+        for(int i=0;i<36 && !stack.isEmpty();i++)if(inventory.getItem(i).isEmpty()){int amount=Math.min(stack.getCount(),Math.min(stack.getMaxStackSize(),inventory.getMaxStackSize()));inventory.setItem(i,stack.copyWithCount(amount));stack.shrink(amount);}
     }
     private String requiredKey(String key){if(!key.startsWith("chest."))return "";try{var chest=store.data().chests().get(UUID.fromString(key.substring(6)));return chest==null?"":com.ianblk.zianmanager.ManagerBlocks.keyFor(chest.block());}catch(IllegalArgumentException error){return "";}}
     private void bindKey(ServerPlayer player,RewardClaim claim,String key)throws Exception{if(key.startsWith("chest."))keys.bind(claim.id(),player.getUUID(),requiredKey(key));}

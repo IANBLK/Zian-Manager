@@ -1,8 +1,8 @@
-# Objetos, armas, cofres y zonas — alpha.4
+# Objetos, armas, cofres y zonas — alpha.5
 
 ## Pestaña creativa
 
-La pestaña **Zian Manager** contiene el cofre original y los 40 modelos importados: 4 martillos, 3 armas de fantasía, 4 llaves, 9 cofres, 2 accesorios y 18 objetos del paquete Altar. Todos usan IDs propios `zianmanager:`; no reemplazan objetos, sonidos ni interfaces de Minecraft.
+La pestaña **Zian Manager** contiene los 40 modelos importados: 4 martillos, 3 armas de fantasía, 4 llaves, 9 cofres, 2 accesorios y 18 objetos del paquete Altar. Todos usan IDs propios `zianmanager:`; no reemplazan objetos, sonidos ni interfaces de Minecraft.
 
 No se añaden recetas: están destinados al editor de loot, comandos y creativo.
 
@@ -48,7 +48,9 @@ locked_epic_crate       → epic_key
 locked_legendary_crate  → legendary_key
 ```
 
-Todos llevan prefijo `zianmanager:`. La llave puede estar en el inventario; no tiene que estar en la mano. Una llave incorrecta no abre el cofre. Abrir la vista previa no consume la llave ni cambia el sorteo. **Recibir recompensas** consume una llave, confirma el inventario guardado y entrega el loot. Una reclamación pagada no consume otra llave. Si falta espacio antes de comenzar, se conserva la llave y el loot pendiente.
+Todos llevan prefijo `zianmanager:`. La llave puede estar en el inventario; no tiene que estar en la mano. Una llave incorrecta no abre el cofre. **Clic derecho consume una llave y entrega el loot directamente**, sin una pantalla que tape la animación. Los objetos que no caben en el inventario aparecen al suelo junto al jugador, incluso en creativo; quedan reservados para ese jugador mediante la propiedad nativa de dueño del objeto.
+
+El sorteo queda registrado antes de entregar. Una reclamación pagada no consume otra llave. La entrega confirma el inventario guardado y, si hay sobrantes, guarda las entidades del mundo antes de completar el registro. Volver a hacer clic durante la renovación no duplica la entrega.
 
 Una interrupción ambigua pausa el consumo para revisión; no se descuenta otra llave automáticamente. Después de verificar o compensar manualmente, el administrador puede confirmar el coste:
 
@@ -67,3 +69,7 @@ En **Zonas → Ubicación** marca las dos esquinas y los puntos de aparición. *
 Las rotaciones incompatibles con el formato de cubos de 1.21.1 se convierten a geometría OBJ. Se conservan UV, pivotes y poses del objeto; las texturas se extraen sin cambiar sus bytes. Los cofres usan un renderer propio que conserva jerarquía y canales de animación, sin requerir GeckoLib. Se normalizan uniformemente a la escala de un bloque para mantener sus proporciones.
 
 Las pruebas locales verifican daño, habilidades, espera, martillo, llaves y persistencia. El aspecto, las animaciones y la vista de zonas requieren confirmación visual en el cliente del usuario. Los paquetes Altar usan un formato original más reciente; se importan sus modelos como objetos propios, no sus cambios globales de interfaz o los sistemas de CustomModelData originales.
+
+## Compatibilidad del cofre retirado
+
+El cofre original ya no se ofrece en creativo ni en visores que respetan la etiqueta de ocultación. Los bloques antiguos pasan a `loot_common_crate` y los objetos antiguos del inventario se convierten al entrar. Se mantiene únicamente su ID interno de compatibilidad para evitar perder datos de mundos anteriores; no se incluye su textura antigua. UUID, loot y esperas de los cofres configurados se conservan.

@@ -2,11 +2,11 @@
 
 **Administra dungeons dentro del juego:** mobs personalizados, jefes, zonas con oleadas, loot personal y NPC de diálogo.
 
-**0.1.0-alpha.4 · Minecraft 1.21.1 · NeoForge 21.1.252 · Java 21**
+**0.1.0-alpha.5 · Minecraft 1.21.1 · NeoForge 21.1.252 · Java 21**
 
 Instala el mismo JAR en cliente y servidor. Es independiente de Cobblemon, RCT API y RCT Mod. Lootr y LuckPerms son opcionales.
 
-## 🛠️ Nuevo en alpha.4
+## 🛠️ Objetos y zonas
 
 Pestaña creativa **Zian Manager**, 40 modelos importados, martillos 3×3×1, armas con habilidades y esperas, nueve variantes de cofre con loot personal (cuatro requieren llave), y vista de esquinas/contorno/puntos de aparición. [Consulta la guía de objetos y zonas](docs/EQUIPMENT.md).
 
@@ -16,7 +16,7 @@ Pestaña creativa **Zian Manager**, 40 modelos importados, martillos 3×3×1, ar
 - Jefes con barra de vida y loot configurable.
 - Zonas con **3 a 6 mobs por oleada**, hasta 16 oleadas, pausa y reaparición configurable.
 - Tablas **MOB, BOSS y CHEST**, con selección ponderada sin repetir entradas.
-- Cofre negro, plateado y dorado: **sin receta**, protegido contra rotura en supervivencia, explosiones y empuje. Loot renovable por jugador, sin inventario accesible a tolvas.
+- Cofres importados: **sin receta**, protegido contra rotura en supervivencia, explosiones y empuje. Loot renovable por jugador, sin inventario accesible a tolvas.
 - NPC humano Alex/slim, diez skins y diálogo con botón de comando configurable.
 - Configuraciones, encuentros y entregas persistentes.
 
@@ -62,7 +62,9 @@ Sin entradas propias puedes indicar una tabla nativa de **cofre**, por ejemplo `
 
 Usa `/zianmanager givechest`, coloca el cofre y **Shift + clic derecho** para asignarle tabla y renovación en minutos. Cada jugador tiene su propio sorteo y tiempo.
 
-El jugador abre la pantalla y pulsa **Recibir todo**. Abrir reserva el sorteo: cerrar y reabrir no cambia los objetos. El tiempo empieza al completar la entrega. Si falta espacio, el loot pendiente se conserva:
+**Clic derecho entrega el loot automáticamente**, sin pantalla de premios, para poder ver la animación. Los objetos van al inventario; lo que no cabe aparece al suelo junto al jugador, también en creativo. Cada entrega conserva el sorteo y el registro de consumo de llave. Las entregas ambiguas quedan en revisión y no se repiten automáticamente.
+
+El tiempo de renovación comienza al completar la entrega. Para reclamar entregas pendientes anteriores:
 
 ```text
 /zianmanager pending
@@ -121,7 +123,7 @@ Esto confirma la revisión; no genera objetos de nuevo. Un encuentro con un mob 
 
 ## 🧪 Validación y límites
 
-32 pruebas automáticas de selección, persistencia y entregas. Pruebas locales de servidor dedicado con dos jugadores simulados, oleadas compartidas, reaparición, NPC, protección del cofre, loot personal y reinicio. También probado con **Lootr 1.11.37.122**.
+36 pruebas automáticas de selección, persistencia y entregas. Pruebas locales de servidor dedicado con dos jugadores simulados, oleadas compartidas, reaparición, NPC, protección del cofre, loot personal y reinicio. También probado con **Lootr 1.11.37.122**.
 
 Falta una prueba visual en tu cliente. Esta alpha no está validada en Youer ni con Cataclysm. El selector permite entidades instaladas que hereden de `Mob`, pero sus ataques, fases y atributos especiales pueden requerir adaptaciones. El cofre es un modelo estático, sin animación de tapa.
 
@@ -135,3 +137,5 @@ python tools/manager-smoke.py
 La prueba usa un mundo aislado bajo `build/`, localhost y puertos 25586/25587. Define `ZIANMANAGER_WITH_LOOTR=true` para incluir Lootr desde el primer arranque. La segunda pasada verifica el reinicio con Lootr. Requiere Java 21 y acceso a las dependencias.
 
 [Procedencia](docs/REUSE.md) · [Textura y prompt](art/PROMPT.md) · MIT © IANBLK
+
+**Alpha.5:** retirado el cofre original del creativo; sus bloques e inventarios se migran al cofre común conservando los registros. Corregidas las rutas de iconos/texturas y separados los datos de animación de los modelos del juego.

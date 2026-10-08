@@ -41,7 +41,7 @@ public final class ManagerSmoke {
             var spawn=level.getSharedSpawnPos();int x=spawn.getX(),y=spawn.getY()+2,z=spawn.getZ();chest=new BlockPos(x+8,y,z);
             first.moveTo(x,y,z,0,0);second.moveTo(x+1,y,z,0,0);first.gameMode.changeGameModeForPlayer(GameType.SURVIVAL);second.gameMode.changeGameModeForPlayer(GameType.SURVIVAL);
             if(Files.exists(marker)){
-                var c=store.data().chests().get(CHEST);if(c==null || !level.getBlockState(new BlockPos(c.x(),c.y(),c.z())).is(ManagerBlocks.CHEST.get()))throw new IllegalStateException("Chest missing after restart");
+                var c=store.data().chests().get(CHEST);if(c==null || !level.getBlockState(new BlockPos(c.x(),c.y(),c.z())).is(ManagerBlocks.CRATES.get("loot_common_crate").get()))throw new IllegalStateException("Chest missing after restart");
                 if(runtime.loot().remaining(first,"chest."+CHEST,10)<=0 || !runtime.loot().pending(firstId).isEmpty())throw new IllegalStateException("Personal cooldown/receipt missing after restart");
                 if(store.data().npcs().get(NPC)==null || !(level.getEntity(NPC) instanceof ManagerNpcs.DialogueNpc))throw new IllegalStateException("Dialogue NPC missing after restart");
                 EquipmentSmoke.verifyRestart(runtime,first);runtime.view(first,"loot","smoke_chest",null,"");runtime.view(first,"mob","smoke_guard",null,"");runtime.view(first,"zone","smoke_room",null,"");runtime.view(first,"npc",NPC.toString(),null,"");
@@ -53,18 +53,18 @@ public final class ManagerSmoke {
             store.put(new LootSpec("smoke_chest","CHEST",10,entries,""));store.put(new LootSpec("smoke_mob","MOB",2,entries.subList(0,10),""));store.put(new LootSpec("smoke_boss","BOSS",5,entries.subList(0,10),""));
             var guard=new MobSpec("smoke_guard","Guardián de prueba","minecraft:zombie",40,6,2,1,0.2,List.of(new Effect("minecraft:resistance",0,120)),Map.of("head",new ItemStack(Items.IRON_HELMET).save(server.registryAccess()).toString()),"smoke_mob",false);store.put(guard);
             for(int px=x-2;px<x+12;px++)for(int pz=z-2;pz<z+8;pz++){for(int py=y;py<y+4;py++)level.setBlockAndUpdate(new BlockPos(px,py,pz),net.minecraft.world.level.block.Blocks.AIR.defaultBlockState());level.setBlockAndUpdate(new BlockPos(px,y-1,pz),net.minecraft.world.level.block.Blocks.STONE.defaultBlockState());}
-            level.setBlockAndUpdate(chest,ManagerBlocks.CHEST.get().defaultBlockState());store.put(new ChestSpec(CHEST,"minecraft:overworld",chest.getX(),chest.getY(),chest.getZ(),"smoke_chest",10));
+            level.setBlockAndUpdate(chest,ManagerBlocks.CRATES.get("loot_common_crate").get().defaultBlockState());store.put(new ChestSpec(CHEST,"minecraft:overworld",chest.getX(),chest.getY(),chest.getZ(),"smoke_chest",10));
             if(!level.getBlockState(chest).is(TagKey.create(Registries.BLOCK,ResourceLocation.parse("lootr:convert/blacklist"))))throw new IllegalStateException("Lootr block blacklist missing");
             if(!ManagerBlocks.CHEST_ENTITY.get().builtInRegistryHolder().is(TagKey.create(Registries.BLOCK_ENTITY_TYPE,ResourceLocation.parse("lootr:convert/blacklist"))))throw new IllegalStateException("Lootr block-entity blacklist missing");
             if(level.getBlockState(chest).canOcclude())throw new IllegalStateException("Chest incorrectly occludes adjacent block faces");
-            if(level.getBlockState(chest).getDestroySpeed(level,chest)!=-1 || ManagerBlocks.CHEST.get().getExplosionResistance()<1000000)throw new IllegalStateException("Chest durability protection missing");
+            if(level.getBlockState(chest).getDestroySpeed(level,chest)!=-1 || ManagerBlocks.CRATES.get("loot_common_crate").get().getExplosionResistance()<1000000)throw new IllegalStateException("Chest durability protection missing");
             first.gameMode.changeGameModeForPlayer(GameType.CREATIVE);if(first.gameMode.destroyBlock(chest))throw new IllegalStateException("Creative non-admin broke chest");
             server.getPlayerList().op(first.getGameProfile());if(!first.gameMode.destroyBlock(chest) || store.data().chests().containsKey(CHEST))throw new IllegalStateException("Creative admin cannot remove registered chest");server.getPlayerList().deop(first.getGameProfile());
-            level.setBlockAndUpdate(chest,ManagerBlocks.CHEST.get().defaultBlockState());store.put(new ChestSpec(CHEST,"minecraft:overworld",chest.getX(),chest.getY(),chest.getZ(),"smoke_chest",10));first.gameMode.changeGameModeForPlayer(GameType.SURVIVAL);if(first.gameMode.destroyBlock(chest))throw new IllegalStateException("Survival player broke chest");
-            if(server.getRecipeManager().getRecipes().stream().anyMatch(r->r.value().getResultItem(server.registryAccess()).is(ManagerBlocks.CHEST_ITEM.get())))throw new IllegalStateException("Chest has a crafting recipe");
+            level.setBlockAndUpdate(chest,ManagerBlocks.CRATES.get("loot_common_crate").get().defaultBlockState());store.put(new ChestSpec(CHEST,"minecraft:overworld",chest.getX(),chest.getY(),chest.getZ(),"smoke_chest",10));first.gameMode.changeGameModeForPlayer(GameType.SURVIVAL);if(first.gameMode.destroyBlock(chest))throw new IllegalStateException("Survival player broke chest");
+            if(server.getRecipeManager().getRecipes().stream().anyMatch(r->r.value().getResultItem(server.registryAccess()).is(ManagerBlocks.CRATES.get("loot_common_crate").get().asItem())))throw new IllegalStateException("Chest has a crafting recipe");
             int before=first.getInventory().items.stream().mapToInt(ItemStack::getCount).sum();runtime.loot().grant(first,"chest."+CHEST,"smoke_chest",10,chest);int after=first.getInventory().items.stream().mapToInt(ItemStack::getCount).sum();if(after-before!=10 || !runtime.loot().pending(firstId).isEmpty())throw new IllegalStateException("Ten-item personal chest delivery failed");
             runtime.loot().grant(second,"chest."+CHEST,"smoke_chest",10,chest);runtime.loot().grant(first,"chest."+CHEST,"smoke_chest",10,chest);if(first.getInventory().items.stream().mapToInt(ItemStack::getCount).sum()!=after)throw new IllegalStateException("Personal chest duplicate payout");
-            EquipmentSmoke.setup(runtime,first);
+            EquipmentSmoke.setup(runtime,first);EquipmentSmoke.directOverflow(runtime,first,false);EquipmentSmoke.directOverflow(runtime,second,true);
             store.put(new NpcSpec(NPC,"minecraft:overworld",new Point(x+10,y,z,90),"Guía de prueba","Bienvenido a la dungeon."));
             var points=List.of(new Point(x+2.5,y,z+4.5,0),new Point(x+5.5,y,z+4.5,0),new Point(x+8.5,y,z+4.5,0));
             store.put(new ZoneSpec("smoke_room","minecraft:overworld",new Point(x-2,y,z-2,0),new Point(x+12,y+6,z+8,0),points,List.of("smoke_guard","smoke_guard","smoke_guard"),2,1,10,"smoke_boss",true));
@@ -72,7 +72,7 @@ public final class ManagerSmoke {
         }
         var run=runtime.encounter("smoke_room");
         if(phase==1 && ++ticks>120){
-            if(!level.getBlockState(chest).is(ManagerBlocks.CHEST.get()))throw new IllegalStateException("Registered chest did not recover");
+            if(!level.getBlockState(chest).is(ManagerBlocks.CRATES.get("loot_common_crate").get()))throw new IllegalStateException("Registered chest did not recover");
             EquipmentSmoke.verify(runtime,first);
             if(!(level.getEntity(NPC) instanceof ManagerNpcs.DialogueNpc npc) || !npc.skin().equals("heraldo_real"))throw new IllegalStateException("Human NPC / synced slim skin missing");
             var configured=store.data().npcs().get(NPC);store.put(new NpcSpec(NPC,configured.dimension(),configured.point(),configured.name(),configured.text(),"heraldo_real","Recibir", "minecraft:give {player} minecraft:paper 1",60));

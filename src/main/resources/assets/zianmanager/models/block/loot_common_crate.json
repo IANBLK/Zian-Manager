@@ -6,6 +6,6 @@
   "flip_v": false,
   "render_type": "minecraft:cutout",
   "textures": {
-    "particle": "zianmanager:imported/loot_common_crate/0"
+    "particle": "zianmanager:item/imported/loot_common_crate/0"
   }
 }

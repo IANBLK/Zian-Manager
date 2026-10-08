@@ -7,6 +7,6 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 public final class ManagerCreative {
  private static final DeferredRegister<CreativeModeTab> TABS=DeferredRegister.create(Registries.CREATIVE_MODE_TAB,"zianmanager");
- static{TABS.register("equipment",()->CreativeModeTab.builder().title(Component.literal("Zian Manager")).icon(()->new ItemStack(ManagerEquipment.item("flame_spear"))).displayItems((parameters,out)->{out.accept(ManagerBlocks.CHEST_ITEM.get());ManagerBlocks.CRATES.values().forEach(b->out.accept(b.get().asItem()));ManagerEquipment.ALL.values().forEach(i->out.accept(i.get()));}).build());}
+ static{TABS.register("equipment",()->CreativeModeTab.builder().title(Component.literal("Zian Manager")).icon(()->new ItemStack(ManagerEquipment.item("flame_spear"))).displayItems((parameters,out)->{ManagerBlocks.CRATES.values().forEach(b->out.accept(b.get().asItem()));ManagerEquipment.ALL.values().forEach(i->out.accept(i.get()));}).build());}
  public static void register(IEventBus bus){TABS.register(bus);}
 }

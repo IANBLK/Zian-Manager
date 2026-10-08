@@ -2,9 +2,9 @@ newmtl texture_0
 Kd 1 1 1
 Ka 1 1 1
 d 1
-map_Kd zianmanager:imported/altar_amaxe/0
+map_Kd zianmanager:item/imported/altar_amaxe/0
 newmtl texture_1
 Kd 1 1 1
 Ka 1 1 1
 d 1
-map_Kd zianmanager:imported/altar_amaxe/1
+map_Kd zianmanager:item/imported/altar_amaxe/1

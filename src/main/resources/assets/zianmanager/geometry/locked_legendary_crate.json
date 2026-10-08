@@ -3949,15 +3949,15 @@
   ],
   "textures": [
     {
-      "path": "zianmanager:textures/imported/locked_legendary_crate/0.png",
-      "material": "zianmanager:imported/locked_legendary_crate/0",
+      "path": "zianmanager:textures/item/imported/locked_legendary_crate/0.png",
+      "material": "zianmanager:item/imported/locked_legendary_crate/0",
       "width": 64,
       "height": 64,
       "sha256": "3270a82322fe2fd3895b2ff0f6db7c58ac9ff1eb9996151dd56abc4494bdea93"
     },
     {
-      "path": "zianmanager:textures/imported/locked_legendary_crate/1.png",
-      "material": "zianmanager:imported/locked_legendary_crate/1",
+      "path": "zianmanager:textures/item/imported/locked_legendary_crate/1.png",
+      "material": "zianmanager:item/imported/locked_legendary_crate/1",
       "width": 16,
       "height": 16,
       "sha256": "fa491cfe8a680c7f7172bbb9b8e9d7fb68fab253a8ddb9a9199049c59102405e"

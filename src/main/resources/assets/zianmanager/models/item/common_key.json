@@ -6,7 +6,7 @@
   "flip_v": false,
   "render_type": "minecraft:cutout",
   "textures": {
-    "particle": "zianmanager:imported/common_key/0"
+    "particle": "zianmanager:item/imported/common_key/0"
   },
   "display": {
     "thirdperson_righthand": {

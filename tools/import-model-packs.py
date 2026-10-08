@@ -7,8 +7,8 @@ manifest=[]
 def write(path,data):
  path.parent.mkdir(parents=True,exist_ok=True);path.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 def texture(id,index,pixels,uv):
- path=ASSETS/f'textures/imported/{id}/{index}.png';path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(pixels)
- return {'path':f'zianmanager:textures/imported/{id}/{index}.png','material':f'zianmanager:imported/{id}/{index}','width':uv[0],'height':uv[1],'sha256':hashlib.sha256(pixels).hexdigest()}
+ path=ASSETS/f'textures/item/imported/{id}/{index}.png';path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(pixels)
+ return {'path':f'zianmanager:textures/item/imported/{id}/{index}.png','material':f'zianmanager:item/imported/{id}/{index}','width':uv[0],'height':uv[1],'sha256':hashlib.sha256(pixels).hexdigest()}
 def rotate(v,r):
  x,y,z=v
  for i,a in enumerate(r):
@@ -37,7 +37,7 @@ def model(id,d,textures,source,free=False):
  scale=14/max(hi[i]-lo[i] for i in range(3)) if free else 1
  offset=[(lo[0]+hi[0])/2,lo[1],(lo[2]+hi[2])/2] if free else [0,0,0]
  raw={'cubes':cubes,'tree':tree,'textures':textures,'animations':d.get('animations',[]),'scale':scale,'offset':offset}
- if free:write(ASSETS/f'models/raw/{id}.json',raw)
+ if free:write(ASSETS/f'geometry/{id}.json',raw)
  lines=[f'mtllib {id}.mtl'];material=[];count=0
  for i,t in enumerate(textures):material += [f'newmtl texture_{i}','Kd 1 1 1','Ka 1 1 1','d 1',f'map_Kd {t["material"]}']
  def cube(e,transforms):
@@ -109,7 +109,7 @@ with ZipFile(DOWNLOADS/'altarbygwambassn2.zip') as z:
    for key,value in d['textures'].items():
     if key=='particle':continue
     src='assets/minecraft/textures/'+value.removeprefix('minecraft:')+'.png';p=z.read(src);uv=[16,16];lookup[key]=len(tx);tx.append(texture(id,len(tx),p,uv))
-    if src+'.mcmeta' in z.namelist():(ASSETS/f'textures/imported/{id}/{len(tx)-1}.png.mcmeta').write_bytes(z.read(src+'.mcmeta'))
+    if src+'.mcmeta' in z.namelist():(ASSETS/f'textures/item/imported/{id}/{len(tx)-1}.png.mcmeta').write_bytes(z.read(src+'.mcmeta'))
    for i,e in enumerate(d['elements']):
     e['uuid']=str(i);e['type']='cube'
     for f in e['faces'].values():f['texture']=lookup[f['texture'].removeprefix('#')]

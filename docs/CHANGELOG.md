@@ -1,3 +1,11 @@
+# 0.1.0-alpha.10
+
+- Texto flotante público y fijo sobre el centro de la dungeon con cuenta atrás de regeneración según su configuración.
+- Espera de seguridad de dos segundos entre intentos de abrir cofres con llave, por jugador y compartida entre cofres. Clics bloqueados no consumen llaves ni crean reclamaciones.
+- Limpieza de textos al finalizar la espera, desactivar/eliminar zona y reiniciar, evitando duplicados.
+- Reintento breve del reemplazo atómico ante acceso denegado transitorio; errores persistentes conservan la protección de entregas ambiguas.
+- Registro detallado de errores de escritura al abrir cofres. Las reclamaciones antiguas en revisión requieren comprobación manual.
+
 # 0.1.0-alpha.9
 
 - Cofres con llave: opción Sin tiempo de reutilización; cada apertura nueva consume una llave y genera otro sorteo. Los cofres libres mantienen renovación configurable.

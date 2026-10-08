@@ -1,12 +1,12 @@
 # Progreso de Zian Manager
 
-Actualizado el 8 de octubre de 2026. Versión de pruebas: **0.1.0-alpha.9**.
+Actualizado el 8 de octubre de 2026. Versión de pruebas: **0.1.0-alpha.10**.
 
 ## Estado guardado
 
 El desarrollo está en `feature/dungeon-core` y la propuesta completa está en [PR #1](https://github.com/IANBLK/Zian-Manager/pull/1). Sigue como borrador para las pruebas dentro del juego.
 
-Alpha.9 incorpora cofres con llave sin espera, apariciones automáticas dentro de zonas y porcentajes reales de drop solo para mobs normales. Las validaciones locales y límites se documentan en VALIDATION.md. La compilación y los registros también se generan en GitHub Actions; los mundos, cachés y credenciales quedan fuera del repositorio.
+Alpha.10 añade contador flotante de regeneración, protección de dos segundos entre usos de llaves y reintento breve de archivos bloqueados. Conserva cofres con llave sin espera, apariciones automáticas dentro de zonas y porcentajes reales de drop solo para mobs normales. Las validaciones locales y límites se documentan en VALIDATION.md. La compilación y los registros también se generan en GitHub Actions; los mundos, cachés y credenciales quedan fuera del repositorio.
 
 ## Implementado
 

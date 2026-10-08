@@ -48,3 +48,11 @@ Compilación y 36 pruebas unitarias superadas. Auditoría de 27 modelos activos 
 - Prueba nativa aislada con Lootr: dos aperturas inmediatas con una llave cada una; rechazo sin llave, cofres libres con espera, zona automática y aumento de dos mobs con segundo jugador. Prueba de reinicio conserva configuración y entregas.
 - Solo aparecen mobs si hay suelo sólido y espacio libre dentro del área; zonas estrechas pueden tener menos mobs. El límite es por oleada y no hay multiplicación al reentrar.
 - La presentación del cliente y entidades de otros mods necesitan comprobación dentro del juego; el servidor real no se modifica.
+
+## Alpha.10: cuenta atrás y espera de llaves
+
+- Compilación correcta y 56 pruebas unitarias sin fallos.
+- Prueba nativa con Lootr: 20 intentos rápidos consumen una sola llave y no dejan reclamaciones pendientes; después de la espera se consume la siguiente.
+- Texto de regeneración creado en el mundo durante el tiempo configurado de espera; usa un Text Display nativo visible para clientes compatibles.
+- La cuenta atrás se fija al centro y se actualiza cada segundo. La presentación visual con shaders aún requiere confirmación del usuario.
+- El reintento de escritura solo cubre acceso denegado transitorio. La captura no permite determinar la causa exacta del error anterior. No se borran ni repiten las reclamaciones que ya están en revisión.

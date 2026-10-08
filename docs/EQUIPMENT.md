@@ -1,4 +1,4 @@
-# Objetos, armas, cofres y zonas — alpha.9
+# Objetos, armas, cofres y zonas — alpha.10
 
 ## Pestaña creativa
 
@@ -110,3 +110,11 @@ En **Personajes → Acción** configura el botón principal y pulsa **Más boton
 El diálogo muestra las opciones en dos columnas y permite desplazar el texto. Cada botón ejecuta únicamente su comando guardado en el servidor; una sesión admite una pulsación. Los cooldowns son independientes por botón y jugador y persisten tras reiniciar. El botón **Restablecer usos** borra las esperas/revisiones de todas las opciones de ese NPC. Los NPC anteriores mantienen su comando y su espera principal.
 
 La escala considera el máximo de jugadores simultáneos de cada oleada. Salir y volver a entrar no añade mobs extra; no elimina mobs ya creados cuando un jugador sale. Las configuraciones anteriores conservan sus puntos guardados, pero las nuevas apariciones usan el área automáticamente.
+
+## Cuenta atrás y uso rápido de llaves
+
+Durante la espera posterior a completar una dungeon, aparece sobre su centro un texto público con minutos y segundos para regenerar los mobs. Se actualiza cada segundo y desaparece al terminar la espera, desactivar o eliminar la zona. Las zonas anteriores utilizan el punto medio de sus límites. No duplica textos al reiniciar.
+
+Todos los cofres con llave comparten una espera de seguridad de 40 ticks (dos segundos en condiciones normales) por jugador. Los clics bloqueados muestran el aviso sobre la barra rápida, sin consumir llaves ni crear premios. No prolongan la espera; otros jugadores conservan sus propios usos. Esta espera se aplica también si se desactivó el tiempo de renovación del cofre.
+
+La escritura conserva el reemplazo atómico y reintenta brevemente errores de acceso transitorios. Un error persistente conserva el bloqueo de seguridad. Las entregas que ya figuraban en revisión no se borran ni vuelven a pagarse automáticamente: deben revisarse para evitar duplicar objetos ya recibidos.

@@ -37,6 +37,7 @@ public final class ManagerRuntime {
     private record Death(Mob mob,net.minecraft.world.damagesource.DamageSource source){}
     private final Map<UUID,Death> deaths=new LinkedHashMap<>();
     private final Map<UUID,Mob> previews=new HashMap<>();private final Map<UUID,Session> sessions=new HashMap<>();private final Map<UUID,ServerBossEvent> bars=new HashMap<>();private final Map<UUID,Integer> missing=new HashMap<>();private long ticks;
+    private final KeyUseGate keyUseGate=new KeyUseGate();private final ZoneHolograms holograms=new ZoneHolograms();
     private record Session(UUID token,String type,String id,long until,BlockPos pos){}
     public static ManagerRuntime get(){return instance;}
     public ManagerStore store(){ready();return store;}
@@ -45,7 +46,7 @@ public final class ManagerRuntime {
     public ManagerRuntime(){
         instance=this;
         NeoForge.EVENT_BUS.addListener((ServerStartedEvent e)->start(e.getServer()));
-        NeoForge.EVENT_BUS.addListener((ServerStoppedEvent e)->{bars.values().forEach(ServerBossEvent::removeAllPlayers);bars.clear();previews.values().forEach(Entity::discard);previews.clear();deaths.clear();sessions.clear();missing.clear();spawnRetry.clear();server=null;store=null;ledger=null;loot=null;npcCommands=null;});
+        NeoForge.EVENT_BUS.addListener((ServerStoppedEvent e)->{bars.values().forEach(ServerBossEvent::removeAllPlayers);bars.clear();previews.values().forEach(Entity::discard);previews.clear();deaths.clear();sessions.clear();missing.clear();spawnRetry.clear();keyUseGate.clear();holograms.clear();server=null;store=null;ledger=null;loot=null;npcCommands=null;});
         NeoForge.EVENT_BUS.addListener(this::tick);
         NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST,this::drops);
         NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST,(net.neoforged.neoforge.event.entity.living.LivingDeathEvent e)->{
@@ -66,7 +67,7 @@ public final class ManagerRuntime {
             if(e.getEntity() instanceof ServerPlayer player && store!=null){var npc=store.data().npcs().get(e.getTarget().getUUID());if(npc!=null){e.setCanceled(true);e.setCancellationResult(net.minecraft.world.InteractionResult.SUCCESS);openDialogue(player,npc);}}
         });
         NeoForge.EVENT_BUS.addListener((EntityJoinLevelEvent e)->{
-            if(e.getLevel().isClientSide)return;var tag=e.getEntity().getPersistentData();if(tag.getBoolean("ZianManagerPreview") && !previews.containsKey(e.getEntity().getUUID())){e.setCanceled(true);return;}if(store!=null && tag.getBoolean("ZianManagerNpc") && !store.data().npcs().containsKey(e.getEntity().getUUID())){e.setCanceled(true);return;}if(ledger==null)return;
+            if(e.getLevel().isClientSide)return;var tag=e.getEntity().getPersistentData();if(tag.getBoolean("ZianManagerCountdown") && !holograms.owns(e.getEntity().getUUID())){e.setCanceled(true);return;}if(tag.getBoolean("ZianManagerPreview") && !previews.containsKey(e.getEntity().getUUID())){e.setCanceled(true);return;}if(store!=null && tag.getBoolean("ZianManagerNpc") && !store.data().npcs().containsKey(e.getEntity().getUUID())){e.setCanceled(true);return;}if(ledger==null)return;
             if(tag.contains("ZianManagerRun")){
                 var run=ledger.get(tag.getString("ZianManagerZone"));
                 if(run==null || !run.uuid().toString().equals(tag.getString("ZianManagerRun")) || run.phase()==Phase.CANCELLED || run.spawns().stream().noneMatch(s->s.uuid().equals(e.getEntity().getUUID()) && !s.defeated())){e.setCanceled(true);}
@@ -95,10 +96,11 @@ public final class ManagerRuntime {
             if(admin(player) && (player.isShiftKeyDown() || chest==null)){view(player,"chest",chest==null?"":chest.uuid().toString(),pos,"");return;}
             if(!ManagerPermissions.allows(player.createCommandSourceStack(),"loot",false))throw new IllegalArgumentException("No tienes permiso para abrir este cofre");
             if(chest==null)throw new IllegalArgumentException("Cofre sin configurar. El administrador debe usar Shift + clic derecho.");
+            if(!ManagerBlocks.keyFor(chest.block()).isEmpty()){long delay=keyUseGate.enter(player.getUUID(),server.getTickCount());if(delay>0){player.displayClientMessage(Component.literal("Espera "+((delay+19)/20)+" segundo(s) para usar otra llave."),true);return;}}
             long wait=loot.remaining(player,"chest."+chest.uuid(),chest.minutes());if(wait>0)throw new IllegalArgumentException("Loot disponible en "+((wait+59999)/60000)+" minuto(s)");
             var claim=loot.reserve(player,"chest."+chest.uuid(),chest.loot(),chest.minutes(),pos);
             if(claim.review()){player.sendSystemMessage(Component.literal("Entrega pendiente de revisión; no se repetirá."));return;}player.serverLevel().blockEvent(pos,player.serverLevel().getBlockState(pos).getBlock(),1,1);loot.deliver(player,claim.id());
-        }catch(Exception error){player.sendSystemMessage(Component.literal(error.getMessage()));}
+        }catch(Exception error){if(error instanceof java.io.IOException)ZianManager.LOGGER.error("Chest delivery failed player={} position={}; preserved for review",player.getUUID(),pos,error);player.sendSystemMessage(Component.literal(error.getMessage()));}
     }
     public void view(ServerPlayer player,String type,String id,BlockPos context,String notice){
         UUID token=UUID.randomUUID();sessions.put(player.getUUID(),new Session(token,type,id,System.currentTimeMillis()+300000,context));
@@ -267,6 +269,7 @@ public final class ManagerRuntime {
     private void tick(ServerTickEvent.Post event){
         if(event.getServer()!=server || store==null)return;for(var death:List.copyOf(deaths.values()))died(death);deaths.clear();if(++ticks%20!=0)return;long now=System.currentTimeMillis();sessions.values().removeIf(s->s.until<now);
         try{
+            keyUseGate.expire(server.getTickCount());holograms.update(server,store,ledger,now);
             previews.entrySet().removeIf(e->{if(e.getValue().tickCount>400 || e.getValue().isRemoved()){e.getValue().discard();return true;}return false;});
             for(var chest:store.data().chests().values()){var level=level(chest.dimension());var pos=new BlockPos(chest.x(),chest.y(),chest.z());if(level!=null && level.getChunkSource().hasChunk(pos.getX()>>4,pos.getZ()>>4) && !level.getBlockState(pos).is(ManagerBlocks.chestState(chest.block()).getBlock()))level.setBlockAndUpdate(pos,ManagerBlocks.chestState(chest.block()).setValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING,net.minecraft.core.Direction.byName(chest.facing())));}
             if(ticks%100==0)store.data().npcs().values().forEach(this::placeNpc);

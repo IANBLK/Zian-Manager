@@ -2,7 +2,7 @@
 
 **Administra dungeons dentro del juego:** mobs personalizados, jefes, zonas con oleadas, loot personal y NPC de diálogo.
 
-**0.1.0-alpha.9 · Minecraft 1.21.1 · NeoForge 21.1.252 · Java 21**
+**0.1.0-alpha.10 · Minecraft 1.21.1 · NeoForge 21.1.252 · Java 21**
 
 Instala el mismo JAR en cliente y servidor. Es independiente de Cobblemon, RCT API y RCT Mod. Lootr y LuckPerms son opcionales.
 
@@ -36,7 +36,7 @@ Abre `/zianmanager`. El inicio muestra **Mobs y jefes**, **Tablas de recompensas
 ### Mobs, zonas y personajes
 
 - **Mobs y jefes:** pestañas **Básico**, **Combate**, **Equipo**, **Efectos** y **Avanzado**. Elige entidad y recompensas con selectores. Para equipar, elige la ranura y copia el objeto en mano. El selector de efectos permite elegir nombre, nivel y duración; el formato manual sigue disponible en Avanzado. La vista previa dura 20 segundos, es inmóvil y no da loot.
-- **Zonas:** pestañas **General**, **Ubicación**, **Tamaño** y **Oleadas**. El selector permite elegir de 1 a 8 tipos de mob. Crea la zona desde el bloque bajo tus pies, ajusta su tamaño alrededor del centro ; los mobs aparecen automáticamente sobre suelo libre dentro del área. Configura pausas, reaparición y recompensa de finalización. Activa la zona cuando esté lista. Puedes probar o detener el encuentro desde Oleadas.
+- **Zonas:** pestañas **General**, **Ubicación**, **Tamaño** y **Oleadas**. El selector permite elegir de 1 a 8 tipos de mob. Crea la zona desde el bloque bajo tus pies, ajusta su tamaño alrededor del centro ; los mobs aparecen automáticamente sobre suelo libre dentro del área. Configura pausas, reaparición y recompensa de finalización. Al completar la dungeon aparece un texto flotante fijo sobre el centro con el tiempo restante para su regeneración. Activa la zona cuando esté lista. Puedes probar o detener el encuentro desde Oleadas.
 - **Personajes:** pestañas **Apariencia**, **Diálogo** y **Acción**. Elige la skin, escribe el diálogo en varias líneas y configura el botón/comando opcional. Puedes mover el personaje a tu posición y restablecer sus usos después de revisar entregas.
 - **Cofres:** el botón **Obtener cofre** evita escribir otro comando. Colócalo y usa **Shift + clic derecho**; selecciona la tabla y su renovación. En las variantes con llave puedes activar **Sin tiempo de reutilización**.
 
@@ -62,7 +62,7 @@ Sin entradas propias puedes indicar una tabla nativa de **cofre**, por ejemplo `
 
 ## 🗝️ Cofres personales
 
-Usa `/zianmanager givechest`, coloca el cofre y **Shift + clic derecho** para asignarle tabla y renovación en minutos. Cada jugador tiene su propio sorteo y tiempo. En un cofre con llave, **Sin tiempo de reutilización** permite abrirlo de nuevo inmediatamente consumiendo otra llave; los cofres sin llave mantienen una renovación de al menos un minuto.
+Usa `/zianmanager givechest`, coloca el cofre y **Shift + clic derecho** para asignarle tabla y renovación en minutos. Cada jugador tiene su propio sorteo y tiempo. En un cofre con llave, **Sin tiempo de reutilización** permite abrirlo de nuevo inmediatamente consumiendo otra llave, con una espera de seguridad de dos segundos entre usos por jugador; los cofres sin llave mantienen una renovación de al menos un minuto.
 
 **Clic derecho entrega el loot automáticamente**, sin pantalla de premios, para poder ver la animación. Los objetos van al inventario; lo que no cabe aparece al suelo junto al jugador, también en creativo. Cada entrega conserva el sorteo y el registro de consumo de llave. Las entregas ambiguas quedan en revisión y no se repiten automáticamente.
 

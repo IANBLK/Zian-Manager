@@ -24,7 +24,7 @@ import java.util.*;
 /** Opt-in localhost integration fixtures; never runs in normal servers. */
 public final class ManagerSmoke {
     private int phase,ticks;private boolean done;private ServerPlayer first,second;private UUID originalRun;private BlockPos chest;private long spawned;
-    private UUID firstId,secondId;
+    private UUID firstId,secondId;private int initialMobs;
     private static final UUID FIRST=UUID.fromString("00000000-0000-0000-0000-000000000111"),SECOND=UUID.fromString("00000000-0000-0000-0000-000000000112"),CHEST=UUID.fromString("00000000-0000-0000-0000-000000000113"),NPC=UUID.fromString("00000000-0000-0000-0000-000000000114");
     public ManagerSmoke(){if(!"true".equals(System.getenv("ZIANMANAGER_SMOKE")))return;NeoForge.EVENT_BUS.addListener(this::tick);}
     private void tick(ServerTickEvent.Post event){if(done)return;var server=event.getServer();try{
@@ -67,7 +67,7 @@ public final class ManagerSmoke {
             CenteredZoneSmoke.verify(runtime,first);EquipmentSmoke.setup(runtime,first);EquipmentSmoke.directOverflow(runtime,first,false);EquipmentSmoke.directOverflow(runtime,second,true);
             store.put(new NpcSpec(NPC,"minecraft:overworld",new Point(x+10,y,z,90),"Guía de prueba","Bienvenido a la dungeon."));
             var points=List.of(new Point(x+2.5,y,z+4.5,0),new Point(x+5.5,y,z+4.5,0),new Point(x+8.5,y,z+4.5,0));
-            store.put(new ZoneSpec("smoke_room","minecraft:overworld",new Point(x-2,y,z-2,0),new Point(x+12,y+6,z+8,0),points,List.of("smoke_guard","smoke_guard","smoke_guard"),2,1,10,"smoke_boss",true));
+            store.put(new ZoneSpec("smoke_room","minecraft:overworld",new Point(x-2,y,z-2,0),new Point(x+12,y+6,z+8,0),List.of(),List.of("smoke_guard"),2,1,10,"smoke_boss",true));
             level.setBlockAndUpdate(chest,net.minecraft.world.level.block.Blocks.AIR.defaultBlockState());phase=1;ticks=0;return;
         }
         var run=runtime.encounter("smoke_room");
@@ -85,12 +85,17 @@ public final class ManagerSmoke {
             int breadBefore=first.getInventory().countItem(Items.BREAD);runtime.openDialogue(first,store.data().npcs().get(NPC));session=sessions.get(firstId);token=(UUID)tokenMethod.invoke(session);runtime.action(first,new ManagerNetwork.Action(token,"npc_command","{\"button\":\"bonus\"}"));if(first.getInventory().countItem(Items.BREAD)!=breadBefore+1)throw new IllegalStateException("Second NPC button blocked by main cooldown");runtime.openDialogue(first,store.data().npcs().get(NPC));session=sessions.get(firstId);token=(UUID)tokenMethod.invoke(session);runtime.action(first,new ManagerNetwork.Action(token,"npc_command","{\"button\":\"bonus\"}"));if(first.getInventory().countItem(Items.BREAD)!=breadBefore+1)throw new IllegalStateException("Second NPC button ignored its own cooldown");ZianManager.LOGGER.info("Zian Manager multiple NPC buttons smoke passed: independent commands, non-OP access and cooldowns");
 
 
-            if(run==null || run.phase()!=Phase.ACTIVE || run.spawns().size()!=3)throw new IllegalStateException("Entry did not create one shared three-mob encounter");originalRun=run.uuid();
-            for(var slot:run.spawns()){var mob=(Mob)level.getEntity(slot.uuid());if(mob==null || mob.getMaxHealth()!=40 || mob.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.HEAD).isEmpty())throw new IllegalStateException("Configured mob attributes/equipment missing");mob.hurt(level.damageSources().playerAttack(first),1000);}
+            if(run==null || run.phase()!=Phase.ACTIVE || run.spawns().size()<1 || run.spawns().size()>3)throw new IllegalStateException("Single-template automatic zone did not create 1-3 mobs");originalRun=run.uuid();initialMobs=run.spawns().size();
+            phase=5;ticks=0;return;
+        }
+        if(phase==5 && ++ticks>40){
+            if(run.spawns().size()!=initialMobs+2 || run.scaledPlayers()!=2 || !run.uuid().equals(originalRun))throw new IllegalStateException("Second player did not add exactly two mobs to shared encounter");
+            var zone=store.data().zones().get("smoke_room");
+            for(var slot:run.spawns()){var mob=(Mob)level.getEntity(slot.uuid());if(mob==null || mob.getMaxHealth()!=40 || mob.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.HEAD).isEmpty() || !zone.contains(zone.dimension(),slot.point().x(),slot.point().y(),slot.point().z()))throw new IllegalStateException("Automatic spawn outside zone or missing configured attributes");mob.hurt(level.damageSources().playerAttack(first),1000);}
             phase=2;ticks=0;return;
         }
         if(phase==2 && ++ticks>40){if(run.wave()!=2 || run.phase()!=Phase.ACTIVE || !run.uuid().equals(originalRun))throw new IllegalStateException("Second wave missing or duplicate encounter");for(var slot:run.spawns())((Mob)level.getEntity(slot.uuid())).hurt(level.damageSources().playerAttack(first),1000);phase=3;ticks=0;return;}
         if(phase==3){if(run.phase()!=Phase.COMPLETE)throw new IllegalStateException("Zone did not complete");phase=4;ticks=0;return;}
-        if(phase==4){if(run.uuid().equals(originalRun)){if(++ticks>400)throw new IllegalStateException("Cooldown did not spawn a fresh encounter");return;}if(run.phase()!=Phase.ACTIVE)throw new IllegalStateException("Respawn not active");runtime.cancel("smoke_room");if(!runtime.loot().pending(firstId).isEmpty())throw new IllegalStateException("Native loot remained unconfirmed");Files.writeString(marker,firstId+"\n"+secondId+"\n");ZianManager.LOGGER.info("Zian Manager native smoke passed: shared zone, 3-mob waves, respawn, item readback, personal chest, survival protection/creative admin removal/no recipe, dialogue NPC; Lootr={}",net.neoforged.fml.ModList.get().isLoaded("lootr"));done=true;}
+        if(phase==4){if(run.uuid().equals(originalRun)){if(++ticks>400)throw new IllegalStateException("Cooldown did not spawn a fresh encounter");return;}if(run.phase()!=Phase.ACTIVE)throw new IllegalStateException("Respawn not active");runtime.cancel("smoke_room");if(!runtime.loot().pending(firstId).isEmpty())throw new IllegalStateException("Native loot remained unconfirmed");Files.writeString(marker,firstId+"\n"+secondId+"\n");ZianManager.LOGGER.info("Zian Manager native smoke passed: shared automatic single-template zone, 1-3 mobs plus two per extra player, respawn, item readback, personal chest, survival protection/creative admin removal/no recipe, dialogue NPC; Lootr={}",net.neoforged.fml.ModList.get().isLoaded("lootr"));done=true;}
     }catch(Exception error){done=true;ZianManager.LOGGER.error("Zian Manager native smoke FAILED",error);}}
 }

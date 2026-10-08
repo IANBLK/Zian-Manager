@@ -8,12 +8,12 @@ public record RewardClaim(UUID id, UUID player, String trainer, long created, Li
     public RewardClaim(UUID id,UUID player,String trainer,long created,List<Part> parts){this(id,player,trainer,created,parts,0,0,null);}
     public long nextEligibleAt(){return Math.addExact(created,Math.multiplyExact(cooldownMinutes,60000L));}
     public RewardClaim {
-        if((cycle>0 && cooldownMinutes==0) || (cooldownMinutes>0 && battle==null))
+        if((cycle>0 || cooldownMinutes>0) && battle==null)
             throw new IllegalArgumentException("Ciclo repetible sin evidencia de combate");
         if (id == null || player == null || created < 0 || cycle < 0 || cooldownMinutes < 0 || cooldownMinutes > 43200) throw new IllegalArgumentException("Reclamación inválida");
         RewardIds.validId(trainer);
         parts = List.copyOf(parts);
-        if (parts.isEmpty() || parts.size() > 32) throw new IllegalArgumentException("Componentes inválidos");
+        if (parts.size() > 32) throw new IllegalArgumentException("Componentes inválidos");
     }
     public boolean complete() { return parts.stream().allMatch(p -> p.phase() == Phase.DELIVERED); }
     public boolean review() { return parts.stream().anyMatch(p -> p.phase() == Phase.APPLYING || p.phase() == Phase.REVIEW_REQUIRED); }

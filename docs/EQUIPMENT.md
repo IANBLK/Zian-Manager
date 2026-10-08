@@ -1,4 +1,4 @@
-# Objetos, armas, cofres y zonas — alpha.8
+# Objetos, armas, cofres y zonas — alpha.9
 
 ## Pestaña creativa
 
@@ -48,7 +48,7 @@ locked_legendary_crate  → legendary_key
 
 Todos llevan prefijo `zianmanager:`. La llave puede estar en el inventario; no tiene que estar en la mano. Una llave incorrecta no abre el cofre. **Clic derecho consume una llave y entrega el loot directamente**, sin una pantalla que tape la animación. Los objetos que no caben en el inventario aparecen al suelo junto al jugador, incluso en creativo; quedan reservados para ese jugador mediante la propiedad nativa de dueño del objeto.
 
-El sorteo queda registrado antes de entregar. Una reclamación pagada no consume otra llave. La entrega confirma el inventario guardado y, si hay sobrantes, guarda las entidades del mundo antes de completar el registro. Volver a hacer clic durante la renovación no duplica la entrega.
+El sorteo queda registrado antes de entregar. Una reclamación pagada no consume otra llave. La entrega confirma el inventario guardado y, si hay sobrantes, guarda las entidades del mundo antes de completar el registro. Volver a hacer clic durante la renovación no duplica la entrega. En los cofres con llave, la opción **Sin tiempo de reutilización** permite un nuevo sorteo inmediato con otra llave. Los cofres sin llave conservan renovación configurable de al menos un minuto.
 
 Una interrupción ambigua pausa el consumo para revisión; no se descuenta otra llave automáticamente. Después de verificar o compensar manualmente, el administrador puede confirmar el coste:
 
@@ -64,9 +64,9 @@ Este comando no crea objetos ni llaves; confirma la revisión de su consumo. Los
 2. Colócate sobre el bloque que quieres como centro y, en **Ubicación**, pulsa **Crear zona de dungeon**. Se utiliza el bloque bajo tus pies.
 3. En **Tamaño**, ajusta los bloques a cada lado en **X** y **Z**, los bloques por encima y por debajo. Puedes escribir valores o usar **− / +**. Radio 3 significa 3 bloques por lado más el central: **7×7**.
 4. La vista se actualiza mientras editas los valores válidos. **Aplicar tamaño** guarda el área; **Cerrar y ver zona** permite caminar y observarla. El HUD distingue una vista previa sin guardar.
-5. El centro aparece en dorado, el contorno en azul y las apariciones de mobs con marcadores. Añade un punto libre por cada mob desde Ubicación; activa la zona cuando esté lista.
+5. El centro aparece en dorado, el contorno en azul y las apariciones de mobs con marcadores. Elige de 1 a 8 tipos de mob desde General y activa la zona: no necesitas puntos manuales. El primer jugador inicia 1–3 mobs; cada jugador adicional añade dos, hasta ocho por oleada.
 
-Cambiar el tamaño conserva el centro. El centro queda bloqueado después de crearlo; el botón pasa a **Centro fijado**. Volver a solicitar la creación conserva ese centro. Para una ubicación distinta, crea otra zona. Un encuentro activo debe detenerse antes de editar el área; los puntos deben permanecer dentro de una zona habilitada. **Mostrar / ocultar** conserva el control de la guía, que se muestra en su dimensión durante diez minutos.
+Cambiar el tamaño conserva el centro. El centro queda bloqueado después de crearlo; el botón pasa a **Centro fijado**. Volver a solicitar la creación conserva ese centro. Para una ubicación distinta, crea otra zona. Un encuentro activo debe detenerse antes de editar el área. Los mobs buscan suelo firme y espacio libre dentro del área; si falta espacio pueden aparecer menos. **Mostrar / ocultar** conserva el control de la guía, que se muestra en su dimensión durante diez minutos.
 
 Las zonas anteriores mantienen sus límites y progreso al cargar. Puedes convertirlas al modo centrado creando el centro o aplicando tamaño; no se redimensionan automáticamente al actualizar el mod.
 
@@ -108,3 +108,5 @@ Los IDs siguen siendo los mismos para conservar inventarios, encantamientos y ta
 En **Personajes → Acción** configura el botón principal y pulsa **Más botones…** para añadir hasta siete adicionales. Cada uno tiene texto, comando y espera por jugador. Usa **Aplicar botones** y luego **Guardar cambios**. Un comando principal vacío permite un diálogo con solo los adicionales.
 
 El diálogo muestra las opciones en dos columnas y permite desplazar el texto. Cada botón ejecuta únicamente su comando guardado en el servidor; una sesión admite una pulsación. Los cooldowns son independientes por botón y jugador y persisten tras reiniciar. El botón **Restablecer usos** borra las esperas/revisiones de todas las opciones de ese NPC. Los NPC anteriores mantienen su comando y su espera principal.
+
+La escala considera el máximo de jugadores simultáneos de cada oleada. Salir y volver a entrar no añade mobs extra; no elimina mobs ya creados cuando un jugador sale. Las configuraciones anteriores conservan sus puntos guardados, pero las nuevas apariciones usan el área automáticamente.

@@ -1,20 +1,21 @@
 # Progreso de Zian Manager
 
-Actualizado el 8 de octubre de 2026. Versión de pruebas: **0.1.0-alpha.8**.
+Actualizado el 8 de octubre de 2026. Versión de pruebas: **0.1.0-alpha.9**.
 
 ## Estado guardado
 
 El desarrollo está en `feature/dungeon-core` y la propuesta completa está en [PR #1](https://github.com/IANBLK/Zian-Manager/pull/1). Sigue como borrador para las pruebas dentro del juego.
 
-La implementación de alpha.8 corresponde al commit `757f43422a043bee9fee072571d384deb06d1245`. [Las comprobaciones de GitHub](https://github.com/IANBLK/Zian-Manager/actions/runs/37749567467) terminaron correctamente: compilación, 45 pruebas unitarias, auditoría de modelos, servidor local y reinicio, con y sin Lootr.
-
-El JAR y los registros están disponibles como artefacto `zianmanager-alpha-and-evidence` en esa ejecución. No se guardan mundos de prueba, cachés, credenciales ni archivos del servidor Rassvet en el repositorio.
+Alpha.9 incorpora cofres con llave sin espera, apariciones automáticas dentro de zonas y porcentajes reales de drop solo para mobs normales. Las validaciones locales y límites se documentan en VALIDATION.md. La compilación y los registros también se generan en GitHub Actions; los mundos, cachés y credenciales quedan fuera del repositorio.
 
 ## Implementado
 
 - Mobs y jefes configurables, equipo, efectos, encuentros compartidos, oleadas y renovación.
+- Zonas con 1–8 tipos seleccionados, sin puntos manuales: 1–3 iniciales, +2 por jugador simultáneo adicional y máximo ocho por oleada.
 - Zonas creadas desde el bloque central, tamaño X/Z/altura/profundidad, vista previa y centro bloqueado. Corregida la doble transformación de cámara del contorno.
 - Editor de loot visual inspirado en el gacha; selección ponderada sin repetir entradas y tablas para mobs, jefes y cofres.
+- Modo opcional de porcentaje real por entrada exclusivamente para mobs; puede no haber drop. Jefes y cofres mantienen sorteo por peso.
+- Cofres con llave pueden abrirse sin espera consumiendo una llave por sorteo; cofres libres mantienen renovación.
 - Cofres importados con apertura directa, animaciones y variantes con llave. Loot al inventario, sobrantes al suelo y resumen de objetos/cantidades en el chat.
 - Registro persistente de recompensas, consumo de llave, renovación y revisión de entregas ambiguas.
 - NPC humanos Alex/slim con diez skins, diálogo y hasta ocho botones de comando con esperas independientes.
@@ -23,7 +24,7 @@ El JAR y los registros están disponibles como artefacto `zianmanager-alpha-and-
 
 ## Validación realizada
 
-Pruebas locales y GitHub confirman daño, efectos y duración, absorción temporal, encantamientos, lanzamiento conservando Lealtad, minería protegida 3×3×1, zona centrada y redimensionado, comandos de NPC sin OP, esperas por botón, apertura de cofre sin pantalla, inventario lleno en supervivencia/creativo, no duplicación, llaves y persistencia después de reiniciar.
+Las pruebas locales confirman daño, efectos y duración, absorción temporal, encantamientos, lanzamiento conservando Lealtad, minería protegida 3×3×1, zona centrada y redimensionado, comandos de NPC sin OP, esperas por botón, apertura de cofre sin pantalla, inventario lleno en supervivencia/creativo, no duplicación, llaves y persistencia después de reiniciar.
 
 El usuario confirmó funcionamiento durante versiones anteriores y aportó las capturas que guiaron las correcciones de texturas e interfaz. La corrección visual más reciente aún necesita confirmación del usuario.
 

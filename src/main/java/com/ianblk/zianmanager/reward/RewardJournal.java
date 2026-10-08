@@ -60,13 +60,16 @@ public final class RewardJournal {
         var last=latest(player,trainer);
         if(last==null)return 0;
         if(!last.complete())return -2;
-        if(definition.mode()==RewardDefinition.Mode.UNIQUE)return -1;
+        if(definition.mode()==RewardDefinition.Mode.UNIQUE)return -1;if(definition.cooldownMinutes()==0)return 0;
         return Math.max(0,last.nextEligibleAt()-now);
     }
     public synchronized boolean reserve(UUID player, String trainer, RewardDefinition reward) throws IOException {
         return reserveAt(player,trainer,reward,System.currentTimeMillis(),null);
     }
     public synchronized boolean reserveAt(UUID player,String trainer,RewardDefinition reward,long now,UUID battle) throws IOException {
+        return reserveAt(player,trainer,reward,now,battle,false);
+    }
+    public synchronized boolean reserveAt(UUID player,String trainer,RewardDefinition reward,long now,UUID battle,boolean recordEmpty) throws IOException {
         ensureHealthy();
         var last=latest(player,trainer);
         if(remaining(player,trainer,reward,now)!=0)return false;
@@ -74,7 +77,7 @@ public final class RewardJournal {
         if(battle!=null && claims.values().stream().anyMatch(c -> c.player().equals(player) && c.trainer().equals(trainer) && battle.equals(c.battle())))return false;
         long cycle=last==null?0:Math.addExact(last.cycle(),1);
         UUID id=id(player,trainer,cycle);
-        if (reward.empty()) return false;
+        if (reward.empty() && !recordEmpty) return false;
         List<RewardClaim.Part> parts = new ArrayList<>();
         for (String item : reward.items()) parts.add(new RewardClaim.Part(RewardClaim.Kind.ITEM, item, 1, RewardClaim.Phase.PENDING, ""));
         if (reward.coins() > 0) parts.add(new RewardClaim.Part(RewardClaim.Kind.COINS, reward.currency(), reward.coins(), RewardClaim.Phase.PENDING, ""));

@@ -1,3 +1,12 @@
+# 0.1.0-alpha.9
+
+- Cofres con llave: opción Sin tiempo de reutilización; cada apertura nueva consume una llave y genera otro sorteo. Los cofres libres mantienen renovación configurable.
+- Zonas automáticas sin puntos manuales: selección de 1–8 tipos de mob, 1–3 iniciales, dos por jugador simultáneo adicional y máximo ocho por oleada.
+- Suelo firme y espacio libre dentro del área; centro y guía visual conservados.
+- Registro de población y participación persistente. Reentrar no crea oleadas adicionales.
+- Modo opcional de porcentajes absolutos solo para mobs: cada entrada se comprueba independientemente y puede no haber drop; jefes y cofres conservan selección por peso. El resultado vacío queda registrado para impedir rerolls.
+- Pruebas de entregas consecutivas con llave y sin espera, zonas con una sola plantilla y escalado compartido.
+
 # 0.1.0-alpha.8
 
 - Corregida la doble transformación de cámara del contorno de zonas: ahora se dibuja una sola vez en el espacio del mundo.

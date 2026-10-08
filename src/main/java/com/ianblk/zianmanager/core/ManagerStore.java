@@ -6,6 +6,7 @@ import java.util.*;
 public final class ManagerStore {
     public record Data(int schema,Map<String,MobSpec> mobs,Map<String,LootSpec> loot,Map<String,ZoneSpec> zones,Map<UUID,ChestSpec> chests,Map<UUID,NpcSpec> npcs){
         public Data{if(schema!=1)throw new IllegalArgumentException("Versión desconocida");mobs=Map.copyOf(mobs);loot=Map.copyOf(loot);zones=Map.copyOf(zones);chests=Map.copyOf(chests);npcs=Map.copyOf(npcs);if(mobs.size()>128 || loot.size()>128 || zones.size()>64 || chests.size()>512 || npcs.size()>256)throw new IllegalArgumentException("Demasiadas definiciones");
+            for(var table:loot.values())if(table.independent() && (mobs.values().stream().anyMatch(m->m.boss() && m.loot().equals(table.id())) || chests.values().stream().anyMatch(c->c.loot().equals(table.id())) || zones.values().stream().anyMatch(z->z.completionLoot().equals(table.id()))))throw new IllegalArgumentException("Porcentajes reales solo para mobs normales; esta tabla está usada por un jefe, cofre o finalización de zona");
             mobs.forEach((k,v)->{if(!k.equals(v.id()))throw new IllegalArgumentException("ID incorrecto");});loot.forEach((k,v)->{if(!k.equals(v.id()))throw new IllegalArgumentException("ID incorrecto");});zones.forEach((k,v)->{if(!k.equals(v.id()))throw new IllegalArgumentException("ID incorrecto");});
         }
     }

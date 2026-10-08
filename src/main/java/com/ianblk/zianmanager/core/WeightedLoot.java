@@ -3,6 +3,9 @@ import java.util.*;
 import com.ianblk.zianmanager.core.Definitions.LootEntry;
 public final class WeightedLoot {
     private WeightedLoot(){}
+    public static List<LootEntry> independent(List<LootEntry> entries,Random random){
+        var result=new ArrayList<LootEntry>();for(var entry:entries){if(entry.weight()<1 || entry.weight()>100)throw new IllegalArgumentException("Porcentaje fuera de 1–100");if(random.nextInt(100)<entry.weight())result.add(entry);}return List.copyOf(result);
+    }
     public static List<LootEntry> select(List<LootEntry> entries,int count,Random random){
         var remaining=new ArrayList<>(entries);var result=new ArrayList<LootEntry>();
         for(int i=0;i<count && !remaining.isEmpty();i++){

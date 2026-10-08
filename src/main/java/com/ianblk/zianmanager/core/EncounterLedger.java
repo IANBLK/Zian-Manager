@@ -6,8 +6,9 @@ import java.io.IOException;
 public final class EncounterLedger {
     public enum Phase { ACTIVE, WAITING, COMPLETE, REVIEW, CANCELLED }
     public record Spawn(UUID uuid,String template,Point point,boolean defeated){public Spawn{Objects.requireNonNull(uuid);Definitions.id(template);Objects.requireNonNull(point);}}
-    public record Run(UUID uuid,String zone,int wave,Phase phase,long readyAt,List<Spawn> spawns,Set<UUID> players){
-        public Run{Objects.requireNonNull(uuid);Definitions.id(zone);Objects.requireNonNull(phase);spawns=List.copyOf(spawns);players=Set.copyOf(players);if(wave<1 || wave>16 || readyAt<0 || spawns.size()>6 || players.size()>64)throw new IllegalArgumentException("Encuentro inválido");}
+    public record Run(UUID uuid,String zone,int wave,Phase phase,long readyAt,List<Spawn> spawns,Set<UUID> players,int baseMobs,int scaledPlayers){
+        public Run(UUID uuid,String zone,int wave,Phase phase,long readyAt,List<Spawn> spawns,Set<UUID> players){this(uuid,zone,wave,phase,readyAt,spawns,players,0,0);}
+        public Run{Objects.requireNonNull(uuid);Definitions.id(zone);Objects.requireNonNull(phase);spawns=List.copyOf(spawns);players=Set.copyOf(players);if(wave<1 || wave>16 || readyAt<0 || spawns.size()>8 || players.size()>64 || baseMobs<0 || baseMobs>3 || scaledPlayers<0 || scaledPlayers>64)throw new IllegalArgumentException("Encuentro inválido");}
     }
     private record Data(int schema,Map<String,Run> runs){Data{if(schema!=1)throw new IllegalArgumentException("Versión desconocida");runs=Map.copyOf(runs);}}
     private final Path path;private Map<String,Run> runs;
@@ -21,6 +22,6 @@ public final class EncounterLedger {
         for(var slot:old.spawns){if(slot.uuid.equals(entity) && !slot.defeated){next.add(new Spawn(slot.uuid,slot.template,slot.point,true));changed=true;}else next.add(slot);}
         if(!changed)return false;
         boolean done=next.stream().allMatch(Spawn::defeated);Phase phase=done?(old.wave>=totalWaves?Phase.COMPLETE:Phase.WAITING):Phase.ACTIVE;
-        put(new Run(old.uuid,old.zone,old.wave,phase,done?Math.addExact(now,Math.multiplyExact(1000L,phase==Phase.COMPLETE?cooldown:pause)):0,next,old.players));return true;
+        put(new Run(old.uuid,old.zone,old.wave,phase,done?Math.addExact(now,Math.multiplyExact(1000L,phase==Phase.COMPLETE?cooldown:pause)):0,next,old.players,old.baseMobs,old.scaledPlayers));return true;
     }
 }

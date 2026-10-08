@@ -23,7 +23,7 @@ public final class LootService {
         this.server=server;this.store=store;keys=new com.ianblk.zianmanager.core.KeyLedger(server.getWorldPath(LevelResource.ROOT).resolve("data/zianmanager/keys.json"));journal=RewardJournal.open(server.getWorldPath(LevelResource.ROOT).resolve("data/zianmanager/claims.json"));
     }
     public long remaining(ServerPlayer player,String key,int minutes){
-        var last=journal.latest(player.getUUID(),key);if(last==null)return 0;if(!last.complete())return -1;
+        var last=journal.latest(player.getUUID(),key);if(last==null)return 0;if(!last.complete())return -1;if(minutes==0 && !requiredKey(key).isEmpty())return 0;
         return Math.max(0,last.nextEligibleAt()-System.currentTimeMillis());
     }
     public List<ItemStack> roll(ServerPlayer player,String preset,BlockPos pos){
@@ -34,19 +34,20 @@ public final class LootService {
             var table=server.reloadableRegistries().getLootTable(key);
             var params=new LootParams.Builder(player.serverLevel()).withParameter(LootContextParams.ORIGIN,Vec3.atCenterOf(pos)).withOptionalParameter(LootContextParams.THIS_ENTITY,player).withLuck(player.getLuck()).create(LootContextParamSets.CHEST);
             out.addAll(table.getRandomItems(params));out.removeIf(stack->com.ianblk.zianmanager.ManagerEquipment.retired(stack.getItem()));Collections.shuffle(out,random);if(out.size()>definition.rolls())out.subList(definition.rolls(),out.size()).clear();
-        }else for(var entry:WeightedLoot.select(definition.entries().stream().filter(entry->!com.ianblk.zianmanager.ManagerEquipment.retired(item(player,entry.item()).getItem())).toList(),definition.rolls(),random)){
+        }else {var entries=definition.entries().stream().filter(entry->!com.ianblk.zianmanager.ManagerEquipment.retired(item(player,entry.item()).getItem())).toList();for(var entry:definition.independent()?WeightedLoot.independent(entries,random):WeightedLoot.select(entries,definition.rolls(),random)){
             var stack=item(player,entry.item());stack.setCount(entry.min()+random.nextInt(entry.max()-entry.min()+1));
             if(stack.isEmpty() || stack.getCount()>stack.getMaxStackSize())throw new IllegalArgumentException("Cantidad incompatible con el objeto");out.add(stack);
         }
-        if(out.isEmpty())throw new IllegalArgumentException("La tabla no produjo objetos. Revisa su configuración.");return out;
+        }
+        if(out.isEmpty() && !definition.independent())throw new IllegalArgumentException("La tabla no produjo objetos. Revisa su configuración.");return out;
     }
     public RewardClaim reserve(ServerPlayer player,String key,String preset,int minutes,BlockPos pos) throws Exception{
-        var old=journal.latest(player.getUUID(),key);if(old!=null && !old.complete()){bindKey(player,old,key);previewKey(player,old);return old;}
-        if(old!=null && (minutes==0 || remaining(player,key,minutes)>0))return old;
+        boolean repeat=minutes>0 || !requiredKey(key).isEmpty();var old=journal.latest(player.getUUID(),key);if(old!=null && !old.complete()){bindKey(player,old,key);previewKey(player,old);return old;}
+        if(old!=null && (!repeat || remaining(player,key,minutes)>0))return old;
         String required=requiredKey(key);if(!required.isEmpty() && !hasKey(player,required))throw new IllegalArgumentException("Necesitas "+net.minecraft.core.registries.BuiltInRegistries.ITEM.get(net.minecraft.resources.ResourceLocation.parse(required)).getDescription().getString()+" para abrir este cofre.");
         List<String> items=roll(player,preset,pos).stream().map(s->s.save(player.registryAccess()).toString()).toList();
-        var definition=new RewardDefinition("",0,items,minutes==0?RewardDefinition.Mode.UNIQUE:RewardDefinition.Mode.REPEAT,minutes);
-        journal.reserveAt(player.getUUID(),key,definition,System.currentTimeMillis(),UUID.randomUUID());var claim=journal.latest(player.getUUID(),key);bindKey(player,claim,key);return claim;
+        var definition=new RewardDefinition("",0,items,repeat?RewardDefinition.Mode.REPEAT:RewardDefinition.Mode.UNIQUE,minutes);
+        journal.reserveAt(player.getUUID(),key,definition,System.currentTimeMillis(),UUID.randomUUID(),store.data().loot().get(preset).independent());var claim=journal.latest(player.getUUID(),key);bindKey(player,claim,key);return claim;
     }
     public void grant(ServerPlayer player,String key,String preset,int minutes,BlockPos pos) throws Exception{
         if(!com.ianblk.zianmanager.permission.ManagerPermissions.allows(player.createCommandSourceStack(),"loot",false))return;

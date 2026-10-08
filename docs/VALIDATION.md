@@ -38,3 +38,13 @@ Compilación y 36 pruebas unitarias superadas. Auditoría de 27 modelos activos 
 ## Alpha.8
 
 45 pruebas unitarias. Prueba local con Lootr: centro no cambia al repetir creación desde otra posición, redimensionado conserva el ancla, comandos principal y adicional ejecutables sin OP con esperas independientes, repetición rechazada y reinicio. Conservadas pruebas de armas, encantamientos, tridente, loot e inventario lleno. Corrección de render basada en el código de LevelRenderer: el model-view ya está aplicado globalmente; se elimina su segunda aplicación y se usa una pose nueva con traducción relativa a la cámara. Vista y lore necesitan confirmación visual en el cliente del usuario.
+
+## Alpha.9: llaves, población y probabilidades de mobs
+
+- Compilación Java 21/NeoForge 21.1.252; 55 pruebas unitarias sin fallos.
+- Porcentajes independientes: simulación reproducible de 100.000 muertes con entradas al 10% y 5%, posibilidad de ninguna o ambas. Jefes y cofres rechazan este modo.
+- Resultado vacío persistido y protegido de rerolls después de reiniciar.
+- Zona de una sola plantilla sin puntos, escala 1–3/+2/límite ocho, estado guardado después de muerte y reinicio.
+- Prueba nativa aislada con Lootr: dos aperturas inmediatas con una llave cada una; rechazo sin llave, cofres libres con espera, zona automática y aumento de dos mobs con segundo jugador. Prueba de reinicio conserva configuración y entregas.
+- Solo aparecen mobs si hay suelo sólido y espacio libre dentro del área; zonas estrechas pueden tener menos mobs. El límite es por oleada y no hay multiplicación al reentrar.
+- La presentación del cliente y entidades de otros mods necesitan comprobación dentro del juego; el servidor real no se modifica.

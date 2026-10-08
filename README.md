@@ -2,7 +2,7 @@
 
 **Administra dungeons dentro del juego:** mobs personalizados, jefes, zonas con oleadas, loot personal y NPC de diálogo.
 
-**0.1.0-alpha.8 · Minecraft 1.21.1 · NeoForge 21.1.252 · Java 21**
+**0.1.0-alpha.9 · Minecraft 1.21.1 · NeoForge 21.1.252 · Java 21**
 
 Instala el mismo JAR en cliente y servidor. Es independiente de Cobblemon, RCT API y RCT Mod. Lootr y LuckPerms son opcionales.
 
@@ -14,7 +14,7 @@ Pestaña creativa **Zian Manager**, 27 modelos activos, martillos 3×3×1, armas
 
 - Plantillas de mobs: entidad, nombre, vida, daño, armadura, dureza, resistencia al empuje, efectos y seis ranuras de equipo. Conservan la IA original.
 - Jefes con barra de vida y loot configurable.
-- Zonas con **3 a 6 mobs por oleada**, hasta 16 oleadas, pausa y reaparición configurable.
+- Zonas con apariciones automáticas: **1–3 mobs iniciales, +2 por jugador adicional y máximo 8 por oleada**, hasta 16 oleadas, pausa y reaparición configurable.
 - Tablas **MOB, BOSS y CHEST**, con selección ponderada sin repetir entradas.
 - Cofres importados: **sin receta**, protegido contra rotura en supervivencia, explosiones y empuje. Loot renovable por jugador, sin inventario accesible a tolvas.
 - NPC humano Alex/slim, diez skins y diálogo con botón de comando configurable.
@@ -36,9 +36,9 @@ Abre `/zianmanager`. El inicio muestra **Mobs y jefes**, **Tablas de recompensas
 ### Mobs, zonas y personajes
 
 - **Mobs y jefes:** pestañas **Básico**, **Combate**, **Equipo**, **Efectos** y **Avanzado**. Elige entidad y recompensas con selectores. Para equipar, elige la ranura y copia el objeto en mano. El selector de efectos permite elegir nombre, nivel y duración; el formato manual sigue disponible en Avanzado. La vista previa dura 20 segundos, es inmóvil y no da loot.
-- **Zonas:** pestañas **General**, **Ubicación**, **Tamaño** y **Oleadas**. El selector de equipo añade de 3 a 6 mobs, incluso repetidos. Crea la zona desde el bloque bajo tus pies, ajusta su tamaño alrededor del centro y añade un punto libre por mob. Configura pausas, reaparición y recompensa de finalización. Activa la zona cuando esté lista. Puedes probar o detener el encuentro desde Oleadas.
+- **Zonas:** pestañas **General**, **Ubicación**, **Tamaño** y **Oleadas**. El selector permite elegir de 1 a 8 tipos de mob. Crea la zona desde el bloque bajo tus pies, ajusta su tamaño alrededor del centro ; los mobs aparecen automáticamente sobre suelo libre dentro del área. Configura pausas, reaparición y recompensa de finalización. Activa la zona cuando esté lista. Puedes probar o detener el encuentro desde Oleadas.
 - **Personajes:** pestañas **Apariencia**, **Diálogo** y **Acción**. Elige la skin, escribe el diálogo en varias líneas y configura el botón/comando opcional. Puedes mover el personaje a tu posición y restablecer sus usos después de revisar entregas.
-- **Cofres:** el botón **Obtener cofre** evita escribir otro comando. Colócalo y usa **Shift + clic derecho**; selecciona la tabla y su renovación.
+- **Cofres:** el botón **Obtener cofre** evita escribir otro comando. Colócalo y usa **Shift + clic derecho**; selecciona la tabla y su renovación. En las variantes con llave puedes activar **Sin tiempo de reutilización**.
 
 Los ID se generan para los mobs nuevos. Las referencias admiten minúsculas, números y guion bajo, hasta 32 caracteres. Una referencia guardada se mantiene estable. Los ajustes se guardan por sección y la interfaz conserva la pestaña al recibir la respuesta. Las selecciones de equipo y efectos requieren **Aplicar** y después **Guardar cambios**.
 
@@ -52,6 +52,8 @@ Tus ejemplos están cubiertos:
 - **Boss:** 10 entradas, sortear **5**.
 - **Cofre:** 20 entradas, sortear **10**.
 
+Solo para **Mobs**, el botón **Modo: porcentaje real** comprueba cada objeto por separado: una llave común al 10% y otra rara al 5% pueden no aparecer. Pueden salir ambas; con esos valores, ninguna aparece en el 85,5% de las muertes. Este modo admite hasta 32 entradas y no usa la cantidad de sorteos ni tablas externas. **Jefes y cofres conservan el sorteo por peso**, que elige las entradas configuradas. Las tablas antiguas mantienen su modo hasta que lo cambies.
+
 El **peso** expresa una probabilidad relativa: peso 20 tiene el doble de probabilidad que peso 10. La interfaz muestra el porcentaje **del primer sorteo**. Después de cada elección se recalculan los porcentajes entre las entradas restantes; no son probabilidades independientes y fijas de caída.
 
 Los sorteos cuentan **entradas/stacks**, no unidades: una entrada puede entregar tres diamantes. Cada entrada elegida produce una cantidad entre mínimo y máximo. Máximo 64 entradas y 32 sorteos por tabla; si faltan entradas, se entregan las disponibles. Una entrada no se repite, pero añadir dos entradas del mismo objeto permite obtenerlo dos veces.
@@ -60,7 +62,7 @@ Sin entradas propias puedes indicar una tabla nativa de **cofre**, por ejemplo `
 
 ## 🗝️ Cofres personales
 
-Usa `/zianmanager givechest`, coloca el cofre y **Shift + clic derecho** para asignarle tabla y renovación en minutos. Cada jugador tiene su propio sorteo y tiempo.
+Usa `/zianmanager givechest`, coloca el cofre y **Shift + clic derecho** para asignarle tabla y renovación en minutos. Cada jugador tiene su propio sorteo y tiempo. En un cofre con llave, **Sin tiempo de reutilización** permite abrirlo de nuevo inmediatamente consumiendo otra llave; los cofres sin llave mantienen una renovación de al menos un minuto.
 
 **Clic derecho entrega el loot automáticamente**, sin pantalla de premios, para poder ver la animación. Los objetos van al inventario; lo que no cabe aparece al suelo junto al jugador, también en creativo. Cada entrega conserva el sorteo y el registro de consumo de llave. Las entregas ambiguas quedan en revisión y no se repiten automáticamente.
 

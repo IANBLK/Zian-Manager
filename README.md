@@ -145,3 +145,5 @@ La prueba usa un mundo aislado bajo `build/`, localhost y puertos 25586/25587. D
 **Alpha.7:** balance y efectos revisados según lo solicitado; encantamientos de espada/pico/hacha/tridente, Rompeolas lanzable y zonas creadas desde un centro con tamaño editable y vista previa en vivo. Las esperas de 120 s pasan a 90 s; Lanza Ígnea 1 s y Bastón del Vacío 10 s.
 
 **Alpha.8:** contorno de zona corregido para mantenerse fijo en coordenadas del mundo, centro bloqueado tras crear y tamaño ampliable alrededor del mismo bloque. Nombres y lore de fantasía en armas, con solo reutilización en la información de habilidades. Los NPC permiten hasta ocho botones de comando con esperas independientes.
+
+[Estado del progreso y comprobaciones de GitHub](docs/PROGRESS.md).

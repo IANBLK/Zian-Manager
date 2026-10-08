@@ -34,3 +34,7 @@ Compilación y 36 pruebas unitarias superadas. Auditoría de 27 modelos activos 
 ## Alpha.7
 
 41 pruebas unitarias. Prueba local con Lootr: creación de zona desde el bloque del suelo, radio 3 = 7×7, ampliación sin mover centro y cancelación conservando el centro. Verificados daños 7/8/10/9/9/9/10/9, efectos y niveles por 30 s, diez corazones de absorción, Wither de 5 s, aceptación de encantamientos de espada/minería/tridente y lanzamiento de Rompeolas conservando Lealtad y el objeto. La espera de la habilidad no activa el bloqueo de uso normal del tridente. También superadas apertura directa, llaves, sobrantes al suelo, oleadas y reinicio. La nueva vista previa y el aspecto del proyectil necesitan confirmación visual en el cliente.
+
+## Alpha.8
+
+45 pruebas unitarias. Prueba local con Lootr: centro no cambia al repetir creación desde otra posición, redimensionado conserva el ancla, comandos principal y adicional ejecutables sin OP con esperas independientes, repetición rechazada y reinicio. Conservadas pruebas de armas, encantamientos, tridente, loot e inventario lleno. Corrección de render basada en el código de LevelRenderer: el model-view ya está aplicado globalmente; se elimina su segunda aplicación y se usa una pose nueva con traducción relativa a la cámara. Vista y lore necesitan confirmación visual en el cliente del usuario.

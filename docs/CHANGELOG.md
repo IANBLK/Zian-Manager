@@ -1,3 +1,12 @@
+# 0.1.0-alpha.8
+
+- Corregida la doble transformación de cámara del contorno de zonas: ahora se dibuja una sola vez en el espacio del mundo.
+- Centro bloqueado al crear la zona; ampliación con tamaño X/Z/altura/profundidad mantiene la misma posición.
+- Nombres y lore de fantasía para las catorce armas/herramientas; tooltip sin descripción técnica de habilidades, solo reutilización.
+- Habilidades, daño y encantamientos se conservan.
+- NPC con hasta ocho botones de comando (principal y siete adicionales), editor dentro del juego y cooldown por botón/jugador.
+- Compatibilidad con diálogos y esperas guardados de versiones anteriores.
+
 # 0.1.0-alpha.7
 
 - Encantamientos normales según categoría: martillos/pico, hacha, espadas/lanzas/bastón y tridente Rompeolas.

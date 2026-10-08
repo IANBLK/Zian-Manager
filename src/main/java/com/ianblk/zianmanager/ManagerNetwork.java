@@ -22,8 +22,8 @@ public final class ManagerNetwork {
     public record Action(UUID token,String operation,String json) implements CustomPacketPayload {
         public static final Type<Action> TYPE=new Type<>(ResourceLocation.fromNamespaceAndPath("zianmanager","action"));
         public static final StreamCodec<RegistryFriendlyByteBuf,Action> CODEC=new StreamCodec<>(){
-            public Action decode(RegistryFriendlyByteBuf b){return new Action(b.readUUID(),b.readUtf(32),b.readUtf(16384));}
-            public void encode(RegistryFriendlyByteBuf b,Action v){b.writeUUID(v.token);b.writeUtf(v.operation,32);b.writeUtf(v.json,16384);}
+            public Action decode(RegistryFriendlyByteBuf b){return new Action(b.readUUID(),b.readUtf(32),b.readUtf(32768));}
+            public void encode(RegistryFriendlyByteBuf b,Action v){b.writeUUID(v.token);b.writeUtf(v.operation,32);b.writeUtf(v.json,32768);}
         };
         public Type<Action> type(){return TYPE;}
     }
@@ -36,7 +36,7 @@ public final class ManagerNetwork {
         public Type<View> type(){return TYPE;}
     }
     public static void register(IEventBus bus){bus.addListener((RegisterPayloadHandlersEvent event)->{
-        var channel=event.registrar("manager6");
+        var channel=event.registrar("manager7");
         channel.playToServer(Request.TYPE,Request.CODEC,(v,c)->c.enqueueWork(()->{if(c.player() instanceof ServerPlayer player)ManagerRuntime.get().request(player,v.section,v.id);}));
         channel.playToServer(Action.TYPE,Action.CODEC,(v,c)->c.enqueueWork(()->{if(c.player() instanceof ServerPlayer player)ManagerRuntime.get().action(player,v);}));
         channel.playToClient(View.TYPE,View.CODEC,(v,c)->c.enqueueWork(()->com.ianblk.zianmanager.client.ManagerClient.accept(v.json)));

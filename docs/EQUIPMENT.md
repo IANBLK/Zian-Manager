@@ -1,4 +1,4 @@
-# Objetos, armas, cofres y zonas — alpha.7
+# Objetos, armas, cofres y zonas — alpha.8
 
 ## Pestaña creativa
 
@@ -66,7 +66,7 @@ Este comando no crea objetos ni llaves; confirma la revisión de su consumo. Los
 4. La vista se actualiza mientras editas los valores válidos. **Aplicar tamaño** guarda el área; **Cerrar y ver zona** permite caminar y observarla. El HUD distingue una vista previa sin guardar.
 5. El centro aparece en dorado, el contorno en azul y las apariciones de mobs con marcadores. Añade un punto libre por cada mob desde Ubicación; activa la zona cuando esté lista.
 
-Cambiar el tamaño conserva el centro. Pulsar nuevamente **Crear zona de dungeon** mueve el centro al bloque bajo tu posición actual. Un encuentro activo debe detenerse antes de editar el área; los puntos deben permanecer dentro de una zona habilitada. **Mostrar / ocultar** conserva el control de la guía, que se muestra en su dimensión durante diez minutos.
+Cambiar el tamaño conserva el centro. El centro queda bloqueado después de crearlo; el botón pasa a **Centro fijado**. Volver a solicitar la creación conserva ese centro. Para una ubicación distinta, crea otra zona. Un encuentro activo debe detenerse antes de editar el área; los puntos deben permanecer dentro de una zona habilitada. **Mostrar / ocultar** conserva el control de la guía, que se muestra en su dimensión durante diez minutos.
 
 Las zonas anteriores mantienen sus límites y progreso al cargar. Puedes convertirlas al modo centrado creando el centro o aplicando tamaño; no se redimensionan automáticamente al actualizar el mod.
 
@@ -85,3 +85,26 @@ El cofre original ya no se ofrece en creativo ni en visores que respetan la etiq
 Se retiran `altar_void1`, `altar_void2`, `altar_void3`, `altar_soul`, `altar_hotbarsym`, `altar_handle`, `altar_warden`, `altar_harness`, `altar_dragonheart`, `altar_clockdragonrend`, `altar_arrowdragonrend`, `straw_hat` y `shield1`. No se ofrecen en creativo ni en visores compatibles; el editor impide añadirlos y los sorteos nuevos ignoran entradas antiguas de esos objetos. Sus identificadores mínimos de compatibilidad mantienen legibles inventarios y reclamaciones ya guardadas, sin sus modelos ni habilidades anteriores.
 
 Después de confirmar una entrega, el chat muestra cada objeto con su cantidad y destino: inventario o suelo. Las cantidades solo describen componentes confirmados; un clic repetido durante la renovación no vuelve a entregar ni anuncia otra entrega.
+
+## Nombres y lore de fantasía
+
+Las habilidades y estadísticas siguen funcionando. El tooltip usa un nombre de fantasía, el tipo de arma, dos líneas de historia y, si corresponde, **Reutilización: N s**; ya no enumera los efectos de la habilidad. Los nombres personalizados puestos por el jugador se conservan.
+
+- Lanza Ígnea → **Ascua Eterna**.
+- Bastón del Vacío → **Susurro del Abismo**.
+- Gladiador → **Juramento de la Arena**.
+- Ancestral → **Memoria de los Primeros**.
+- Filo del Dragón → **Colmillo de Azhâr**.
+- Filo Marchito → **Lamento del Ocaso**.
+- Lanza del Presagio → **Augurio de la Noche**.
+- Rompeolas → **Corona de las Mareas**.
+- Martillos → **Zafiro**, **Arboleda**, **Bastión** y **Brasa**.
+- Hacha/pico de amatista → **Hacha del Crepúsculo** y **Pico del Eco Cristalino**.
+
+Los IDs siguen siendo los mismos para conservar inventarios, encantamientos y tablas. Los nombres en la sección de balance identifican el tipo y los IDs, aunque el juego muestre el nombre de fantasía.
+
+## Varios botones en un NPC
+
+En **Personajes → Acción** configura el botón principal y pulsa **Más botones…** para añadir hasta siete adicionales. Cada uno tiene texto, comando y espera por jugador. Usa **Aplicar botones** y luego **Guardar cambios**. Un comando principal vacío permite un diálogo con solo los adicionales.
+
+El diálogo muestra las opciones en dos columnas y permite desplazar el texto. Cada botón ejecuta únicamente su comando guardado en el servidor; una sesión admite una pulsación. Los cooldowns son independientes por botón y jugador y persisten tras reiniciar. El botón **Restablecer usos** borra las esperas/revisiones de todas las opciones de ese NPC. Los NPC anteriores mantienen su comando y su espera principal.

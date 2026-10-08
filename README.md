@@ -2,7 +2,7 @@
 
 **Administra dungeons dentro del juego:** mobs personalizados, jefes, zonas con oleadas, loot personal y NPC de diálogo.
 
-**0.1.0-alpha.7 · Minecraft 1.21.1 · NeoForge 21.1.252 · Java 21**
+**0.1.0-alpha.8 · Minecraft 1.21.1 · NeoForge 21.1.252 · Java 21**
 
 Instala el mismo JAR en cliente y servidor. Es independiente de Cobblemon, RCT API y RCT Mod. Lootr y LuckPerms son opcionales.
 
@@ -123,7 +123,7 @@ Esto confirma la revisión; no genera objetos de nuevo. Un encuentro con un mob 
 
 ## 🧪 Validación y límites
 
-41 pruebas automáticas de selección, persistencia y entregas. Pruebas locales de servidor dedicado con dos jugadores simulados, oleadas compartidas, reaparición, NPC, protección del cofre, loot personal y reinicio. También probado con **Lootr 1.11.37.122**.
+45 pruebas automáticas de selección, persistencia y entregas. Pruebas locales de servidor dedicado con dos jugadores simulados, oleadas compartidas, reaparición, NPC, protección del cofre, loot personal y reinicio. También probado con **Lootr 1.11.37.122**.
 
 Falta una prueba visual en tu cliente. Esta alpha no está validada en Youer ni con Cataclysm. El selector permite entidades instaladas que hereden de `Mob`, pero sus ataques, fases y atributos especiales pueden requerir adaptaciones. El cofre es un modelo estático, sin animación de tapa.
 
@@ -143,3 +143,5 @@ La prueba usa un mundo aislado bajo `build/`, localhost y puertos 25586/25587. D
 **Alpha.6:** retirados los trece accesorios y objetos decorativos señalados por el usuario del creativo, visores compatibles y sorteos nuevos. Cada entrega de cofre informa en el chat cantidades, nombres y destino (inventario/suelo).
 
 **Alpha.7:** balance y efectos revisados según lo solicitado; encantamientos de espada/pico/hacha/tridente, Rompeolas lanzable y zonas creadas desde un centro con tamaño editable y vista previa en vivo. Las esperas de 120 s pasan a 90 s; Lanza Ígnea 1 s y Bastón del Vacío 10 s.
+
+**Alpha.8:** contorno de zona corregido para mantenerse fijo en coordenadas del mundo, centro bloqueado tras crear y tamaño ampliable alrededor del mismo bloque. Nombres y lore de fantasía en armas, con solo reutilización en la información de habilidades. Los NPC permiten hasta ocho botones de comando con esperas independientes.

@@ -55,6 +55,9 @@ public final class LootService {
         var claim=reserve(player,key,preset,minutes,pos);deliver(player,claim.id());
     }
     public List<RewardClaim> pending(UUID uuid){return journal.forPlayer(uuid).stream().filter(c->!c.complete()).toList();}
+    public List<RewardClaim> reviewClaims(UUID player){return pending(player).stream().filter(RewardClaim::review).toList();}
+    public List<RewardClaim> keyReviews(UUID player){return pending(player).stream().filter(c->{var cost=keys.get(c.id());return cost!=null && (cost.phase().equals("REVIEW") || cost.phase().equals("APPLYING"));}).toList();}
+    public List<String> reviewParts(UUID player,UUID id){var claim=journal.get(id);if(claim==null || !claim.player().equals(player))return List.of();var out=new ArrayList<String>();for(int i=0;i<claim.parts().size();i++){var phase=claim.parts().get(i).phase();if(phase==RewardClaim.Phase.APPLYING || phase==RewardClaim.Phase.REVIEW_REQUIRED)out.add(""+(i+1));}return out;}
     public void deliver(ServerPlayer player,UUID id) throws Exception{
         if(!com.ianblk.zianmanager.permission.ManagerPermissions.allows(player.createCommandSourceStack(),"loot",false))throw new IllegalArgumentException("No tienes permiso para recibir loot Zian");
         var existing=journal.get(id);if(existing==null || !existing.player().equals(player.getUUID()))throw new IllegalArgumentException("Reclamación inexistente");

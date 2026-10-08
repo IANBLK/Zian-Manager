@@ -73,7 +73,7 @@ public final class ManagerSmoke {
         var run=runtime.encounter("smoke_room");
         if(phase==1 && ++ticks>120){
             if(!level.getBlockState(chest).is(ManagerBlocks.CRATES.get("loot_common_crate").get()))throw new IllegalStateException("Registered chest did not recover");
-            EquipmentSmoke.verify(runtime,first);
+            EquipmentSmoke.verify(runtime,first);CommandSuggestionsSmoke.verify(runtime,first,second);
             if(!(level.getEntity(NPC) instanceof ManagerNpcs.DialogueNpc npc) || !npc.skin().equals("heraldo_real"))throw new IllegalStateException("Human NPC / synced slim skin missing");
             var configured=store.data().npcs().get(NPC);store.put(new NpcSpec(NPC,configured.dimension(),configured.point(),configured.name(),configured.text(),"heraldo_real","Recibir", "minecraft:give {player} minecraft:paper 1",60,List.of(new com.ianblk.zianmanager.core.Definitions.NpcButton("bonus","Otra recompensa","minecraft:give {player} minecraft:bread 1",60))));
             first.moveTo(npc.getX(),npc.getY(),npc.getZ()+1,0,0);runtime.openDialogue(first,store.data().npcs().get(NPC));

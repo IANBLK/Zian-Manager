@@ -1,4 +1,4 @@
-# Objetos, armas, cofres y zonas — alpha.10
+# Objetos, armas, cofres y zonas — alpha.11
 
 ## Pestaña creativa
 
@@ -118,3 +118,13 @@ Durante la espera posterior a completar una dungeon, aparece sobre su centro un 
 Todos los cofres con llave comparten una espera de seguridad de 40 ticks (dos segundos en condiciones normales) por jugador. Los clics bloqueados muestran el aviso sobre la barra rápida, sin consumir llaves ni crear premios. No prolongan la espera; otros jugadores conservan sus propios usos. Esta espera se aplica también si se desactivó el tiempo de renovación del cofre.
 
 La escritura conserva el reemplazo atómico y reintenta brevemente errores de acceso transitorios. Un error persistente conserva el bloqueo de seguridad. Las entregas que ya figuraban en revisión no se borran ni vuelven a pagarse automáticamente: deben revisarse para evitar duplicar objetos ya recibidos.
+
+## Autocompletado de recompensas
+
+Escribe el comando hasta el espacio anterior al ID y pulsa **Tab**:
+
+- `/zianmanager claim `: tus recompensas pendientes.
+- `/zianmanager resolve <jugador> `: recompensas de ese jugador que están en revisión; requiere administración.
+- `/zianmanager resolvekey <jugador> `: recompensas cuyo consumo de llave está en revisión; requiere administración.
+
+En `resolve`, después de elegir el ID, Tab también sugiere los números de componentes inciertos. Se filtran los ID al escribir sus primeras letras. Seleccionar una sugerencia no entrega ni confirma recompensas: aún debes completar y ejecutar el comando. Las recompensas entregadas dejan de aparecer.

@@ -1,3 +1,9 @@
+# 0.1.0-alpha.11
+
+- Autocompletado de IDs en `resolve` y `resolvekey`, filtrado por jugador y estado correspondiente.
+- Autocompletado de componentes inciertos en `resolve`; conserva el autocompletado de pendientes propios en `claim`.
+- Las sugerencias respetan los permisos y no ejecutan entregas ni confirmaciones.
+
 # 0.1.0-alpha.10
 
 - Texto flotante público y fijo sobre el centro de la dungeon con cuenta atrás de regeneración según su configuración.

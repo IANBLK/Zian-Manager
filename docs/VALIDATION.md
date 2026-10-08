@@ -56,3 +56,10 @@ Compilación y 36 pruebas unitarias superadas. Auditoría de 27 modelos activos 
 - Texto de regeneración creado en el mundo durante el tiempo configurado de espera; usa un Text Display nativo visible para clientes compatibles.
 - La cuenta atrás se fija al centro y se actualiza cada segundo. La presentación visual con shaders aún requiere confirmación del usuario.
 - El reintento de escritura solo cubre acceso denegado transitorio. La captura no permite determinar la causa exacta del error anterior. No se borran ni repiten las reclamaciones que ya están en revisión.
+
+## Alpha.11: sugerencias de comandos
+
+- Compilación y 56 pruebas unitarias correctas.
+- Prueba del dispatcher real en servidor local con Lootr: `claim` sugiere pendientes propios; `resolve` y `resolvekey` sugieren los ID del jugador elegido según su estado; no muestran premios de otro jugador.
+- `resolve` sugiere únicamente los componentes APPLYING o REVIEW_REQUIRED de esa entrega.
+- Las sugerencias no ejecutan ni confirman recompensas y conservan los permisos de administración.

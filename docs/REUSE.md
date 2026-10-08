@@ -11,3 +11,5 @@ No se incluye código de RCT Mod, RCT API, Cobblemon ni Lootr. Se utilizan las e
 Textura original generada con imagegen para este proyecto; véase art/PROMPT.md. El importador Java solo ajusta dimensiones mediante vecino más cercano.
 
 En alpha.2 se adapta el modelo PlayerModel de CustomTrainerRenderer de ZianRCT y el estilo de botones de ZianGuiScreen. Las diez nuevas skins fueron proporcionadas por el usuario; se incorporan sin modificar sus píxeles, con nombres nuevos y modelo Alex/slim.
+
+Alpha.3: el editor visual se inspira en GachaScreen de Zian Utilities (MIT © ZIANBLK), reutilizando el patrón de filas con iconos, controles de peso −/+ y edición directa. No se incluyen pagos, tiradas ni dependencias del gacha.

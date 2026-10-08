@@ -2,7 +2,7 @@
 
 **Administra dungeons dentro del juego:** mobs personalizados, jefes, zonas con oleadas, loot personal y NPC de diálogo.
 
-**0.1.0-alpha.2 · Minecraft 1.21.1 · NeoForge 21.1.252 · Java 21**
+**0.1.0-alpha.3 · Minecraft 1.21.1 · NeoForge 21.1.252 · Java 21**
 
 Instala el mismo JAR en cliente y servidor. Es independiente de Cobblemon, RCT API y RCT Mod. Lootr y LuckPerms son opcionales.
 
@@ -16,18 +16,29 @@ Instala el mismo JAR en cliente y servidor. Es independiente de Cobblemon, RCT A
 - NPC humano Alex/slim, diez skins y diálogo con botón de comando configurable.
 - Configuraciones, encuentros y entregas persistentes.
 
-## 🎮 Primeros pasos
+## 🎮 Configuración fácil
 
-1. Como administrador ejecuta `/zianmanager`.
-2. En **loot**, crea un ID como `guardian_loot`, elige MOB/BOSS/CHEST y el número de sorteos.
-3. Sostén un objeto en la mano principal, indica peso y cantidad mínima/máxima y pulsa **Añadir objeto**. Conserva sus componentes, incluidos encantamientos. Repite para cada entrada. **Ver entradas** permite seleccionarlas y editarlas.
-4. En **mobs**, crea una plantilla, selecciona entidad y atributos y asigna el ID del loot. Para equiparla, sostén un objeto, elige la ranura y copia el equipo. La vista previa dura 20 segundos, es inmóvil y no da loot.
-5. En **zones**, crea un ID y equipo separado por comas: `guardian,guardian,jefe`. Guarda la primera y segunda esquina desde tu posición. Añade un punto distinto por mob, dentro de la zona y sin obstáculos.
-6. Configura oleadas, pausa, reaparición y loot opcional de finalización. Habilita la zona. Un jugador en supervivencia la activa al entrar; creativo y espectador no la activan automáticamente. Usa **Probar** para una prueba administrativa.
+Abre `/zianmanager`. El inicio muestra **Mobs y jefes**, **Tablas de recompensas**, **Zonas de dungeon**, **Cofres de dungeon** y **Personajes y diálogos**.
 
-Los ID admiten letras minúsculas, números y guion bajo, hasta 32 caracteres. Los efectos usan `minecraft:speed,0,600;minecraft:resistance,0,600`: ID, amplificador desde cero y duración en segundos. Caducan después de esa duración.
+### Recompensas: editor visual como el gacha
 
-Las oleadas comparten la misma composición en esta alpha. Varios jugadores participan en un encuentro compartido, sin duplicar mobs al entrar otro jugador. El loot de mob se entrega al jugador que lo mata; el de finalización, a los participantes conectados que siguen dentro de la zona. El loot personalizado sustituye los objetos normales del mob y se entrega al inventario, no al suelo.
+1. Abre **Tablas de recompensas → Crear nuevo**. La referencia se genera automáticamente; puedes cambiarla antes de crear la tabla.
+2. Elige **Mobs**, **Jefes** o **Cofres** y usa **− / +** para indicar cuántos objetos se sortean en cada entrega.
+3. Sostén un objeto y pulsa **Añadir objeto que tengo en la mano**. Se copian sus componentes, incluidos encantamientos; el objeto de tu mano no se consume.
+4. La lista muestra su icono, nombre, porcentaje y cantidad. Los botones **− / +** de cada fila ajustan su probabilidad relativa. El porcentaje se recalcula entre todas las entradas.
+5. Pulsa el objeto para ajustar cantidad mínima/máxima; usa **Quitar** para eliminar esa entrada, con confirmación.
+6. **Opciones** conserva el uso de una tabla externa; es opcional y sustituye el sorteo de entradas propias.
+
+### Mobs, zonas y personajes
+
+- **Mobs y jefes:** pestañas **Básico**, **Combate**, **Equipo**, **Efectos** y **Avanzado**. Elige entidad y recompensas con selectores. Para equipar, elige la ranura y copia el objeto en mano. El selector de efectos permite elegir nombre, nivel y duración; el formato manual sigue disponible en Avanzado. La vista previa dura 20 segundos, es inmóvil y no da loot.
+- **Zonas:** pestañas **General**, **Ubicación** y **Oleadas**. El selector de equipo añade de 3 a 6 mobs, incluso repetidos. Marca las esquinas y un punto libre por mob desde tu posición. Configura pausas, reaparición y recompensa de finalización. Activa la zona cuando esté lista. Puedes probar o detener el encuentro desde Oleadas.
+- **Personajes:** pestañas **Apariencia**, **Diálogo** y **Acción**. Elige la skin, escribe el diálogo en varias líneas y configura el botón/comando opcional. Puedes mover el personaje a tu posición y restablecer sus usos después de revisar entregas.
+- **Cofres:** el botón **Obtener cofre** evita escribir otro comando. Colócalo y usa **Shift + clic derecho**; selecciona la tabla y su renovación.
+
+Los ID se generan para los mobs nuevos. Las referencias admiten minúsculas, números y guion bajo, hasta 32 caracteres. Una referencia guardada se mantiene estable. Los ajustes se guardan por sección y la interfaz conserva la pestaña al recibir la respuesta. Las selecciones de equipo y efectos requieren **Aplicar** y después **Guardar cambios**.
+
+Las oleadas comparten composición en esta alpha. Varios jugadores participan en un encuentro compartido, sin duplicar mobs. Creativo y espectador no activan las zonas automáticamente; **Probar encuentro** permite hacerlo como administrador. El loot de mob se entrega al jugador que lo mata; el de finalización a participantes conectados que siguen dentro de la zona. El loot personalizado sustituye los objetos normales del mob y se entrega al inventario, no al suelo.
 
 ## 🎲 Tablas y probabilidades
 

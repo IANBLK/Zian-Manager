@@ -12,3 +12,9 @@ La automatización reproducible está en tools/manager-smoke.py. No se ha probad
 - PNG del cofre comprobado con ImageIO: todos los píxeles con alfa 255. Forma no oclusiva y renderizado sólido.
 - NPC humano con skin sincronizada; comando de objeto ejecutado para jugador sin OP, rechazo de repetición del token y de segundo uso durante la espera.
 - Cuatro pruebas nuevas: espera persistente de comandos, bloqueo de ejecución ambigua, jugadores independientes y carga de NPC antiguos.
+
+## Alpha.3
+
+Interfaz reorganizada y editor de loot inspirado en el gacha. Compilación y 25 pruebas automatizadas verificadas. Las reglas de selección y entrega no cambian. Los datos del editor incluyen iconos, cantidades, pesos y catálogos para selectores. La presentación necesita comprobación visual en el cliente del usuario; no se afirma una prueba visual automatizada. El protocolo exige actualizar cliente y servidor para evitar mezclar interfaces antiguas.
+
+Alpha.3: servidor local con Lootr y reinicio superados, incluyendo generación de datos de los editores de loot, mobs, zonas y NPC.

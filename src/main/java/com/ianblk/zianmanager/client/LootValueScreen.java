@@ -1,0 +1,12 @@
+package com.ianblk.zianmanager.client;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.network.chat.Component;
+import java.util.function.BiConsumer;
+public final class LootValueScreen extends ManagerThemedScreen {
+ private final LootEditorScreen parent;private final boolean external;private final BiConsumer<String,String> apply;private String a,b,weight;private int left,top,w,h;
+ public LootValueScreen(LootEditorScreen parent,boolean external,String a,String b,BiConsumer<String,String> apply){super(Component.literal(external?"Tabla externa · Opcional":"Cantidad del objeto"));this.parent=parent;this.external=external;this.a=a;this.b=b;this.weight=parent.selectedWeight();this.apply=apply;}
+ @Override protected void init(){w=Math.min(360,width-24);h=external?154:194;left=(width-w)/2;top=(height-h)/2;var first=new EditBox(font,left+12,top+55,external?w-24:(w-30)/2,20,Component.literal(external?"Tabla externa":"Mínimo"));first.setMaxLength(128);first.setValue(a);first.setResponder(v->a=v);addRenderableWidget(first);if(!external){var second=new EditBox(font,left+18+(w-30)/2,top+55,(w-30)/2,20,Component.literal("Máximo"));second.setValue(b);second.setResponder(v->b=v);addRenderableWidget(second);var chance=new EditBox(font,left+12,top+98,w-24,20,Component.literal("Probabilidad relativa"));chance.setValue(weight);chance.setResponder(v->weight=v);addRenderableWidget(chance);}addRenderableWidget(themed(left+12,top+h-30,(w-30)/2,20,Component.literal("Aplicar"),button->{if(!external)parent.selectedWeight(weight);apply.accept(a,b);}));addRenderableWidget(themed(left+18+(w-30)/2,top+h-30,(w-30)/2,20,Component.literal("Cancelar"),button->onClose()));}
+ @Override public void onClose(){minecraft.setScreen(parent);}
+ @Override public void render(GuiGraphics g,int mx,int my,float dt){panel(g,left,top,w,h);g.drawString(font,external?"ID de tabla externa":"Cantidad mínima",left+12,top+40,0xFFDDDDDD);if(!external)g.drawString(font,"Cantidad máxima",left+18+(w-30)/2,top+40,0xFFDDDDDD);if(!external)g.drawString(font,"Probabilidad relativa (peso)",left+12,top+85,0xFFDDDDDD);g.drawWordWrap(font,Component.literal(external?"Déjalo vacío para usar tus objetos. Una tabla externa sustituye su sorteo.":"El objeto entregará una cantidad al azar entre estos valores."),left+12,top+(external?84:125),w-24,0xFFAAAAAA);super.render(g,mx,my,dt);}
+}

@@ -44,6 +44,7 @@ public final class ManagerSmoke {
                 var c=store.data().chests().get(CHEST);if(c==null || !level.getBlockState(new BlockPos(c.x(),c.y(),c.z())).is(ManagerBlocks.CHEST.get()))throw new IllegalStateException("Chest missing after restart");
                 if(runtime.loot().remaining(first,"chest."+CHEST,10)<=0 || !runtime.loot().pending(firstId).isEmpty())throw new IllegalStateException("Personal cooldown/receipt missing after restart");
                 if(store.data().npcs().get(NPC)==null || !(level.getEntity(NPC) instanceof ManagerNpcs.DialogueNpc))throw new IllegalStateException("Dialogue NPC missing after restart");
+                runtime.view(first,"loot","smoke_chest",null,"");runtime.view(first,"mob","smoke_guard",null,"");runtime.view(first,"zone","smoke_room",null,"");runtime.view(first,"npc",NPC.toString(),null,"");
                 ZianManager.LOGGER.info("Zian Manager native smoke passed: restart preserves chest, NPC, personal loot and cooldown; Lootr={}",net.neoforged.fml.ModList.get().isLoaded("lootr"));done=true;return;
             }
             runtime.cancel("smoke_room");

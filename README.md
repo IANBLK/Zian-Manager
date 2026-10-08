@@ -2,7 +2,7 @@
 
 **Administra dungeons dentro del juego:** mobs personalizados, jefes, zonas con oleadas, loot personal y NPC de diálogo.
 
-**0.1.0-alpha.1 · Minecraft 1.21.1 · NeoForge 21.1.252 · Java 21**
+**0.1.0-alpha.2 · Minecraft 1.21.1 · NeoForge 21.1.252 · Java 21**
 
 Instala el mismo JAR en cliente y servidor. Es independiente de Cobblemon, RCT API y RCT Mod. Lootr y LuckPerms son opcionales.
 
@@ -12,8 +12,8 @@ Instala el mismo JAR en cliente y servidor. Es independiente de Cobblemon, RCT A
 - Jefes con barra de vida y loot configurable.
 - Zonas con **3 a 6 mobs por oleada**, hasta 16 oleadas, pausa y reaparición configurable.
 - Tablas **MOB, BOSS y CHEST**, con selección ponderada sin repetir entradas.
-- Cofre negro, plateado y dorado: **sin receta**, protegido contra rotura en supervivencia y creativo, explosiones y empuje. Loot renovable por jugador, sin inventario accesible a tolvas.
-- NPC aldeano inmóvil con texto configurable.
+- Cofre negro, plateado y dorado: **sin receta**, protegido contra rotura en supervivencia, explosiones y empuje. Loot renovable por jugador, sin inventario accesible a tolvas.
+- NPC humano Alex/slim, diez skins y diálogo con botón de comando configurable.
 - Configuraciones, encuentros y entregas persistentes.
 
 ## 🎮 Primeros pasos
@@ -54,15 +54,40 @@ El jugador abre la pantalla y pulsa **Recibir todo**. Abrir reserva el sorteo: c
 /zianmanager claim <UUID>
 ```
 
-Para retirar el cofre usa **Eliminar confirmado** en el editor. Un cofre registrado se restaura si desaparece mientras su zona está cargada; herramientas externas de edición de mundo o quitar el mod quedan fuera de esta protección.
+Para retirar el cofre usa **Eliminar confirmado** en el editor o rómpelo en creativo con `zianmanager.admin`. Se elimina su registro y no reaparece. Un cofre registrado se restaura si desaparece mientras su zona está cargada; herramientas externas de edición de mundo o quitar el mod quedan fuera de esta protección.
 
 **Lootr:** se utiliza un bloque propio y un diario personal propio, excluidos mediante sus etiquetas públicas de conversión. Los cofres normales de Lootr siguen usando Lootr. No es una extensión de su inventario.
 
-## 💬 NPC y permisos
+## 💬 NPC, skins y acciones
 
-En **npcs**, crea un NPC en tu posición, configura nombre y texto. Clic derecho muestra el diálogo en el chat. Escribe `\n` para saltos de línea. Puedes moverlo a tu posición o eliminarlo desde el editor. Su aspecto es un aldeano; esta alpha no incluye skins de jugadores.
+Las skins suministradas usan el modelo **Alex/slim** de brazos delgados:
+
+1. Heraldo real
+2. Guardián celeste
+3. Centinela sombrío
+4. Caballero infernal
+5. Guardián abisal
+6. Maga prismática
+7. Paladín dorado
+8. Explorador de bronce
+9. Guardiana celestial
+10. Hechicera aurora
+
+El editor permite seleccionar skin, texto del diálogo, nombre del botón, comando y espera en segundos por jugador (0 permite repetir). El comando se configura sin barra inicial y se ejecuta con autoridad del servidor al pulsar el botón. Usa `{player}` para el nombre del jugador; solo los administradores configuran el comando. Ejemplos:
+
+```text
+minecraft:tp {player} 100 70 -200
+minecraft:give {player} minecraft:diamond 1
+```
+
+Un comando vacío deja solo el diálogo. Las sesiones solo permiten una pulsación y verifican la cercanía al NPC. El diario conserva la espera después de reiniciar. Si una ejecución queda ambigua o devuelve fallo, se bloquea para revisión y no se repite sola; revisar el resultado antes de compensar. El botón administrativo **Reiniciar usos**, con confirmación, borra las esperas y revisiones de ese NPC.
+
+## Permisos
+
+En **npcs**, crea un NPC en tu posición, configura nombre y texto. Clic derecho abre el diálogo y el botón configurado. Escribe `\n` para saltos de línea. Puedes moverlo a tu posición o eliminarlo desde el editor. Los NPC antiguos se convierten al modelo humano manteniendo posición y texto.
 
 - `zianmanager.admin`: editor y administración; sin LuckPerms requiere OP de nivel 2.
+- `zianmanager.npc`: conversar y pulsar acciones; permitido por defecto.
 - `zianmanager.loot`: abrir y recibir loot; sin una regla explícita se permite a los jugadores.
 
 LuckPerms es opcional. Una denegación explícita también se respeta para OP. Los jugadores no necesitan OP.
@@ -81,7 +106,7 @@ Esto confirma la revisión; no genera objetos de nuevo. Un encuentro con un mob 
 
 ## 🧪 Validación y límites
 
-21 pruebas automáticas de selección, persistencia y entregas. Pruebas locales de servidor dedicado con dos jugadores simulados, oleadas compartidas, reaparición, NPC, protección del cofre, loot personal y reinicio. También probado con **Lootr 1.11.37.122**.
+25 pruebas automáticas de selección, persistencia y entregas. Pruebas locales de servidor dedicado con dos jugadores simulados, oleadas compartidas, reaparición, NPC, protección del cofre, loot personal y reinicio. También probado con **Lootr 1.11.37.122**.
 
 Falta una prueba visual en tu cliente. Esta alpha no está validada en Youer ni con Cataclysm. El selector permite entidades instaladas que hereden de `Mob`, pero sus ataques, fases y atributos especiales pueden requerir adaptaciones. El cofre es un modelo estático, sin animación de tapa.
 

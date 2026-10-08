@@ -33,7 +33,7 @@ import net.neoforged.bus.api.EventPriority;
 import java.util.*;
 
 public final class ManagerRuntime {
-    private static ManagerRuntime instance;private MinecraftServer server;private ManagerStore store;private EncounterLedger ledger;private LootService loot;
+    private static ManagerRuntime instance;private MinecraftServer server;private ManagerStore store;private EncounterLedger ledger;private LootService loot;private NpcCommands npcCommands;
     private record Death(Mob mob,net.minecraft.world.damagesource.DamageSource source){}
     private final Map<UUID,Death> deaths=new LinkedHashMap<>();
     private final Map<UUID,Mob> previews=new HashMap<>();private final Map<UUID,Session> sessions=new HashMap<>();private final Map<UUID,ServerBossEvent> bars=new HashMap<>();private final Map<UUID,Integer> missing=new HashMap<>();private long ticks;
@@ -45,20 +45,25 @@ public final class ManagerRuntime {
     public ManagerRuntime(){
         instance=this;
         NeoForge.EVENT_BUS.addListener((ServerStartedEvent e)->start(e.getServer()));
-        NeoForge.EVENT_BUS.addListener((ServerStoppedEvent e)->{bars.values().forEach(ServerBossEvent::removeAllPlayers);bars.clear();previews.values().forEach(Entity::discard);previews.clear();deaths.clear();sessions.clear();missing.clear();server=null;store=null;ledger=null;loot=null;});
+        NeoForge.EVENT_BUS.addListener((ServerStoppedEvent e)->{bars.values().forEach(ServerBossEvent::removeAllPlayers);bars.clear();previews.values().forEach(Entity::discard);previews.clear();deaths.clear();sessions.clear();missing.clear();server=null;store=null;ledger=null;loot=null;npcCommands=null;});
         NeoForge.EVENT_BUS.addListener(this::tick);
         NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST,this::drops);
         NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST,(net.neoforged.neoforge.event.entity.living.LivingDeathEvent e)->{
             if(ledger!=null && e.getEntity() instanceof Mob mob && mob.getPersistentData().contains("ZianManagerRun"))deaths.put(mob.getUUID(),new Death(mob,e.getSource()));
         });
-        NeoForge.EVENT_BUS.addListener((BlockEvent.BreakEvent e)->{if(e.getState().is(ManagerBlocks.CHEST.get()))e.setCanceled(true);});
+        NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST,(BlockEvent.BreakEvent e)->{
+            if(!e.getState().is(ManagerBlocks.CHEST.get()))return;
+            if(!(e.getPlayer() instanceof ServerPlayer player) || !player.isCreative() || !admin(player) || store==null){e.setCanceled(true);return;}
+            try{var chest=store.data().chests().values().stream().filter(c->c.dimension().equals(dimension(player)) && new BlockPos(c.x(),c.y(),c.z()).equals(e.getPos())).findFirst().orElse(null);if(chest!=null)store.remove("chest",chest.uuid().toString());}
+            catch(Exception error){e.setCanceled(true);ZianManager.LOGGER.error("Cannot unregister chest; break denied",error);}
+        });
         NeoForge.EVENT_BUS.addListener((PlayerInteractEvent.RightClickBlock e)->{
             if(e.getEntity() instanceof ServerPlayer player && player.isShiftKeyDown() && e.getLevel().getBlockState(e.getPos()).is(ManagerBlocks.CHEST.get()) && admin(player)){
                 e.setCanceled(true);e.setCancellationResult(net.minecraft.world.InteractionResult.SUCCESS);openChest(player,e.getPos());
             }
         });
         NeoForge.EVENT_BUS.addListener((PlayerInteractEvent.EntityInteract e)->{
-            if(e.getEntity() instanceof ServerPlayer player && store!=null){var npc=store.data().npcs().get(e.getTarget().getUUID());if(npc!=null){e.setCanceled(true);e.setCancellationResult(net.minecraft.world.InteractionResult.SUCCESS);player.sendSystemMessage(Component.literal("<"+npc.name()+"> "+npc.text().replace("\\n","\n")));}}
+            if(e.getEntity() instanceof ServerPlayer player && store!=null){var npc=store.data().npcs().get(e.getTarget().getUUID());if(npc!=null){e.setCanceled(true);e.setCancellationResult(net.minecraft.world.InteractionResult.SUCCESS);openDialogue(player,npc);}}
         });
         NeoForge.EVENT_BUS.addListener((EntityJoinLevelEvent e)->{
             if(e.getLevel().isClientSide)return;var tag=e.getEntity().getPersistentData();if(tag.getBoolean("ZianManagerPreview") && !previews.containsKey(e.getEntity().getUUID())){e.setCanceled(true);return;}if(store!=null && tag.getBoolean("ZianManagerNpc") && !store.data().npcs().containsKey(e.getEntity().getUUID())){e.setCanceled(true);return;}if(ledger==null)return;
@@ -69,9 +74,9 @@ public final class ManagerRuntime {
         });
     }
     private void start(MinecraftServer value){server=value;ticks=0;try{
-        var base=server.getWorldPath(LevelResource.ROOT).resolve("data/zianmanager");store=new ManagerStore(base.resolve("definitions.json"));ledger=new EncounterLedger(base.resolve("encounters.json"));loot=new LootService(server,store);
+        var base=server.getWorldPath(LevelResource.ROOT).resolve("data/zianmanager");store=new ManagerStore(base.resolve("definitions.json"));ledger=new EncounterLedger(base.resolve("encounters.json"));loot=new LootService(server,store);npcCommands=new NpcCommands(base.resolve("npc_commands.json"));
         ZianManager.LOGGER.info("Zian Manager ready: {} mobs, {} zones, {} loot tables; chest protected, personal loot",store.data().mobs().size(),store.data().zones().size(),store.data().loot().size());
-    }catch(Exception error){store=null;ledger=null;loot=null;ZianManager.LOGGER.error("Zian Manager unavailable; source files preserved",error);}}
+    }catch(Exception error){store=null;ledger=null;loot=null;npcCommands=null;ZianManager.LOGGER.error("Zian Manager unavailable; source files preserved",error);}}
     private void ready(){if(server==null || store==null || ledger==null || loot==null)throw new IllegalStateException("Zian Manager no está listo; revisa sus archivos");}
     private boolean admin(ServerPlayer player){return ManagerPermissions.allows(player.createCommandSourceStack(),"admin",true);}
     public ServerLevel level(String dimension){return server.getLevel(ResourceKey.create(Registries.DIMENSION,ResourceLocation.parse(dimension)));}
@@ -122,9 +127,9 @@ public final class ManagerRuntime {
             if(z!=null){out.addProperty("notice",notice+" · Puntos: "+z.points().size()+" · Esquinas: "+(z.first()!=null)+"/"+(z.second()!=null)+" · "+(ledger.get(id)==null?"Sin encuentro":ledger.get(id).phase()));}
         }else if(type.equals("chest")){
             var c=id.isEmpty()?null:store.data().chests().get(UUID.fromString(id));field(f,"loot",c==null?"":c.loot());field(f,"minutes",c==null?10:c.minutes());if(context==null && c!=null){context=new BlockPos(c.x(),c.y(),c.z());sessions.put(player.getUUID(),new Session(token,type,id,System.currentTimeMillis()+300000,context));}
-            out.addProperty("notice","Shift + clic derecho para configurar · no se fabrica ni se rompe");
+            out.addProperty("notice","Shift + clic derecho: editar · retirada: creativo con permiso admin");
         }else if(type.equals("npc")){
-            var n=id.isEmpty()?null:store.data().npcs().get(UUID.fromString(id));field(f,"name",n==null?"Guía":n.name());field(f,"text",n==null?"Bienvenido a la dungeon.":n.text());
+            var n=id.isEmpty()?null:store.data().npcs().get(UUID.fromString(id));field(f,"name",n==null?"Guía":n.name());field(f,"text",n==null?"Bienvenido a la dungeon.":n.text());field(f,"skin",n==null?"heraldo_real":n.skin());field(f,"button",n==null?"Entrar":n.button());field(f,"command",n==null?"":n.command());field(f,"cooldownSeconds",n==null?60:n.cooldownSeconds());
         }else throw new IllegalArgumentException("Pantalla desconocida");
         out.add("fields",f);out.add("entries",list);ManagerNetwork.send(player,out.toString());
     }
@@ -136,6 +141,17 @@ public final class ManagerRuntime {
             if(session.type.equals("claim")){
                 if(!action.operation().equals("claim") || session.pos==null || player.distanceToSqr(Vec3(session.pos))>36 || !player.serverLevel().getBlockState(session.pos).is(ManagerBlocks.CHEST.get()) || !ManagerPermissions.allows(player.createCommandSourceStack(),"loot",false))throw new IllegalArgumentException("Cofre no disponible");
                 loot.deliver(player,UUID.fromString(id));return;
+            }
+            if(session.type.equals("dialogue")){
+                if(!action.operation().equals("npc_command"))throw new IllegalArgumentException("Acción inválida");
+                var npc=store.data().npcs().get(UUID.fromString(id));var entity=player.serverLevel().getEntity(UUID.fromString(id));
+                if(npc==null || entity==null || entity.distanceToSqr(player)>36 || !npc.dimension().equals(dimension(player)) || npc.command().isBlank() || !ManagerPermissions.allows(player.createCommandSourceStack(),"npc",false))throw new IllegalArgumentException("NPC no disponible");
+                npcCommands.begin(npc.uuid(),player.getUUID(),npc.cooldownSeconds(),System.currentTimeMillis());
+                String command=npc.command().replace("{player}",player.getGameProfile().getName());
+                String root=command.split(" ",2)[0];if(root.startsWith("minecraft:") && server.getCommands().getDispatcher().getRoot().getChild(root)==null && server.getCommands().getDispatcher().getRoot().getChild(root.substring(10))!=null)command=command.substring(10);
+                try{int result=server.getCommands().getDispatcher().execute(command,server.createCommandSourceStack().withLevel(player.serverLevel()).withPosition(player.position()).withPermission(4));npcCommands.complete(npc.uuid(),player.getUUID(),result>0,System.currentTimeMillis());ZianManager.LOGGER.info("[ZIAN-MANAGER] action=npc_command npc={} player={} result={}",npc.uuid(),player.getUUID(),result>0?"DONE":"FAILED");if(result<=0)throw new IllegalArgumentException("El comando no confirmó éxito; requiere revisión.");}
+                catch(Exception error){ZianManager.LOGGER.error("NPC command execution needs review for NPC {} player {}",npc.uuid(),player.getUUID(),error);throw error;}
+                return;
             }
             if(!admin(player))throw new IllegalArgumentException("No tienes permiso");
             String operation=action.operation();
@@ -176,7 +192,7 @@ public final class ManagerRuntime {
                 if(session.pos==null || player.distanceToSqr(Vec3(session.pos))>64 || !player.serverLevel().getBlockState(session.pos).is(ManagerBlocks.CHEST.get()))throw new IllegalArgumentException("Acércate al cofre y usa Shift + clic derecho");
                 String preset=str(f,"loot","");if(!store.data().loot().containsKey(preset))throw new IllegalArgumentException("Loot inexistente");UUID uuid=id.isEmpty()?UUID.randomUUID():UUID.fromString(id);store.put(new ChestSpec(uuid,dimension(player),session.pos.getX(),session.pos.getY(),session.pos.getZ(),preset,num(f,"minutes",10)));id=uuid.toString();
             }else if(session.type.equals("npc")){
-                UUID uuid=id.isEmpty()?UUID.randomUUID():UUID.fromString(id);var old=store.data().npcs().get(uuid);Point point=old==null || operation.equals("move")?here(player):old.point();var npc=new NpcSpec(uuid,old==null?dimension(player):old.dimension(),point,str(f,"name","Guía"),str(f,"text","Bienvenido"));store.put(npc);id=uuid.toString();placeNpc(npc);
+                UUID uuid=id.isEmpty()?UUID.randomUUID():UUID.fromString(id);var old=store.data().npcs().get(uuid);Point point=old==null || operation.equals("move")?here(player):old.point();var npc=new NpcSpec(uuid,old==null?dimension(player):old.dimension(),point,str(f,"name","Guía"),str(f,"text","Bienvenido"),str(f,"skin","heraldo_real"),str(f,"button","Continuar"),str(f,"command",""),num(f,"cooldownSeconds",60));store.put(npc);id=uuid.toString();placeNpc(npc);if(operation.equals("reset_npc_actions")){npcCommands.reset(uuid);notice="Usos del NPC restablecidos por el administrador";}
             }
             ZianManager.LOGGER.info("[ZIAN-MANAGER] admin={} type={} id={} action={}",player.getUUID(),session.type,id,action.operation());view(player,session.type,id,session.pos,notice);
         }catch(Exception error){player.sendSystemMessage(Component.literal(error.getMessage()==null?"No se pudo aplicar":error.getMessage()));if(admin(player))try{view(player,session.type,id,session.pos,error.getMessage());}catch(Exception ignored){}}
@@ -224,9 +240,15 @@ public final class ManagerRuntime {
             }
         }catch(Exception error){ZianManager.LOGGER.error("Encounter death/reward needs review",error);}
     }
+    public void openDialogue(ServerPlayer player,NpcSpec npc){
+        if(!ManagerPermissions.allows(player.createCommandSourceStack(),"npc",false)){player.sendSystemMessage(Component.literal("No tienes permiso para hablar con este NPC."));return;}
+        UUID token=UUID.randomUUID();sessions.put(player.getUUID(),new Session(token,"dialogue",npc.uuid().toString(),System.currentTimeMillis()+300000,null));
+        var out=new JsonObject();out.addProperty("type","dialogue");out.addProperty("token",token.toString());out.addProperty("title",npc.name());out.addProperty("text",npc.text().replace("\\n","\n"));out.addProperty("button",npc.button());out.addProperty("available",!npc.command().isBlank());ManagerNetwork.send(player,out.toString());
+    }
     private void placeNpc(NpcSpec npc){var level=level(npc.dimension());if(level==null || !level.getChunkSource().hasChunk(((int)npc.point().x())>>4,((int)npc.point().z())>>4))return;var entity=level.getEntity(npc.uuid());
-        if(entity==null){var mob=net.minecraft.world.entity.EntityType.VILLAGER.create(level);if(mob==null)return;mob.setUUID(npc.uuid());mob.setNoAi(true);mob.setInvulnerable(true);mob.setNoGravity(true);mob.setPersistenceRequired();mob.getPersistentData().putBoolean("ZianManagerNpc",true);entity=mob;entity.moveTo(npc.point().x(),npc.point().y(),npc.point().z(),npc.point().yaw(),0);level.addFreshEntity(entity);}
-        entity.setCustomName(Component.literal(npc.name()));entity.setCustomNameVisible(true);entity.teleportTo(npc.point().x(),npc.point().y(),npc.point().z());entity.setYRot(npc.point().yaw());if(entity instanceof LivingEntity living){living.setYHeadRot(npc.point().yaw());living.setYBodyRot(npc.point().yaw());}
+        if(entity!=null && !(entity instanceof ManagerNpcs.DialogueNpc)){entity.discard();entity=null;}
+        if(entity==null){var mob=ManagerNpcs.NPC.get().create(level);if(mob==null)return;mob.setUUID(npc.uuid());mob.getPersistentData().putBoolean("ZianManagerNpc",true);entity=mob;entity.moveTo(npc.point().x(),npc.point().y(),npc.point().z(),npc.point().yaw(),0);level.addFreshEntity(entity);}
+        ((ManagerNpcs.DialogueNpc)entity).skin(npc.skin());entity.setCustomName(Component.literal(npc.name()));entity.setCustomNameVisible(true);entity.teleportTo(npc.point().x(),npc.point().y(),npc.point().z());entity.setYRot(npc.point().yaw());if(entity instanceof LivingEntity living){living.setYHeadRot(npc.point().yaw());living.setYBodyRot(npc.point().yaw());}
     }
     private void tick(ServerTickEvent.Post event){
         if(event.getServer()!=server || store==null)return;for(var death:List.copyOf(deaths.values()))died(death);deaths.clear();if(++ticks%20!=0)return;long now=System.currentTimeMillis();sessions.values().removeIf(s->s.until<now);

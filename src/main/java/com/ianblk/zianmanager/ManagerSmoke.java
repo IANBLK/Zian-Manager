@@ -43,7 +43,7 @@ public final class ManagerSmoke {
             if(Files.exists(marker)){
                 var c=store.data().chests().get(CHEST);if(c==null || !level.getBlockState(new BlockPos(c.x(),c.y(),c.z())).is(ManagerBlocks.CHEST.get()))throw new IllegalStateException("Chest missing after restart");
                 if(runtime.loot().remaining(first,"chest."+CHEST,10)<=0 || !runtime.loot().pending(firstId).isEmpty())throw new IllegalStateException("Personal cooldown/receipt missing after restart");
-                if(store.data().npcs().get(NPC)==null || level.getEntity(NPC)==null)throw new IllegalStateException("Dialogue NPC missing after restart");
+                if(store.data().npcs().get(NPC)==null || !(level.getEntity(NPC) instanceof ManagerNpcs.DialogueNpc))throw new IllegalStateException("Dialogue NPC missing after restart");
                 ZianManager.LOGGER.info("Zian Manager native smoke passed: restart preserves chest, NPC, personal loot and cooldown; Lootr={}",net.neoforged.fml.ModList.get().isLoaded("lootr"));done=true;return;
             }
             runtime.cancel("smoke_room");
@@ -55,8 +55,11 @@ public final class ManagerSmoke {
             level.setBlockAndUpdate(chest,ManagerBlocks.CHEST.get().defaultBlockState());store.put(new ChestSpec(CHEST,"minecraft:overworld",chest.getX(),chest.getY(),chest.getZ(),"smoke_chest",10));
             if(!level.getBlockState(chest).is(TagKey.create(Registries.BLOCK,ResourceLocation.parse("lootr:convert/blacklist"))))throw new IllegalStateException("Lootr block blacklist missing");
             if(!ManagerBlocks.CHEST_ENTITY.get().builtInRegistryHolder().is(TagKey.create(Registries.BLOCK_ENTITY_TYPE,ResourceLocation.parse("lootr:convert/blacklist"))))throw new IllegalStateException("Lootr block-entity blacklist missing");
+            if(level.getBlockState(chest).canOcclude())throw new IllegalStateException("Chest incorrectly occludes adjacent block faces");
             if(level.getBlockState(chest).getDestroySpeed(level,chest)!=-1 || ManagerBlocks.CHEST.get().getExplosionResistance()<1000000)throw new IllegalStateException("Chest durability protection missing");
-            first.gameMode.changeGameModeForPlayer(GameType.CREATIVE);if(first.gameMode.destroyBlock(chest))throw new IllegalStateException("Creative player broke chest");first.gameMode.changeGameModeForPlayer(GameType.SURVIVAL);if(first.gameMode.destroyBlock(chest))throw new IllegalStateException("Survival player broke chest");
+            first.gameMode.changeGameModeForPlayer(GameType.CREATIVE);if(first.gameMode.destroyBlock(chest))throw new IllegalStateException("Creative non-admin broke chest");
+            server.getPlayerList().op(first.getGameProfile());if(!first.gameMode.destroyBlock(chest) || store.data().chests().containsKey(CHEST))throw new IllegalStateException("Creative admin cannot remove registered chest");server.getPlayerList().deop(first.getGameProfile());
+            level.setBlockAndUpdate(chest,ManagerBlocks.CHEST.get().defaultBlockState());store.put(new ChestSpec(CHEST,"minecraft:overworld",chest.getX(),chest.getY(),chest.getZ(),"smoke_chest",10));first.gameMode.changeGameModeForPlayer(GameType.SURVIVAL);if(first.gameMode.destroyBlock(chest))throw new IllegalStateException("Survival player broke chest");
             if(server.getRecipeManager().getRecipes().stream().anyMatch(r->r.value().getResultItem(server.registryAccess()).is(ManagerBlocks.CHEST_ITEM.get())))throw new IllegalStateException("Chest has a crafting recipe");
             int before=first.getInventory().items.stream().mapToInt(ItemStack::getCount).sum();runtime.loot().grant(first,"chest."+CHEST,"smoke_chest",10,chest);int after=first.getInventory().items.stream().mapToInt(ItemStack::getCount).sum();if(after-before!=10 || !runtime.loot().pending(firstId).isEmpty())throw new IllegalStateException("Ten-item personal chest delivery failed");
             runtime.loot().grant(second,"chest."+CHEST,"smoke_chest",10,chest);runtime.loot().grant(first,"chest."+CHEST,"smoke_chest",10,chest);if(first.getInventory().items.stream().mapToInt(ItemStack::getCount).sum()!=after)throw new IllegalStateException("Personal chest duplicate payout");
@@ -66,14 +69,23 @@ public final class ManagerSmoke {
             level.setBlockAndUpdate(chest,net.minecraft.world.level.block.Blocks.AIR.defaultBlockState());phase=1;ticks=0;return;
         }
         var run=runtime.encounter("smoke_room");
-        if(phase==1 && ++ticks>40){
+        if(phase==1 && ++ticks>120){
             if(!level.getBlockState(chest).is(ManagerBlocks.CHEST.get()))throw new IllegalStateException("Registered chest did not recover");
+            if(!(level.getEntity(NPC) instanceof ManagerNpcs.DialogueNpc npc) || !npc.skin().equals("heraldo_real"))throw new IllegalStateException("Human NPC / synced slim skin missing");
+            var configured=store.data().npcs().get(NPC);store.put(new NpcSpec(NPC,configured.dimension(),configured.point(),configured.name(),configured.text(),"heraldo_real","Recibir", "minecraft:give {player} minecraft:paper 1",60));
+            first.moveTo(npc.getX(),npc.getY(),npc.getZ()+1,0,0);runtime.openDialogue(first,store.data().npcs().get(NPC));
+            var sf=ManagerRuntime.class.getDeclaredField("sessions");sf.setAccessible(true);var sessions=(java.util.Map<?,?>)sf.get(runtime);var session=sessions.get(firstId);var tokenMethod=session.getClass().getDeclaredMethod("token");tokenMethod.setAccessible(true);var token=(UUID)tokenMethod.invoke(session);
+            int paperBefore=first.getInventory().countItem(Items.PAPER);var action=new ManagerNetwork.Action(token,"npc_command","{}");runtime.action(first,action);runtime.action(first,action);
+            if(first.getInventory().countItem(Items.PAPER)!=paperBefore+1)throw new IllegalStateException("NPC command failed or replayed without OP");
+            runtime.openDialogue(first,store.data().npcs().get(NPC));session=sessions.get(firstId);token=(UUID)tokenMethod.invoke(session);runtime.action(first,new ManagerNetwork.Action(token,"npc_command","{}"));
+            if(first.getInventory().countItem(Items.PAPER)!=paperBefore+1)throw new IllegalStateException("NPC cooldown ignored");
+
             if(run==null || run.phase()!=Phase.ACTIVE || run.spawns().size()!=3)throw new IllegalStateException("Entry did not create one shared three-mob encounter");originalRun=run.uuid();
             for(var slot:run.spawns()){var mob=(Mob)level.getEntity(slot.uuid());if(mob==null || mob.getMaxHealth()!=40 || mob.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.HEAD).isEmpty())throw new IllegalStateException("Configured mob attributes/equipment missing");mob.hurt(level.damageSources().playerAttack(first),1000);}
             phase=2;ticks=0;return;
         }
         if(phase==2 && ++ticks>40){if(run.wave()!=2 || run.phase()!=Phase.ACTIVE || !run.uuid().equals(originalRun))throw new IllegalStateException("Second wave missing or duplicate encounter");for(var slot:run.spawns())((Mob)level.getEntity(slot.uuid())).hurt(level.damageSources().playerAttack(first),1000);phase=3;ticks=0;return;}
         if(phase==3){if(run.phase()!=Phase.COMPLETE)throw new IllegalStateException("Zone did not complete");phase=4;ticks=0;return;}
-        if(phase==4){if(run.uuid().equals(originalRun)){if(++ticks>400)throw new IllegalStateException("Cooldown did not spawn a fresh encounter");return;}if(run.phase()!=Phase.ACTIVE)throw new IllegalStateException("Respawn not active");runtime.cancel("smoke_room");if(!runtime.loot().pending(firstId).isEmpty())throw new IllegalStateException("Native loot remained unconfirmed");Files.writeString(marker,firstId+"\n"+secondId+"\n");ZianManager.LOGGER.info("Zian Manager native smoke passed: shared zone, 3-mob waves, respawn, item readback, personal chest, unbreakable/no recipe, dialogue NPC; Lootr={}",net.neoforged.fml.ModList.get().isLoaded("lootr"));done=true;}
+        if(phase==4){if(run.uuid().equals(originalRun)){if(++ticks>400)throw new IllegalStateException("Cooldown did not spawn a fresh encounter");return;}if(run.phase()!=Phase.ACTIVE)throw new IllegalStateException("Respawn not active");runtime.cancel("smoke_room");if(!runtime.loot().pending(firstId).isEmpty())throw new IllegalStateException("Native loot remained unconfirmed");Files.writeString(marker,firstId+"\n"+secondId+"\n");ZianManager.LOGGER.info("Zian Manager native smoke passed: shared zone, 3-mob waves, respawn, item readback, personal chest, survival protection/creative admin removal/no recipe, dialogue NPC; Lootr={}",net.neoforged.fml.ModList.get().isLoaded("lootr"));done=true;}
     }catch(Exception error){done=true;ZianManager.LOGGER.error("Zian Manager native smoke FAILED",error);}}
 }

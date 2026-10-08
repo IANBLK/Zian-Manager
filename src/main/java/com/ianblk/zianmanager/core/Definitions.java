@@ -28,5 +28,13 @@ public final class Definitions {
         public boolean contains(String dimension,double x,double y,double z){return this.dimension.equals(dimension) && first!=null && second!=null && x>=Math.min(first.x,second.x) && x<Math.max(first.x,second.x)+1 && y>=Math.min(first.y,second.y) && y<Math.max(first.y,second.y)+2 && z>=Math.min(first.z,second.z) && z<Math.max(first.z,second.z)+1;}
     }
     public record ChestSpec(UUID uuid,String dimension,int x,int y,int z,String loot,int minutes){public ChestSpec{Objects.requireNonNull(uuid);resource(dimension);Definitions.id(loot);if(minutes<1 || minutes>43200)throw new IllegalArgumentException("Espera: 1–43200 minutos");}}
-    public record NpcSpec(UUID uuid,String dimension,Point point,String name,String text){public NpcSpec{Objects.requireNonNull(uuid);resource(dimension);if(name==null || name.isBlank() || name.length()>80 || text==null || text.isBlank() || text.length()>1024)throw new IllegalArgumentException("Diálogo inválido");}}
+    public static final List<String> NPC_SKINS=List.of("heraldo_real","guardian_celeste","centinela_sombrio","caballero_infernal","guardian_abisal","maga_prismatica","paladin_dorado","explorador_bronce","guardiana_celestial","hechicera_aurora");
+    public record NpcSpec(UUID uuid,String dimension,Point point,String name,String text,String skin,String button,String command,int cooldownSeconds){
+        public NpcSpec(UUID uuid,String dimension,Point point,String name,String text){this(uuid,dimension,point,name,text,"heraldo_real","Continuar","",60);}
+        public NpcSpec{Objects.requireNonNull(uuid);Objects.requireNonNull(point);resource(dimension);if(name==null || name.isBlank() || name.length()>80 || text==null || text.isBlank() || text.length()>1024)throw new IllegalArgumentException("Diálogo inválido");
+            skin=skin==null || skin.isBlank()?"heraldo_real":skin;button=button==null || button.isBlank()?"Continuar":button;command=command==null?"":command.trim();
+            if(!NPC_SKINS.contains(skin) || button.length()>64 || command.length()>2048 || command.chars().anyMatch(Character::isISOControl) || cooldownSeconds<0 || cooldownSeconds>2592000)throw new IllegalArgumentException("Acción o skin inválida");
+            if(command.startsWith("/"))command=command.substring(1);
+        }
+    }
 }

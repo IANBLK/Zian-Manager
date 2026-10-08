@@ -9,3 +9,5 @@ Proyecto original de IANBLK, bajo la licencia MIT del repositorio.
 No se incluye código de RCT Mod, RCT API, Cobblemon ni Lootr. Se utilizan las etiquetas públicas de exclusión de conversión de Lootr. La prueba emplea Lootr 1.11.37.122; no garantiza otras versiones o mods.
 
 Textura original generada con imagegen para este proyecto; véase art/PROMPT.md. El importador Java solo ajusta dimensiones mediante vecino más cercano.
+
+En alpha.2 se adapta el modelo PlayerModel de CustomTrainerRenderer de ZianRCT y el estilo de botones de ZianGuiScreen. Las diez nuevas skins fueron proporcionadas por el usuario; se incorporan sin modificar sus píxeles, con nombres nuevos y modelo Alex/slim.

@@ -1,4 +1,4 @@
-# Objetos, armas, cofres y zonas — alpha.15
+# Objetos, armas, cofres y zonas — alpha.16
 
 ## Pestaña creativa
 
@@ -141,7 +141,7 @@ Se usa la dimensión de la zona, también en estructuras construidas en el vací
 
 El comando usa la referencia interna, por ejemplo `/zianmanager applyzone zona_a`. El nombre visible de cada zona se cambia en **General → Nombre visible → Guardar cambios** y aparece en el cartel. Entre oleadas muestra **Oleada 2 en 30 s** según la pausa configurada; después de la última oleada muestra el tiempo para regenerar la dungeon.
 
-## Nuevas armas — alpha.15
+## Nuevas armas — alpha.16
 
 Todas usan encantamientos de espada, efectos de 30 segundos y reutilización de 90 segundos. El daño es base total antes de Fuerza y encantamientos.
 
@@ -153,3 +153,14 @@ Todas usan encantamientos de espada, efectos de 30 segundos y reutilización de 
 Nombre en color y negrita, separadores, subtítulo propio, trasfondo y legado decoran las armas/herramientas anteriores y nuevas. Se conserva la indicación de reutilización sin inventar contadores de bajas ni encantamientos. Los efectos antiguos no se rebalancean: la restricción de nivel II corresponde a las cuatro armas nuevas.
 
 Se conservan los PNG originales, cubos y posiciones de presentación, utilizando el mismo importador OBJ que los paquetes anteriores. El ninja usa la resolución UV 16 declarada en el proyecto aunque su PNG mida 32 píxeles.
+
+## Llaves y cofres decorados — alpha.16
+
+- Llave del Peregrino: común; Arca Sellada del Peregrino.
+- Llave de la Aurora: rara; Arca Sellada de la Aurora.
+- Llave del Eclipse: épica; Arca Sellada del Eclipse.
+- Llave de los Soberanos: legendaria; Arca Sellada de los Soberanos.
+
+Los cofres libres se muestran como Arca de los Caminantes, Arca de la Aurora, Arca de los Soberanos, Relicario de los Espejismos y Cofre de loot diario. Este último conserva el ID loot_vote_crate; el nombre no impone un tiempo nuevo: la renovación sigue configurándose en su editor.
+
+Todos llevan nombre en color/negrita y lore propio con separadores. Las llaves y cofres mantienen sus IDs, modelos y usos anteriores. El panel de tiempo ajusta su ancho al texto y el editor de posición usa esas mismas dimensiones.

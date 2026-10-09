@@ -1,12 +1,12 @@
 # Progreso de Zian Manager
 
-Actualizado el 8 de octubre de 2026. Versión de pruebas: **0.1.0-alpha.15**.
+Actualizado el 8 de octubre de 2026. Versión de pruebas: **0.1.0-alpha.16**.
 
 ## Estado guardado
 
 El desarrollo está en `feature/dungeon-core` y la propuesta completa está en [PR #1](https://github.com/IANBLK/Zian-Manager/pull/1). Sigue como borrador para las pruebas dentro del juego.
 
-Alpha.15 añade temporizador movible, cuatro armas y lore decorado. Conserva límites diarios, bonos temporales, rangos configurables, exención OP/bypass, anuncio personalizable, zonas y letreros. El log de alpha.14 recibido confirma aplicación de cambios y oleadas sin errores del runtime Zian Manager. La prueba real de límites en el servidor híbrido queda para el usuario, como solicitó. Guías y validaciones se guardan junto al código; mundos, cachés y credenciales quedan excluidos.
+Alpha.16 compacta el temporizador y decora llaves/cofres con nombres y lore propios. El cofre del voto se renombra a Cofre de loot diario manteniendo su ID. Conserva el temporizador movible, las cuatro armas y su lore decorado. Conserva límites diarios, bonos temporales, rangos configurables, exención OP/bypass, anuncio personalizable, zonas y letreros. El log de alpha.14 recibido confirma aplicación de cambios y oleadas sin errores del runtime Zian Manager. La prueba real de límites en el servidor híbrido queda para el usuario, como solicitó. Guías y validaciones se guardan junto al código; mundos, cachés y credenciales quedan excluidos.
 
 
 ## Implementado

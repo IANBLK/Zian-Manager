@@ -97,3 +97,11 @@ La ejecución local con Lootr comprobó el comando, los nombres, el contador de 
 - Log del usuario: alpha.14, aplicación de zona y varias oleadas registradas, sin errores del runtime Zian Manager encontrados.
 - HUD sincronizado por jugador con visibilidad según mundo configurado; posición relativa y edición por arrastre. Su presentación, movimiento y modelos nuevos necesitan aceptación visual en el cliente.
 - La prueba real del tiempo por dimensiones en el servidor híbrido queda para después, a petición del usuario. No se ha operado el servidor real.
+
+## Alpha.16: panel compacto y objetos decorados
+
+- Ancho del HUD ajustado a la fuente y texto, compartido con el editor de arrastre; altura y porcentaje de posición conservados.
+- Nombre/lore de las cuatro llaves y nueve cofres con el estilo de las armas.
+- Renombrado visual de loot_vote_crate a Cofre de loot diario, sin cambiar ID, tiempo configurado ni tablas asociadas.
+- Compilación y pruebas unitarias; comprobación nativa de asociación BlockItem y registro de llaves, además del consumo/entrega habitual.
+- La presentación en el cliente y la prueba real del servidor híbrido siguen pendientes de la comprobación del usuario.

@@ -1,3 +1,10 @@
+# 0.1.0-alpha.16
+
+- Temporizador compacto: ancho ajustado al texto, sin espacio sobrante a la derecha; editor de arrastre usa el mismo tamaño.
+- Llaves y las nueve variantes de cofre con nombre coloreado, separadores y lore de fantasía al estilo de las armas.
+- Cofre del voto renombrado a Cofre de loot diario, conservando loot_vote_crate y su configuración guardada.
+- Se conservan modelos, texturas, correspondencia entre llaves/cofres y mecánica de loot.
+
 # 0.1.0-alpha.15
 
 - Temporizador de pantalla sincronizado por el servidor, solo en mundos de dungeon con límite configurado; OP/bypass muestran Tiempo ilimitado.

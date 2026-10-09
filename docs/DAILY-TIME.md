@@ -1,4 +1,4 @@
-# Tiempo diario de dungeons — alpha.15
+# Tiempo diario de dungeons — alpha.16
 
 En `/zianmanager`, abre **Tiempo diario de dungeons**. Los límites se dejan desactivados hasta que selecciones tus mundos; no se adivinan nombres de Multiverse.
 

@@ -1,4 +1,4 @@
-# Cascos y herramientas — alpha.17
+# Cascos y herramientas — alpha.18
 
 Los dos paquetes añaden 50 objetos propios a la pestaña Zian Manager. Mantienen sus PNG, geometría y transformaciones originales; no sustituyen objetos vanilla. Solo reciben nombres de fantasía coloreados, sin habilidades ni lore adicional.
 
@@ -10,7 +10,7 @@ Un renderizador de armadura usa el modelo de cada sombrero y su transformación 
 
 ## Herramientas
 
-Hay hachas, picos, palas y espadas de madera, piedra, hierro, oro y diamante (20 modelos). Conservan velocidad de ataque, velocidad y nivel de minería, reparación por material y capacidad de encantamiento de su equivalente vanilla. Añaden +1 al daño de ataque y todas tienen 75 de durabilidad base, tal como se solicitó. Irrompibilidad y Reparación funcionan normalmente; no se simula una durabilidad fija invulnerable.
+Hay hachas, picos, palas y espadas de madera, piedra, hierro, oro y diamante (20 modelos). Conservan velocidad de ataque, velocidad y nivel de minería, reparación por material y capacidad de encantamiento de su equivalente vanilla. Añaden +1 al daño de ataque y todas tienen la durabilidad base vanilla más 75 puntos. Irrompibilidad y Reparación funcionan normalmente; no se simula una durabilidad fija invulnerable.
 
 - Espadas: encantamientos de espada.
 - Hachas: encantamientos de hacha y minería.
@@ -53,3 +53,5 @@ Los nombres se combinan con Roble Antiguo, Bastión de Piedra, Forja de Acero, A
 - Visor del Viajero de las Estrellas (`hat_ufo`).
 
 La prueba local verifica estadísticas, desgaste y encantamientos; la apariencia de los 30 sombreros equipados debe confirmarse visualmente en el cliente. Instala el mismo JAR en cliente y servidor.
+
+Durabilidad desde alpha.18: madera 134, piedra 206, hierro 325, oro 107 y diamante 1636. Los objetos ya usados conservan sus puntos de desgaste; se corrige su máximo base.

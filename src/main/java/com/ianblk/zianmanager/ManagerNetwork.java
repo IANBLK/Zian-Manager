@@ -42,7 +42,7 @@ public final class ManagerNetwork {
     }
     public static void sendTimer(ServerPlayer player,Timer data){PacketDistributor.sendToPlayer(player,data);}
     public static void register(IEventBus bus){bus.addListener((RegisterPayloadHandlersEvent event)->{
-        var channel=event.registrar("manager12");
+        var channel=event.registrar("manager13");
         channel.playToServer(Request.TYPE,Request.CODEC,(v,c)->c.enqueueWork(()->{if(c.player() instanceof ServerPlayer player)ManagerRuntime.get().request(player,v.section,v.id);}));
         channel.playToServer(Action.TYPE,Action.CODEC,(v,c)->c.enqueueWork(()->{if(c.player() instanceof ServerPlayer player)ManagerRuntime.get().action(player,v);}));
         channel.playToClient(Timer.TYPE,Timer.CODEC,(v,c)->c.enqueueWork(()->com.ianblk.zianmanager.client.DungeonTimerHud.accept(v)));

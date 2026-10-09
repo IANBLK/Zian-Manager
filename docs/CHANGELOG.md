@@ -1,3 +1,9 @@
+# 0.1.0-alpha.18
+
+- Corregida la interpretación de durabilidad: las 20 herramientas tienen vanilla +75 puntos, en vez de 75 totales.
+- Madera 134, piedra 206, hierro 325, oro 107 y diamante 1636; se conserva el daño actual de los objetos usados.
+- Sombreros mantienen 407 de durabilidad de netherita; demás estadísticas, encantamientos y modelos conservados.
+
 # 0.1.0-alpha.17
 
 - 30 sombreros como cascos reales: 4 de armadura, dureza/resistencia al empuje y 407 de durabilidad de netherita; encantamientos, reparación y desgaste normales.

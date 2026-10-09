@@ -1,4 +1,4 @@
-# Objetos, armas, cofres y zonas — alpha.17
+# Objetos, armas, cofres y zonas — alpha.18
 
 ## Pestaña creativa
 
@@ -141,7 +141,7 @@ Se usa la dimensión de la zona, también en estructuras construidas en el vací
 
 El comando usa la referencia interna, por ejemplo `/zianmanager applyzone zona_a`. El nombre visible de cada zona se cambia en **General → Nombre visible → Guardar cambios** y aparece en el cartel. Entre oleadas muestra **Oleada 2 en 30 s** según la pausa configurada; después de la última oleada muestra el tiempo para regenerar la dungeon.
 
-## Nuevas armas — alpha.17
+## Nuevas armas — alpha.18
 
 Todas usan encantamientos de espada, efectos de 30 segundos y reutilización de 90 segundos. El daño es base total antes de Fuerza y encantamientos.
 
@@ -154,7 +154,7 @@ Nombre en color y negrita, separadores, subtítulo propio, trasfondo y legado de
 
 Se conservan los PNG originales, cubos y posiciones de presentación, utilizando el mismo importador OBJ que los paquetes anteriores. El ninja usa la resolución UV 16 declarada en el proyecto aunque su PNG mida 32 píxeles.
 
-## Llaves y cofres decorados — alpha.17
+## Llaves y cofres decorados — alpha.18
 
 - Llave del Peregrino: común; Arca Sellada del Peregrino.
 - Llave de la Aurora: rara; Arca Sellada de la Aurora.

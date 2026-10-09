@@ -113,3 +113,7 @@ La ejecución local con Lootr comprobó el comando, los nombres, el contador de 
 - Prueba nativa de las 20 herramientas: daño +1 respecto de su equivalente vanilla, misma velocidad de ataque, minería y capacidad de encantamiento; durabilidad 75; encantamientos de espada/minería, Irrompibilidad y Reparación.
 - Servidor aislado con Lootr y reinicio completados. Renderizador de cascos compilado con la API de extensión de armadura y atlas de los modelos originales.
 - La apariencia equipada de los cascos y los modelos de herramientas necesita comprobación visual en el cliente; el servidor híbrido real no se modificó.
+
+## Alpha.18: corrección de durabilidad
+
+La petición se corrigió a durabilidad vanilla +75, en lugar de 75 totales. El test nativo compara cada una de las 20 herramientas con su objeto vanilla y suma 75 al máximo, manteniendo las comprobaciones de daño +1, velocidades y encantamientos. Sombreros mantienen 407. Valores esperados: madera134, piedra206, hierro325, oro107 y diamante1636.

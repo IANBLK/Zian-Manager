@@ -1,12 +1,12 @@
 # Progreso de Zian Manager
 
-Actualizado el 8 de octubre de 2026. Versión de pruebas: **0.1.0-alpha.17**.
+Actualizado el 9 de octubre de 2026. Versión de pruebas: **0.1.0-alpha.18**.
 
 ## Estado guardado
 
 El desarrollo está en `feature/dungeon-core` y la propuesta completa está en [PR #1](https://github.com/IANBLK/Zian-Manager/pull/1). Sigue como borrador para las pruebas dentro del juego.
 
-Alpha.17 añade 30 cascos y 20 herramientas con nombres de fantasía y encantamientos. Los cascos conservan durabilidad de netherita con +1 de armadura; las herramientas tienen +1 de daño y durabilidad 75. Conserva las mejoras de alpha.16, que compacta el temporizador y decora llaves/cofres con nombres y lore propios. El cofre del voto se renombra a Cofre de loot diario manteniendo su ID. Conserva el temporizador movible, las cuatro armas y su lore decorado. Conserva límites diarios, bonos temporales, rangos configurables, exención OP/bypass, anuncio personalizable, zonas y letreros. El log de alpha.14 recibido confirma aplicación de cambios y oleadas sin errores del runtime Zian Manager. La prueba real de límites en el servidor híbrido queda para el usuario, como solicitó. Guías y validaciones se guardan junto al código; mundos, cachés y credenciales quedan excluidos.
+Alpha.18 corrige las herramientas a durabilidad vanilla +75. Conserva los 30 cascos y 20 herramientas con nombres de fantasía y encantamientos. Los cascos conservan durabilidad de netherita con +1 de armadura; las herramientas tienen +1 de daño y durabilidad vanilla +75. Conserva las mejoras de alpha.16, que compacta el temporizador y decora llaves/cofres con nombres y lore propios. El cofre del voto se renombra a Cofre de loot diario manteniendo su ID. Conserva el temporizador movible, las cuatro armas y su lore decorado. Conserva límites diarios, bonos temporales, rangos configurables, exención OP/bypass, anuncio personalizable, zonas y letreros. El log de alpha.14 recibido confirma aplicación de cambios y oleadas sin errores del runtime Zian Manager. La prueba real de límites en el servidor híbrido queda para el usuario, como solicitó. Guías y validaciones se guardan junto al código; mundos, cachés y credenciales quedan excluidos.
 
 
 ## Implementado

@@ -2,7 +2,7 @@
 
 **Administra dungeons dentro del juego:** mobs personalizados, jefes, zonas con oleadas, loot personal y NPC de diálogo.
 
-**0.1.0-alpha.17 · Minecraft 1.21.1 · NeoForge 21.1.252 · Java 21**
+**0.1.0-alpha.18 · Minecraft 1.21.1 · NeoForge 21.1.252 · Java 21**
 
 Instala el mismo JAR en cliente y servidor. Es independiente de Cobblemon, RCT API y RCT Mod. Lootr y LuckPerms son opcionales.
 
@@ -156,4 +156,4 @@ DEFAULT/VIP configurables, rangos adicionales por permisos, OP/bypass ilimitado,
 
 ## Sombreros y herramientas importadas
 
-30 sombreros equipables como cascos y 20 herramientas reimaginadas. Nombres de fantasía, encantamientos normales, cascos con estadísticas de netherita y +1 de armadura; herramientas con +1 de daño y 75 de durabilidad. [Guía del equipo importado](docs/IMPORTED-GEAR.md).
+30 sombreros equipables como cascos y 20 herramientas reimaginadas. Nombres de fantasía, encantamientos normales, cascos con estadísticas de netherita y +1 de armadura; herramientas con +1 de daño y +75 de durabilidad respecto a vanilla. [Guía del equipo importado](docs/IMPORTED-GEAR.md).

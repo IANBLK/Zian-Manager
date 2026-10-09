@@ -88,3 +88,12 @@ La ejecución local con Lootr comprobó el comando, los nombres, el contador de 
 - Prueba nativa con Lootr: OP exento, comandos de bonos de 30 minutos personal y global, saldo agotado, teleportación desde consola, rechazo de reentrada y uso persistido. Reinicio del servidor correcto.
 - La salida nativa utiliza teleportación entre dimensiones para comprobar el mecanismo. La integración real Bukkit/LuckPerms/Multiverse/EternalCore/Waystones en Youer no está validada en este entorno y requiere prueba del servidor híbrido.
 - La configuración empieza desactivada; hay que seleccionar mundos y habilitarla. La salida utiliza el comando configurable del plugin, no un spawn vanilla inventado.
+
+## Alpha.15: armas, lore y temporizador
+
+- Compilación correcta y 66 pruebas unitarias sin fallos, incluida carga de configuración anterior con posición inicial del HUD.
+- Auditoría de 31 modelos: geometría finita, índices y materiales válidos, PNG originales sin cambios de bytes y datos de animación fuera del directorio de modelos.
+- Prueba nativa con Lootr y reinicio: cuatro armas con daño base 9–11, dos buffs de 30 s hasta nivel II, reutilización de 90 s y repetición bloqueada; encantamientos de espada compatibles.
+- Log del usuario: alpha.14, aplicación de zona y varias oleadas registradas, sin errores del runtime Zian Manager encontrados.
+- HUD sincronizado por jugador con visibilidad según mundo configurado; posición relativa y edición por arrastre. Su presentación, movimiento y modelos nuevos necesitan aceptación visual en el cliente.
+- La prueba real del tiempo por dimensiones en el servidor híbrido queda para después, a petición del usuario. No se ha operado el servidor real.

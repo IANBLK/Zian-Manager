@@ -528,6 +528,74 @@
       ],
       "animations": 0,
       "free": false
+    },
+    {
+      "id": "warrior_reskin",
+      "source": "WeaponReskins-vol1.zip :: warrior_reskin.bbmodel",
+      "cubes": 25,
+      "vertices": 568,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/warrior_reskin/0.png",
+          "material": "zianmanager:item/imported/warrior_reskin/0",
+          "width": 32,
+          "height": 32,
+          "sha256": "a9dc2887845b2483fffb73076edba6742871fde72aaa2b47490c59dacb6bae27"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    },
+    {
+      "id": "necromancer_reskin",
+      "source": "WeaponReskins-vol1.zip :: necromancer_reskin.bbmodel",
+      "cubes": 20,
+      "vertices": 480,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/necromancer_reskin/0.png",
+          "material": "zianmanager:item/imported/necromancer_reskin/0",
+          "width": 32,
+          "height": 32,
+          "sha256": "c17de2f519fdbf371948b8bde83ee47c38d335f8821112dbfbfa59ea1eb16b1b"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    },
+    {
+      "id": "ninja_reskin",
+      "source": "WeaponReskins-vol1.zip :: ninja_reskin.bbmodel",
+      "cubes": 17,
+      "vertices": 408,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/ninja_reskin/0.png",
+          "material": "zianmanager:item/imported/ninja_reskin/0",
+          "width": 16,
+          "height": 16,
+          "sha256": "603d662e6c0fef4a2505b9259d7b553238f58a1dd913ebe8cae3dc369b6e4ee2"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    },
+    {
+      "id": "chainsaw",
+      "source": "Chainsaw.zip :: Chainsaw/Chainsaw.bbmodel",
+      "cubes": 32,
+      "vertices": 768,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/chainsaw/0.png",
+          "material": "zianmanager:item/imported/chainsaw/0",
+          "width": 64,
+          "height": 64,
+          "sha256": "da2108260b43f14cef910dc3ce60b53df8d4478abc19bfc655c2282026973821"
+        }
+      ],
+      "animations": 0,
+      "free": false
     }
   ],
   "archives": [
@@ -550,236 +618,14 @@
     {
       "name": "altarbygwambassn2.zip",
       "sha256": "53f4153c5ae8146700c7a024e1a92e4498d3950e6f68036ae0f2df0689a38d83"
-    }
-  ],
-  "retired_models": [
-    {
-      "id": "shield1",
-      "source": "Crates and Stuff Model Pack Update 4.zip :: Crates and Stuff Model Pack/BBModels/shield1.bbmodel",
-      "cubes": 9,
-      "vertices": 216,
-      "textures": [
-        {
-          "path": "zianmanager:textures/item/imported/shield1/0.png",
-          "material": "zianmanager:item/imported/shield1/0",
-          "width": 32,
-          "height": 32,
-          "sha256": "e7735b7ab6aba7fe1ec5fec670f2e29697302ea31edeaad6aac8243c54b45cf5"
-        },
-        {
-          "path": "zianmanager:textures/item/imported/shield1/1.png",
-          "material": "zianmanager:item/imported/shield1/1",
-          "width": 16,
-          "height": 16,
-          "sha256": "c6e2c3444f2bf54a91779d499cc0bc1c2d5495f17a87d3a998b2fb6cec0e74e6"
-        }
-      ],
-      "animations": 0,
-      "free": false
     },
     {
-      "id": "straw_hat",
-      "source": "Crates and Stuff Model Pack Update 4.zip :: Crates and Stuff Model Pack/BBModels/straw_hat.bbmodel",
-      "cubes": 2,
-      "vertices": 48,
-      "textures": [
-        {
-          "path": "zianmanager:textures/item/imported/straw_hat/0.png",
-          "material": "zianmanager:item/imported/straw_hat/0",
-          "width": 32,
-          "height": 32,
-          "sha256": "3341c1b9cb162f1261bd7357c617018201527abaab081302207d1b6915d3fee0"
-        }
-      ],
-      "animations": 0,
-      "free": false
+      "name": "WeaponReskins-vol1.zip",
+      "sha256": "57f3e15fa54ab98b40187319d747dc27a3023e54f4e92cc691f94b0d506b3151"
     },
     {
-      "id": "altar_arrowdragonrend",
-      "source": "altarbygwambassn2.zip :: assets/minecraft/models/custom/arrowdragonrend.json",
-      "cubes": 1,
-      "vertices": 24,
-      "textures": [
-        {
-          "path": "zianmanager:textures/item/imported/altar_arrowdragonrend/0.png",
-          "material": "zianmanager:item/imported/altar_arrowdragonrend/0",
-          "width": 16,
-          "height": 16,
-          "sha256": "8ac5116b13d835108bcbda150e7eda1d73bbeb0e34a8726644e5adc4ba38b2c2"
-        }
-      ],
-      "animations": 0,
-      "free": false
-    },
-    {
-      "id": "altar_clockdragonrend",
-      "source": "altarbygwambassn2.zip :: assets/minecraft/models/custom/clockdragonrend.json",
-      "cubes": 1,
-      "vertices": 24,
-      "textures": [
-        {
-          "path": "zianmanager:textures/item/imported/altar_clockdragonrend/0.png",
-          "material": "zianmanager:item/imported/altar_clockdragonrend/0",
-          "width": 16,
-          "height": 16,
-          "sha256": "f0c65ec737fd87780b7fabfe39945f2ceecd3d8f5afb73810892e54a23d4e3ad"
-        }
-      ],
-      "animations": 0,
-      "free": false
-    },
-    {
-      "id": "altar_dragonheart",
-      "source": "altarbygwambassn2.zip :: assets/minecraft/models/custom/dragonheart.json",
-      "cubes": 9,
-      "vertices": 216,
-      "textures": [
-        {
-          "path": "zianmanager:textures/item/imported/altar_dragonheart/0.png",
-          "material": "zianmanager:item/imported/altar_dragonheart/0",
-          "width": 16,
-          "height": 16,
-          "sha256": "b3655a1e071b1d78bb4afe584c9285e6049cfef8a7f6eca4d3a0c6ac23c397d1"
-        }
-      ],
-      "animations": 0,
-      "free": false
-    },
-    {
-      "id": "altar_handle",
-      "source": "altarbygwambassn2.zip :: assets/minecraft/models/custom/handle.json",
-      "cubes": 8,
-      "vertices": 192,
-      "textures": [
-        {
-          "path": "zianmanager:textures/item/imported/altar_handle/0.png",
-          "material": "zianmanager:item/imported/altar_handle/0",
-          "width": 16,
-          "height": 16,
-          "sha256": "7a7c9b7b450e3eb41d415ba7bc6ec310f324294464271eaeffc0dcbd8f4bcaf2"
-        }
-      ],
-      "animations": 0,
-      "free": false
-    },
-    {
-      "id": "altar_harness",
-      "source": "altarbygwambassn2.zip :: assets/minecraft/models/custom/harness.json",
-      "cubes": 11,
-      "vertices": 264,
-      "textures": [
-        {
-          "path": "zianmanager:textures/item/imported/altar_harness/0.png",
-          "material": "zianmanager:item/imported/altar_harness/0",
-          "width": 16,
-          "height": 16,
-          "sha256": "8e08583cad39dc1db63cea63c5904dd3fb9f2703f5271ef175be3353d6583573"
-        }
-      ],
-      "animations": 0,
-      "free": false
-    },
-    {
-      "id": "altar_hotbarsym",
-      "source": "altarbygwambassn2.zip :: assets/minecraft/models/custom/hotbarsym.json",
-      "cubes": 4,
-      "vertices": 96,
-      "textures": [
-        {
-          "path": "zianmanager:textures/item/imported/altar_hotbarsym/0.png",
-          "material": "zianmanager:item/imported/altar_hotbarsym/0",
-          "width": 16,
-          "height": 16,
-          "sha256": "7a82837d914760f87663e063abc3c5c903274222195ef67eb0527a6084119d8f"
-        }
-      ],
-      "animations": 0,
-      "free": false
-    },
-    {
-      "id": "altar_soul",
-      "source": "altarbygwambassn2.zip :: assets/minecraft/models/custom/soul.json",
-      "cubes": 16,
-      "vertices": 384,
-      "textures": [
-        {
-          "path": "zianmanager:textures/item/imported/altar_soul/0.png",
-          "material": "zianmanager:item/imported/altar_soul/0",
-          "width": 16,
-          "height": 16,
-          "sha256": "27a7d5ed18ff3944866af14c27c2f3e9cf55736eda0f4391883d16d44d53355b"
-        }
-      ],
-      "animations": 0,
-      "free": false
-    },
-    {
-      "id": "altar_void1",
-      "source": "altarbygwambassn2.zip :: assets/minecraft/models/custom/void1.json",
-      "cubes": 109,
-      "vertices": 2616,
-      "textures": [
-        {
-          "path": "zianmanager:textures/item/imported/altar_void1/0.png",
-          "material": "zianmanager:item/imported/altar_void1/0",
-          "width": 16,
-          "height": 16,
-          "sha256": "d85a7e402588e230c629c31874546c19586f025048390c98fec9116b8cc479b0"
-        }
-      ],
-      "animations": 0,
-      "free": false
-    },
-    {
-      "id": "altar_void2",
-      "source": "altarbygwambassn2.zip :: assets/minecraft/models/custom/void2.json",
-      "cubes": 5,
-      "vertices": 120,
-      "textures": [
-        {
-          "path": "zianmanager:textures/item/imported/altar_void2/0.png",
-          "material": "zianmanager:item/imported/altar_void2/0",
-          "width": 16,
-          "height": 16,
-          "sha256": "512edf1b107bb3933f63a93d0038fc36052eb8f928c7882be91fb81b3ca5b2ee"
-        }
-      ],
-      "animations": 0,
-      "free": false
-    },
-    {
-      "id": "altar_void3",
-      "source": "altarbygwambassn2.zip :: assets/minecraft/models/custom/void3.json",
-      "cubes": 5,
-      "vertices": 120,
-      "textures": [
-        {
-          "path": "zianmanager:textures/item/imported/altar_void3/0.png",
-          "material": "zianmanager:item/imported/altar_void3/0",
-          "width": 16,
-          "height": 16,
-          "sha256": "512edf1b107bb3933f63a93d0038fc36052eb8f928c7882be91fb81b3ca5b2ee"
-        }
-      ],
-      "animations": 0,
-      "free": false
-    },
-    {
-      "id": "altar_warden",
-      "source": "altarbygwambassn2.zip :: assets/minecraft/models/custom/warden.json",
-      "cubes": 9,
-      "vertices": 216,
-      "textures": [
-        {
-          "path": "zianmanager:textures/item/imported/altar_warden/0.png",
-          "material": "zianmanager:item/imported/altar_warden/0",
-          "width": 16,
-          "height": 16,
-          "sha256": "dec6bda4665db56e79404619f9340e1dad21186dd1e442231ecca9774577ee53"
-        }
-      ],
-      "animations": 0,
-      "free": false
+      "name": "Chainsaw.zip",
+      "sha256": "2316eadc921d835b18b2f02c174711f3e48922109ce4673cb92a9fa4d659534f"
     }
   ]
 }

@@ -1,12 +1,13 @@
 # Progreso de Zian Manager
 
-Actualizado el 8 de octubre de 2026. Versión de pruebas: **0.1.0-alpha.14**.
+Actualizado el 8 de octubre de 2026. Versión de pruebas: **0.1.0-alpha.15**.
 
 ## Estado guardado
 
 El desarrollo está en `feature/dungeon-core` y la propuesta completa está en [PR #1](https://github.com/IANBLK/Zian-Manager/pull/1). Sigue como borrador para las pruebas dentro del juego.
 
-Alpha.14 añade límites diarios, bonos temporales, rangos configurables, exención OP/bypass y anuncio personalizable. Conserva las correcciones de alpha.13: el formato del cartel y muestra la cuenta atrás explícita de la próxima oleada. El log recibido usaba alpha.11; se requiere reemplazar el JAR para disponer del comando applyzone. Conserva nombres visibles de dungeon, tiempos modificables durante la espera, botón/comando para aplicar y reiniciar y letreros públicos por estado sin recargar la entidad. Conserva el autocompletado de recompensas en revisión, consumo de llaves y componentes. Conserva el contador flotante de regeneración, protección de dos segundos entre usos de llaves y reintento breve de archivos bloqueados. Conserva cofres con llave sin espera, apariciones automáticas dentro de zonas y porcentajes reales de drop solo para mobs normales. Las validaciones locales y límites se documentan en VALIDATION.md. La compilación y los registros también se generan en GitHub Actions; los mundos, cachés y credenciales quedan fuera del repositorio.
+Alpha.15 añade temporizador movible, cuatro armas y lore decorado. Conserva límites diarios, bonos temporales, rangos configurables, exención OP/bypass, anuncio personalizable, zonas y letreros. El log de alpha.14 recibido confirma aplicación de cambios y oleadas sin errores del runtime Zian Manager. La prueba real de límites en el servidor híbrido queda para el usuario, como solicitó. Guías y validaciones se guardan junto al código; mundos, cachés y credenciales quedan excluidos.
+
 
 ## Implementado
 
@@ -19,7 +20,7 @@ Alpha.14 añade límites diarios, bonos temporales, rangos configurables, exenci
 - Cofres importados con apertura directa, animaciones y variantes con llave. Loot al inventario, sobrantes al suelo y resumen de objetos/cantidades en el chat.
 - Registro persistente de recompensas, consumo de llave, renovación y revisión de entregas ambiguas.
 - NPC humanos Alex/slim con diez skins, diálogo y hasta ocho botones de comando con esperas independientes.
-- Pestaña creativa propia con 27 modelos activos; trece objetos retirados del catálogo y los sorteos nuevos, con identificadores mínimos para datos anteriores.
+- Pestaña creativa propia con 31 modelos activos; trece objetos retirados del catálogo y los sorteos nuevos, con identificadores mínimos para datos anteriores.
 - Armas y herramientas con encantamientos de su categoría, balance solicitado, tridente lanzable, habilidades conservadas y nombres/lore de fantasía. Tooltips muestran solo reutilización respecto a las habilidades.
 
 ## Validación realizada

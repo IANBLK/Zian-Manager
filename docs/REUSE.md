@@ -15,3 +15,5 @@ En alpha.2 se adapta el modelo PlayerModel de CustomTrainerRenderer de ZianRCT y
 Alpha.3: el editor visual se inspira en GachaScreen de Zian Utilities (MIT © ZIANBLK), reutilizando el patrón de filas con iconos, controles de peso −/+ y edición directa. No se incluyen pagos, tiradas ni dependencias del gacha.
 
 Alpha.4 incorpora modelos y texturas de los cinco ZIP proporcionados por el usuario. `imported-assets.json` documenta los archivos fuente y sus hashes. La licencia MIT del código no cambia ni atribuye una licencia nueva al arte de esos paquetes; se mantienen separados del código original.
+
+Alpha.15 incorpora WeaponReskins-vol1.zip y Chainsaw.zip proporcionados por el usuario. Se extraen los PNG sin modificar sus bytes y se conservan cubos, transformaciones y presentación. Para modelos Java se usa la resolución UV del proyecto, conforme al [codec oficial de Blockbench](https://github.com/JannisX11/blockbench/blob/master/js/formats/java/java_block.ts); el ninja declara resolución UV 16 con PNG de 32 píxeles. El importador incremental --extra conserva los modelos existentes cuando sus ZIP fuente ya no están disponibles.

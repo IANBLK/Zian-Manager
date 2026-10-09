@@ -1,8 +1,8 @@
-# Objetos, armas, cofres y zonas — alpha.14
+# Objetos, armas, cofres y zonas — alpha.15
 
 ## Pestaña creativa
 
-La pestaña **Zian Manager** contiene los 27 modelos activos: 4 martillos, 3 armas de fantasía, 4 llaves, 9 cofres y 7 armas/herramientas del paquete Altar. Todos usan IDs propios `zianmanager:`; no reemplazan objetos, sonidos ni interfaces de Minecraft.
+La pestaña **Zian Manager** contiene los 31 modelos activos: 4 martillos, 7 armas de fantasía, 4 llaves, 9 cofres y 7 armas/herramientas del paquete Altar. Todos usan IDs propios `zianmanager:`; no reemplazan objetos, sonidos ni interfaces de Minecraft.
 
 No se añaden recetas: están destinados al editor de loot, comandos y creativo.
 
@@ -140,3 +140,16 @@ Para cambios de mobs, oleadas o tamaño durante un encuentro, usa **Aplicar y re
 Se usa la dimensión de la zona, también en estructuras construidas en el vacío. Coloca el centro sobre el suelo real de la estructura y ajusta la altura y el radio para abarcarla. Debe existir suelo firme y espacio libre; el mod no genera terreno ni coloca mobs sobre el vacío. Creativo y espectador no activan la dungeon automáticamente; un administrador puede usar Probar encuentro.
 
 El comando usa la referencia interna, por ejemplo `/zianmanager applyzone zona_a`. El nombre visible de cada zona se cambia en **General → Nombre visible → Guardar cambios** y aparece en el cartel. Entre oleadas muestra **Oleada 2 en 30 s** según la pausa configurada; después de la última oleada muestra el tiempo para regenerar la dungeon.
+
+## Nuevas armas — alpha.15
+
+Todas usan encantamientos de espada, efectos de 30 segundos y reutilización de 90 segundos. El daño es base total antes de Fuerza y encantamientos.
+
+- Solaris, Juramento del Rey (`warrior_reskin`): daño 11, Fuerza II y Resistencia I.
+- Réquiem de Nhal (`necromancer_reskin`): daño 9, Regeneración II y Absorción II.
+- Tsukikage, Filo de la Luna (`ninja_reskin`): daño 10, Fuerza I y Regeneración I.
+- Kárnax, la Devoraacero (`chainsaw`): daño 11, Fuerza II y Resistencia II; ataque más lento.
+
+Nombre en color y negrita, separadores, subtítulo propio, trasfondo y legado decoran las armas/herramientas anteriores y nuevas. Se conserva la indicación de reutilización sin inventar contadores de bajas ni encantamientos. Los efectos antiguos no se rebalancean: la restricción de nivel II corresponde a las cuatro armas nuevas.
+
+Se conservan los PNG originales, cubos y posiciones de presentación, utilizando el mismo importador OBJ que los paquetes anteriores. El ninja usa la resolución UV 16 declarada en el proyecto aunque su PNG mida 32 píxeles.

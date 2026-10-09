@@ -1,4 +1,4 @@
-# Tiempo diario de dungeons — alpha.14
+# Tiempo diario de dungeons — alpha.15
 
 En `/zianmanager`, abre **Tiempo diario de dungeons**. Los límites se dejan desactivados hasta que selecciones tus mundos; no se adivinan nombres de Multiverse.
 
@@ -46,3 +46,9 @@ La prueba local usa NeoForge con Lootr y un comando de teleportación equivalent
 No se ha instalado ni modificado nada en el servidor real.
 
 Referencias de integración: [mundos y claves de Multiverse](https://mvplugins.org/core/how-to/customise-world-creation/), [comandos y permisos de EternalCore](https://eternalcode.pl/projects/eternalcore), [permisos de LuckPerms](https://luckperms.net/wiki/Permission-commands).
+
+## Temporizador movible
+
+En Tiempo diario de dungeons → Pantalla activa Mostrar temporizador y pulsa Mover temporizador. Arrastra la tarjeta y guarda su posición. También puedes ajustar los porcentajes X/Y de 0 a 100; se adaptan a la resolución y escala de GUI. La posición se guarda en la configuración del servidor.
+
+La tarjeta solo aparece dentro de los mundos configurados mientras el límite diario está habilitado. Muestra HH:MM:SS; OP y bypass ven Tiempo ilimitado. Se oculta al salir, desconectarse o desactivarse. El editor permite una vista previa para colocarla incluso fuera de una dungeon. El saldo proviene del servidor y el cliente solo suaviza la cuenta atrás.

@@ -2,7 +2,7 @@
 import base64,copy,hashlib,json,math,struct,sys
 from pathlib import Path
 from zipfile import ZipFile
-ROOT=Path(__file__).resolve().parents[1];ASSETS=ROOT/'src/main/resources/assets/zianmanager';DOWNLOADS=Path(sys.argv[1]) if len(sys.argv)>1 else Path('C:/Users/pauln/Downloads')
+ROOT=Path(__file__).resolve().parents[1];ASSETS=ROOT/'src/main/resources/assets/zianmanager';DOWNLOADS=Path(next((a for a in sys.argv[1:] if not a.startswith('--')),'C:/Users/pauln/Downloads'))
 manifest=[]
 def write(path,data):
  path.parent.mkdir(parents=True,exist_ok=True);path.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
@@ -85,6 +85,28 @@ def model(id,d,textures,source,free=False):
   write(ASSETS/f'models/item/{id}.json',{'parent':f'zianmanager:block/{id}'})
   write(ASSETS/f'blockstates/{id}.json',{'variants':{f'facing={face}':{'model':f'zianmanager:block/{id}','y':angle} for face,angle in [('north',0),('east',90),('south',180),('west',270)]}})
  manifest.append({'id':id,'source':source,'cubes':len(cubes),'vertices':count,'textures':textures,'animations':len(d.get('animations',[])),'free':free})
+def import_extra_weapons():
+ # New Java-block weapons use project UV resolution, matching Blockbench's Java codec.
+ for pack in ['WeaponReskins-vol1.zip','Chainsaw.zip']:
+  with ZipFile(DOWNLOADS/pack) as z:
+   for n in z.namelist():
+    if not n.endswith('.bbmodel'):continue
+    d=json.loads(z.read(n));id=Path(n).stem.lower();tx=[]
+    for i,t in enumerate(d['textures']):
+     pixels=base64.b64decode(t['source'].split(',',1)[1]);uv=[d['resolution']['width'],d['resolution']['height']]
+     tx.append(texture(id,i,pixels,uv))
+    model(id,d,tx,pack+' :: '+n)
+
+if '--extra' in sys.argv:
+ report=json.loads((ROOT/'docs/imported-assets.json').read_text(encoding='utf-8'))
+ manifest=[m for m in report['models'] if m['id'] not in {'warrior_reskin','necromancer_reskin','ninja_reskin','chainsaw'}]
+ import_extra_weapons()
+ archives=[a for a in report['archives'] if a['name'] not in {'WeaponReskins-vol1.zip','Chainsaw.zip'}]
+ archives += [{'name':n,'sha256':hashlib.sha256((DOWNLOADS/n).read_bytes()).hexdigest()} for n in ['WeaponReskins-vol1.zip','Chainsaw.zip']]
+ write(ROOT/'docs/imported-assets.json',{'models':manifest,'archives':archives})
+ print('Imported extra weapons; existing models retained and texture bytes unchanged.')
+ sys.exit(0)
+
 # Hammers: source geometry and display transforms unchanged, four palette variants.
 with ZipFile(DOWNLOADS/'Multicolored Hammer Pack.zip') as z:
  d=json.loads(z.read('Multicolored Hammer Pack/json/hammer_model.json'))
@@ -119,5 +141,6 @@ with ZipFile(DOWNLOADS/'altarbygwambassn2.zip') as z:
     e['uuid']=str(i);e['type']='cube'
     for f in e['faces'].values():f['texture']=lookup[f['texture'].removeprefix('#')]
    model(id,d,tx,'altarbygwambassn2.zip :: '+n)
-write(ROOT/'docs/imported-assets.json',{'models':manifest,'archives':[{'name':n,'sha256':hashlib.sha256((DOWNLOADS/n).read_bytes()).hexdigest()} for n in ['Multicolored Hammer Pack.zip','Fantasy Weapons Pack 1.zip','crate_pack_2.zip','Crates and Stuff Model Pack Update 4.zip','altarbygwambassn2.zip']]})
+import_extra_weapons()
+write(ROOT/'docs/imported-assets.json',{'models':manifest,'archives':[{'name':n,'sha256':hashlib.sha256((DOWNLOADS/n).read_bytes()).hexdigest()} for n in ['Multicolored Hammer Pack.zip','Fantasy Weapons Pack 1.zip','crate_pack_2.zip','Crates and Stuff Model Pack Update 4.zip','altarbygwambassn2.zip','WeaponReskins-vol1.zip','Chainsaw.zip']]})
 print('Imported',len(manifest),'models; texture pixels unmodified.')

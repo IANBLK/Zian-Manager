@@ -1,3 +1,13 @@
+# 0.1.0-alpha.15
+
+- Temporizador de pantalla sincronizado por el servidor, solo en mundos de dungeon con límite configurado; OP/bypass muestran Tiempo ilimitado.
+- Posición movible mediante arrastre o porcentajes desde Pantalla en el menú de tiempo diario; compatible con configuración anterior.
+- Cuatro armas importadas: Solaris (11), Réquiem (9), Tsukikage (10) y Kárnax (11); buffs de 30 s hasta nivel II y espera de 90 s.
+- Encantamientos de espada para las armas nuevas y registro en la pestaña creativa propia.
+- Nombres coloreados y lore de fantasía con separadores y secciones para las armas/herramientas.
+- Importación incremental de modelos OBJ y PNG originales; corrección de resolución UV del ninja sin modificar píxeles.
+- Revisión del log de alpha.14: registra aplicación de zonas y oleadas; no se encontraron errores del runtime Zian Manager.
+
 # 0.1.0-alpha.14
 
 - Límites diarios compartidos entre mundos de dungeon: DEFAULT 30/90 y VIP 120/180 minutos, configurables, con perfiles adicionales por permiso.

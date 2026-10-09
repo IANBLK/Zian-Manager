@@ -16,6 +16,7 @@ public final class EncounterLedger {
     public Run get(String zone){return runs.get(zone);}
     public Collection<Run> all(){return runs.values();}
     public void put(Run run) throws IOException{var next=new LinkedHashMap<>(runs);next.put(run.zone,run);AtomicJson.write(path,new Data(1,next));runs=Map.copyOf(next);}
+    public void updateWait(String zone,int oldPause,int newPause,int oldCooldown,int newCooldown)throws IOException{var run=get(zone);if(run==null || run.phase()!=Phase.COMPLETE && run.phase()!=Phase.WAITING)return;int old=run.phase()==Phase.COMPLETE?oldCooldown:oldPause,next=run.phase()==Phase.COMPLETE?newCooldown:newPause;if(old==next)return;long ready=Math.max(0,run.readyAt()-(long)old*1000+(long)next*1000);put(new Run(run.uuid(),run.zone(),run.wave(),run.phase(),ready,run.spawns(),run.players(),run.baseMobs(),run.scaledPlayers()));}
     public boolean defeated(String zone,UUID runId,UUID entity,int totalWaves,int pause,int cooldown,long now) throws IOException{
         Run old=runs.get(zone);if(old==null || !old.uuid.equals(runId) || old.phase!=Phase.ACTIVE)return false;
         List<Spawn> next=new ArrayList<>();boolean changed=false;

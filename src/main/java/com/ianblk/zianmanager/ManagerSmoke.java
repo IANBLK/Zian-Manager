@@ -24,7 +24,7 @@ import java.util.*;
 /** Opt-in localhost integration fixtures; never runs in normal servers. */
 public final class ManagerSmoke {
     private int phase,ticks;private boolean done;private ServerPlayer first,second;private UUID originalRun;private BlockPos chest;private long spawned;
-    private UUID firstId,secondId;private int initialMobs;
+    private UUID labelId;private net.minecraft.world.phys.Vec3 labelPos;private UUID firstId,secondId;private int initialMobs;
     private static final UUID FIRST=UUID.fromString("00000000-0000-0000-0000-000000000111"),SECOND=UUID.fromString("00000000-0000-0000-0000-000000000112"),CHEST=UUID.fromString("00000000-0000-0000-0000-000000000113"),NPC=UUID.fromString("00000000-0000-0000-0000-000000000114");
     public ManagerSmoke(){if(!"true".equals(System.getenv("ZIANMANAGER_SMOKE")))return;NeoForge.EVENT_BUS.addListener(this::tick);}
     private void tick(ServerTickEvent.Post event){if(done)return;var server=event.getServer();try{
@@ -51,7 +51,7 @@ public final class ManagerSmoke {
             List<net.minecraft.world.item.Item> items=List.of(Items.DIAMOND,Items.EMERALD,Items.IRON_INGOT,Items.GOLD_INGOT,Items.REDSTONE,Items.COAL,Items.LAPIS_LAZULI,Items.TORCH,Items.COBBLESTONE,Items.BREAD,Items.APPLE,Items.CARROT,Items.POTATO,Items.STICK,Items.STRING,Items.ARROW,Items.BONE,Items.WHEAT,Items.LEATHER,Items.AMETHYST_SHARD);
             var entries=new ArrayList<LootEntry>();for(var item:items)entries.add(new LootEntry(new ItemStack(item).save(server.registryAccess()).toString(),1,1,1));
             store.put(new LootSpec("smoke_chest","CHEST",10,entries,""));store.put(new LootSpec("smoke_mob","MOB",2,entries.subList(0,10),""));store.put(new LootSpec("smoke_boss","BOSS",5,entries.subList(0,10),""));
-            var guard=new MobSpec("smoke_guard","Guardián de prueba","minecraft:zombie",40,6,2,1,0.2,List.of(new Effect("minecraft:resistance",0,120)),Map.of("head",new ItemStack(Items.IRON_HELMET).save(server.registryAccess()).toString()),"smoke_mob",false);store.put(guard);
+            var guard=new MobSpec("smoke_guard","Guardián de prueba","minecraft:zombie",40,6,2,1,0.2,List.of(new Effect("minecraft:resistance",0,120)),Map.of("head",new ItemStack(Items.IRON_HELMET).save(server.registryAccess()).toString()),"smoke_mob",false);store.put(guard);VoidZoneSmoke.verify(runtime,first);
             for(int px=x-2;px<x+12;px++)for(int pz=z-2;pz<z+8;pz++){for(int py=y;py<y+4;py++)level.setBlockAndUpdate(new BlockPos(px,py,pz),net.minecraft.world.level.block.Blocks.AIR.defaultBlockState());level.setBlockAndUpdate(new BlockPos(px,y-1,pz),net.minecraft.world.level.block.Blocks.STONE.defaultBlockState());}
             level.setBlockAndUpdate(chest,ManagerBlocks.CRATES.get("loot_common_crate").get().defaultBlockState());store.put(new ChestSpec(CHEST,"minecraft:overworld",chest.getX(),chest.getY(),chest.getZ(),"smoke_chest",10));
             if(!level.getBlockState(chest).is(TagKey.create(Registries.BLOCK,ResourceLocation.parse("lootr:convert/blacklist"))))throw new IllegalStateException("Lootr block blacklist missing");
@@ -67,7 +67,7 @@ public final class ManagerSmoke {
             CenteredZoneSmoke.verify(runtime,first);EquipmentSmoke.setup(runtime,first);EquipmentSmoke.directOverflow(runtime,first,false);EquipmentSmoke.directOverflow(runtime,second,true);
             store.put(new NpcSpec(NPC,"minecraft:overworld",new Point(x+10,y,z,90),"Guía de prueba","Bienvenido a la dungeon."));
             var points=List.of(new Point(x+2.5,y,z+4.5,0),new Point(x+5.5,y,z+4.5,0),new Point(x+8.5,y,z+4.5,0));
-            store.put(new ZoneSpec("smoke_room","minecraft:overworld",new Point(x-2,y,z-2,0),new Point(x+12,y+6,z+8,0),List.of(),List.of("smoke_guard"),2,1,10,"smoke_boss",true));
+            store.put(new ZoneSpec("smoke_room","minecraft:overworld",new Point(x-2,y,z-2,0),new Point(x+12,y+6,z+8,0),List.of(),List.of("smoke_guard"),2,1,10,"smoke_boss",true,null,0,0,0,0,"Cripta de prueba"));
             level.setBlockAndUpdate(chest,net.minecraft.world.level.block.Blocks.AIR.defaultBlockState());phase=1;ticks=0;return;
         }
         var run=runtime.encounter("smoke_room");
@@ -86,16 +86,18 @@ public final class ManagerSmoke {
 
 
             if(run==null || run.phase()!=Phase.ACTIVE || run.spawns().size()<1 || run.spawns().size()>3)throw new IllegalStateException("Single-template automatic zone did not create 1-3 mobs");originalRun=run.uuid();initialMobs=run.spawns().size();
+            for(var e:level.getAllEntities())if(e instanceof net.minecraft.world.entity.Display.TextDisplay && e.saveWithoutId(new net.minecraft.nbt.CompoundTag()).getString("text").contains("Cripta de prueba")){labelId=e.getUUID();labelPos=e.position();}if(labelId==null)throw new IllegalStateException("Public named active dungeon label missing");
             phase=5;ticks=0;return;
         }
         if(phase==5 && ++ticks>40){
             if(run.spawns().size()!=initialMobs+2 || run.scaledPlayers()!=2 || !run.uuid().equals(originalRun))throw new IllegalStateException("Second player did not add exactly two mobs to shared encounter");
+            if(level.getEntity(labelId)==null || !level.getEntity(labelId).position().equals(labelPos))throw new IllegalStateException("Dungeon label moved or disappeared across updates");
             var zone=store.data().zones().get("smoke_room");
             for(var slot:run.spawns()){var mob=(Mob)level.getEntity(slot.uuid());if(mob==null || mob.getMaxHealth()!=40 || mob.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.HEAD).isEmpty() || !zone.contains(zone.dimension(),slot.point().x(),slot.point().y(),slot.point().z()))throw new IllegalStateException("Automatic spawn outside zone or missing configured attributes");mob.hurt(level.damageSources().playerAttack(first),1000);}
             phase=2;ticks=0;return;
         }
         if(phase==2 && ++ticks>40){if(run.wave()!=2 || run.phase()!=Phase.ACTIVE || !run.uuid().equals(originalRun))throw new IllegalStateException("Second wave missing or duplicate encounter");for(var slot:run.spawns())((Mob)level.getEntity(slot.uuid())).hurt(level.damageSources().playerAttack(first),1000);phase=3;ticks=0;return;}
-        if(phase==3 && ++ticks>25){if(run.phase()!=Phase.COMPLETE)throw new IllegalStateException("Zone did not complete");boolean hologram=false;for(var e:level.getAllEntities())if(e instanceof net.minecraft.world.entity.Display.TextDisplay && e.getPersistentData().getBoolean("ZianManagerCountdown")){var tag=e.saveWithoutId(new net.minecraft.nbt.CompoundTag());if(tag.getString("text").contains("La zona se regenerar"))hologram=true;}if(!hologram)throw new IllegalStateException("Dungeon regeneration countdown hologram missing");ZianManager.LOGGER.info("Zian Manager countdown hologram smoke passed");phase=4;ticks=0;return;}
+        if(phase==3 && ++ticks>25){if(run.phase()!=Phase.COMPLETE)throw new IllegalStateException("Zone did not complete");boolean hologram=false;for(var e:level.getAllEntities())if(e instanceof net.minecraft.world.entity.Display.TextDisplay && e.getPersistentData().getBoolean("ZianManagerCountdown")){var tag=e.saveWithoutId(new net.minecraft.nbt.CompoundTag());if(tag.getString("text").contains("La zona se regenerar"))hologram=true;}if(!hologram)throw new IllegalStateException("Dungeon regeneration countdown hologram missing");ZianManager.LOGGER.info("Zian Manager countdown hologram smoke passed");ZoneRefreshSmoke.verify(runtime,first);phase=4;ticks=0;return;}
         if(phase==4){if(run.uuid().equals(originalRun)){if(++ticks>400)throw new IllegalStateException("Cooldown did not spawn a fresh encounter");return;}if(run.phase()!=Phase.ACTIVE)throw new IllegalStateException("Respawn not active");runtime.cancel("smoke_room");if(!runtime.loot().pending(firstId).isEmpty())throw new IllegalStateException("Native loot remained unconfirmed");Files.writeString(marker,firstId+"\n"+secondId+"\n");ZianManager.LOGGER.info("Zian Manager native smoke passed: shared automatic single-template zone, 1-3 mobs plus two per extra player, respawn, item readback, personal chest, survival protection/creative admin removal/no recipe, dialogue NPC; Lootr={}",net.neoforged.fml.ModList.get().isLoaded("lootr"));done=true;}
     }catch(Exception error){done=true;ZianManager.LOGGER.error("Zian Manager native smoke FAILED",error);}}
 }

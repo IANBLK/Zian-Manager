@@ -63,3 +63,13 @@ Compilación y 36 pruebas unitarias superadas. Auditoría de 27 modelos activos 
 - Prueba del dispatcher real en servidor local con Lootr: `claim` sugiere pendientes propios; `resolve` y `resolvekey` sugieren los ID del jugador elegido según su estado; no muestran premios de otro jugador.
 - `resolve` sugiere únicamente los componentes APPLYING o REVIEW_REQUIRED de esa entrega.
 - Las sugerencias no ejecutan ni confirman recompensas y conservan los permisos de administración.
+
+## Alpha.12: aplicar cambios y letreros públicos
+
+- 59 pruebas unitarias: nombre persistente y compatible, modificación de regeneración desde la finalización original y modificación de pausa sin reiniciar una oleada activa.
+- Prueba nativa de guardar nombre y tiempo durante la espera, comando applyzone y zona que mantiene su estado habilitado tras el reinicio.
+- Letrero público visible durante la oleada, con nombre personalizado; conserva UUID y posición entre actualizaciones. Cuenta atrás comprobada después de completar el encuentro.
+- No se recibió un log del usuario: el archivo adjunto era el JAR. La causa concreta de la falta de mobs necesita el registro correspondiente; la zona en revisión queda indicada y puede reiniciarse explícitamente.
+- Plataforma suspendida en otra dimensión: sin suelo no se preparan mobs; al construir la plataforma aparecen dentro del área y en la dimensión configurada.
+- Prueba completa con Lootr y reinicio correcta.
+- La dimensión personalizada real y sus shaders no se probaron; las apariciones requieren una estructura con suelo firme y espacio libre en el área configurada.

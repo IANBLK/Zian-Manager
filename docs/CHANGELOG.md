@@ -1,3 +1,12 @@
+# 0.1.0-alpha.12
+
+- Nombre visible de dungeon, compatible con zonas anteriores que usaban solo una referencia.
+- Guardar regeneración y pausas recalcula la espera del encuentro actual desde su finalización original.
+- Botón Aplicar y reiniciar y comando applyzone con autocompletado para reiniciar encuentros sin premios, conservando la configuración y el estado habilitado.
+- Letrero público permanente por estado: disponible, en curso, próxima oleada, regeneración o revisión, con nombre personalizado.
+- Actualización del texto sin recargar ni mover la entidad; mayor alcance visual, texto iluminado y legible a través de obstáculos.
+- Pruebas de nombres persistentes, esperas modificadas y plataforma suspendida en otra dimensión sin terreno natural.
+
 # 0.1.0-alpha.11
 
 - Autocompletado de IDs en `resolve` y `resolvekey`, filtrado por jugador y estado correspondiente.

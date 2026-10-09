@@ -29,6 +29,7 @@ public final class ManagerScreen extends ManagerThemedScreen {
    if(type.equals("mob") && (tab.equals("Básico") || tab.equals("Equipo")))action(names,actions,"Ver mob de prueba",()->send("preview"));
    if(type.equals("loot") && tab.equals("Objetos")){action(names,actions,"Añadir objeto de mano",()->send("add"));action(names,actions,"Editar seleccionado",()->send("edit_entry"));}
    if(type.equals("zone") && tab.equals("Tamaño")){action(names,actions,"Cerrar y ver zona",this::onClose);action(names,actions,"Mostrar / ocultar",()->ZonePreview.visible=!ZonePreview.visible);}
+   if(type.equals("zone") && !id.isEmpty())action(names,actions,"Aplicar y reiniciar",()->send("apply_zone"));
    if(type.equals("zone") && tab.equals("Oleadas")){action(names,actions,"Probar encuentro",()->send("test"));action(names,actions,"Detener encuentro",()->send("cancel"));}
    if(type.equals("npc") && tab.equals("Apariencia"))action(names,actions,"Mover a mi posición",()->send("move"));
    if(type.equals("npc") && tab.equals("Acción"))action(names,actions,"Más botones…",()->minecraft.setScreen(new NpcButtonsScreen(this,values.getOrDefault("extraActions","[]"),v->{values.put("extraActions",v);minecraft.setScreen(this);})));

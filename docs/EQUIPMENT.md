@@ -1,4 +1,4 @@
-# Objetos, armas, cofres y zonas — alpha.11
+# Objetos, armas, cofres y zonas — alpha.12
 
 ## Pestaña creativa
 
@@ -66,7 +66,7 @@ Este comando no crea objetos ni llaves; confirma la revisión de su consumo. Los
 4. La vista se actualiza mientras editas los valores válidos. **Aplicar tamaño** guarda el área; **Cerrar y ver zona** permite caminar y observarla. El HUD distingue una vista previa sin guardar.
 5. El centro aparece en dorado, el contorno en azul y las apariciones de mobs con marcadores. Elige de 1 a 8 tipos de mob desde General y activa la zona: no necesitas puntos manuales. El primer jugador inicia 1–3 mobs; cada jugador adicional añade dos, hasta ocho por oleada.
 
-Cambiar el tamaño conserva el centro. El centro queda bloqueado después de crearlo; el botón pasa a **Centro fijado**. Volver a solicitar la creación conserva ese centro. Para una ubicación distinta, crea otra zona. Un encuentro activo debe detenerse antes de editar el área. Los mobs buscan suelo firme y espacio libre dentro del área; si falta espacio pueden aparecer menos. **Mostrar / ocultar** conserva el control de la guía, que se muestra en su dimensión durante diez minutos.
+Cambiar el tamaño conserva el centro. El centro queda bloqueado después de crearlo; el botón pasa a **Centro fijado**. Volver a solicitar la creación conserva ese centro. Para una ubicación distinta, crea otra zona. Para cambiar tamaño o composición durante un encuentro, usa **Aplicar y reiniciar**; no entrega recompensas por reiniciar. Nombre y tiempos se guardan sin detener el encuentro. Los mobs buscan suelo firme y espacio libre dentro del área; si falta espacio pueden aparecer menos. **Mostrar / ocultar** conserva el control de la guía, que se muestra en su dimensión durante diez minutos.
 
 Las zonas anteriores mantienen sus límites y progreso al cargar. Puedes convertirlas al modo centrado creando el centro o aplicando tamaño; no se redimensionan automáticamente al actualizar el mod.
 
@@ -113,7 +113,7 @@ La escala considera el máximo de jugadores simultáneos de cada oleada. Salir y
 
 ## Cuenta atrás y uso rápido de llaves
 
-Durante la espera posterior a completar una dungeon, aparece sobre su centro un texto público con minutos y segundos para regenerar los mobs. Se actualiza cada segundo y desaparece al terminar la espera, desactivar o eliminar la zona. Las zonas anteriores utilizan el punto medio de sus límites. No duplica textos al reiniciar.
+Durante la espera posterior a completar una dungeon, aparece sobre su centro un texto público con minutos y segundos para regenerar los mobs. Se actualiza cada segundo y permanece durante los demás estados, mostrando Disponible, En curso, Próxima oleada o Zona en revisión. Desaparece al eliminar la zona o descargar su área. Las zonas anteriores utilizan el punto medio de sus límites. No duplica textos al reiniciar.
 
 Todos los cofres con llave comparten una espera de seguridad de 40 ticks (dos segundos en condiciones normales) por jugador. Los clics bloqueados muestran el aviso sobre la barra rápida, sin consumir llaves ni crear premios. No prolongan la espera; otros jugadores conservan sus propios usos. Esta espera se aplica también si se desactivó el tiempo de renovación del cofre.
 
@@ -128,3 +128,13 @@ Escribe el comando hasta el espacio anterior al ID y pulsa **Tab**:
 - `/zianmanager resolvekey <jugador> `: recompensas cuyo consumo de llave está en revisión; requiere administración.
 
 En `resolve`, después de elegir el ID, Tab también sugiere los números de componentes inciertos. Se filtran los ID al escribir sus primeras letras. Seleccionar una sugerencia no entrega ni confirma recompensas: aún debes completar y ejecutar el comando. Las recompensas entregadas dejan de aparecer.
+
+## Nombre, cambios y dimensiones de vacío
+
+En General, **Nombre visible** permite nombrar la dungeon sin cambiar su referencia. El nombre aparece en el letrero público. No requiere ser administrador para verlo cerca de la zona; la distancia de carga del servidor/cliente sigue aplicando.
+
+Guardar nombre, pausa o regeneración aplica el cambio al encuentro actual. Si la zona estaba esperando, se conserva el momento de finalización y se recalcula la espera con el nuevo tiempo, sin empezar el contador desde cero.
+
+Para cambios de mobs, oleadas o tamaño durante un encuentro, usa **Aplicar y reiniciar**. También puedes ejecutar `/zianmanager applyzone <referencia>` con Tab. Se retiran los mobs del encuentro anterior, se limpia la espera y la zona vuelve a comenzar si está habilitada y hay jugadores. No entrega recompensas por este reinicio. Una zona desactivada conserva ese estado.
+
+Se usa la dimensión de la zona, también en estructuras construidas en el vacío. Coloca el centro sobre el suelo real de la estructura y ajusta la altura y el radio para abarcarla. Debe existir suelo firme y espacio libre; el mod no genera terreno ni coloca mobs sobre el vacío. Creativo y espectador no activan la dungeon automáticamente; un administrador puede usar Probar encuentro.

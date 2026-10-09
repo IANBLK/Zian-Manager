@@ -1,4 +1,4 @@
-# Objetos, armas, cofres y zonas — alpha.13
+# Objetos, armas, cofres y zonas — alpha.14
 
 ## Pestaña creativa
 

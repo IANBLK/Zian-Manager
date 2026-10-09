@@ -81,3 +81,10 @@ El latest.log recibido indica zianmanager-0.1.0-alpha.11.jar. Esa versión no in
 Se corrige la actualización del texto para conservar el NBT válido del display, incluida su transformación. El cartel usa el nombre individual de zona y muestra Oleada N en X s durante la pausa. La prueba nativa comprueba el cartel durante esa pausa y rechaza la ejecución si reaparece el error de formato.
 
 La ejecución local con Lootr comprobó el comando, los nombres, el contador de oleada y el contador de regeneración sin errores de formato del display. Compilación y 59 pruebas unitarias correctas.
+
+## Alpha.14: tiempo diario y bonos
+
+- 65 pruebas unitarias correctas: límites entre semana/fines de semana, medianoche de Ecuador, saldo persistente, bonos individuales/globales, vencimiento y anuncio único a las 00:01.
+- Prueba nativa con Lootr: OP exento, comandos de bonos de 30 minutos personal y global, saldo agotado, teleportación desde consola, rechazo de reentrada y uso persistido. Reinicio del servidor correcto.
+- La salida nativa utiliza teleportación entre dimensiones para comprobar el mecanismo. La integración real Bukkit/LuckPerms/Multiverse/EternalCore/Waystones en Youer no está validada en este entorno y requiere prueba del servidor híbrido.
+- La configuración empieza desactivada; hay que seleccionar mundos y habilitarla. La salida utiliza el comando configurable del plugin, no un spawn vanilla inventado.

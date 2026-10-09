@@ -1,0 +1,16 @@
+package com.ianblk.zianmanager.core;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+import java.nio.file.Path;
+import java.time.*;
+import java.util.*;
+import static org.junit.jupiter.api.Assertions.*;
+class DailyDungeonTimeTest {
+ @TempDir Path dir;
+ @Test void exactEcuadorMidnightSeparatesWeekdayAndWeekend(){var s=DailyDungeonTime.Settings.defaults();var friday=Instant.parse("2026-10-10T04:59:59Z");var saturday=friday.plusSeconds(1);assertEquals(LocalDate.of(2026,10,9),s.day(friday));assertEquals(1800,s.limit(friday,false));assertEquals(7200,s.limit(friday,true));assertEquals(5400,s.limit(saturday,false));assertEquals(10800,s.limit(saturday,true));}
+ @Test void spentTimeSurvivesRestartAndResetsOnNextLocalDay()throws Exception{var file=dir.resolve("usage.json");var j=new DailyDungeonTime(file);var s=DailyDungeonTime.Settings.defaults();var p=UUID.randomUUID();var now=Instant.parse("2026-10-08T12:00:00Z");j.charge(Map.of(p,1800L),s.day(now));assertEquals(0,new DailyDungeonTime(file).remaining(p,now,s,false));assertEquals(1800,new DailyDungeonTime(file).remaining(p,now.plusSeconds(86400),s,false));}
+ @Test void personalAndGlobalBonusesAddWithoutResettingSpentTimeAndExpireAtMidnight()throws Exception{var file=dir.resolve("usage.json");var j=new DailyDungeonTime(file);var s=DailyDungeonTime.Settings.defaults();var p=UUID.randomUUID();var later=UUID.randomUUID();var now=Instant.parse("2026-10-08T23:00:00Z");var day=s.day(now);j.charge(Map.of(p,1800L),day);j.grant(p,day,1800);j.grant(null,day,1800);j=new DailyDungeonTime(file);assertEquals(3600,j.remaining(p,now,s,false));assertEquals(3600,j.remaining(later,now,s,false));j.charge(Map.of(p,60L),day);assertEquals(3540,j.remaining(p,now,s,false));assertEquals(1800,j.remaining(p,Instant.parse("2026-10-09T05:00:00Z"),s,false));assertEquals(0,j.bonus(later,day.plusDays(1)));}
+ @Test void regenerationAnnouncementIsAtMinuteOneAndNotRepeatedAfterRestart()throws Exception{var file=dir.resolve("usage.json");var j=new DailyDungeonTime(file);var s=DailyDungeonTime.Settings.defaults();var zero=Instant.parse("2026-10-09T05:00:00Z");assertFalse(j.announceDue(zero,s));assertTrue(j.announceDue(zero.plusSeconds(60),s));j.markAnnouncement(s.day(zero));assertFalse(new DailyDungeonTime(file).announceDue(zero.plusSeconds(120),s));assertTrue(new DailyDungeonTime(file).announceDue(zero.plusSeconds(86460),s));}
+ @Test void delayedTicksCarryFractionsAndReconnectDoesNotChargeOfflineTime(){var start=Instant.parse("2026-10-08T12:00:00Z");var zone=ZoneId.of("America/Guayaquil");var day=start.atZone(zone).toLocalDate();var pulse=DailyDungeonTime.pulse(null,start,day,zone);long used=pulse.seconds();for(int i=1;i<=50;i++){pulse=DailyDungeonTime.pulse(pulse.at(),start.plusMillis(1500L*i),day,zone);used+=pulse.seconds();}assertEquals(76,used);assertEquals(1,DailyDungeonTime.pulse(null,start.plusSeconds(3600),day,zone).seconds());}
+ @Test void customTierAndSettingsRemainConfigurableAndCannotEnableWithoutWorlds(){var tier=new DailyDungeonTime.Tier("ELITE","zianmanager.dungeon.elite",240,360);assertEquals(14400,tier.limit(LocalDate.of(2026,10,9)));assertEquals(21600,tier.limit(LocalDate.of(2026,10,10)));assertThrows(IllegalArgumentException.class,()->new DailyDungeonTime.Settings(true,List.of(),"America/Guayaquil",30,90,120,180,"vip","bypass","spawn {player}"));}
+}

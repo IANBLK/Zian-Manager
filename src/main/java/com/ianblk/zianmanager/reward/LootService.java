@@ -50,6 +50,7 @@ public final class LootService {
         journal.reserveAt(player.getUUID(),key,definition,System.currentTimeMillis(),UUID.randomUUID(),store.data().loot().get(preset).independent());var claim=journal.latest(player.getUUID(),key);bindKey(player,claim,key);return claim;
     }
     public void grant(ServerPlayer player,String key,String preset,int minutes,BlockPos pos) throws Exception{
+        if(!com.ianblk.zianmanager.ManagerRuntime.get().dungeonTime().allowed(player))return;
         if(!com.ianblk.zianmanager.permission.ManagerPermissions.allows(player.createCommandSourceStack(),"loot",false))return;
         if(minutes>0 && remaining(player,key,minutes)>0){player.sendSystemMessage(Component.literal("Próximo loot en "+((remaining(player,key,minutes)+59999)/60000)+" minuto(s)."));return;}
         var claim=reserve(player,key,preset,minutes,pos);deliver(player,claim.id());
@@ -59,6 +60,7 @@ public final class LootService {
     public List<RewardClaim> keyReviews(UUID player){return pending(player).stream().filter(c->{var cost=keys.get(c.id());return cost!=null && (cost.phase().equals("REVIEW") || cost.phase().equals("APPLYING"));}).toList();}
     public List<String> reviewParts(UUID player,UUID id){var claim=journal.get(id);if(claim==null || !claim.player().equals(player))return List.of();var out=new ArrayList<String>();for(int i=0;i<claim.parts().size();i++){var phase=claim.parts().get(i).phase();if(phase==RewardClaim.Phase.APPLYING || phase==RewardClaim.Phase.REVIEW_REQUIRED)out.add(""+(i+1));}return out;}
     public void deliver(ServerPlayer player,UUID id) throws Exception{
+        if(!com.ianblk.zianmanager.ManagerRuntime.get().dungeonTime().allowed(player))throw new IllegalArgumentException("Tiempo diario de dungeon agotado");
         if(!com.ianblk.zianmanager.permission.ManagerPermissions.allows(player.createCommandSourceStack(),"loot",false))throw new IllegalArgumentException("No tienes permiso para recibir loot Zian");
         var existing=journal.get(id);if(existing==null || !existing.player().equals(player.getUUID()))throw new IllegalArgumentException("Reclamación inexistente");
         if(existing.complete())return;if(!player.isAlive() || player.isRemoved()){player.sendSystemMessage(Component.literal("Jugador no disponible para recibir loot."));return;}if(existing.review()){player.sendSystemMessage(Component.literal("Entrega en revisión; no se consumirá otra llave."));return;}bindKey(player,existing,existing.trainer());

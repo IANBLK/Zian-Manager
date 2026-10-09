@@ -1,3 +1,13 @@
+# 0.1.0-alpha.14
+
+- Límites diarios compartidos entre mundos de dungeon: DEFAULT 30/90 y VIP 120/180 minutos, configurables, con perfiles adicionales por permiso.
+- OP y permiso de bypass tienen tiempo ilimitado y no consumen saldo.
+- Saldo guardado por jugador y fecha local; reinicio a las 00:00 de Ecuador, sin reinicio de saldo al salir o reconectar.
+- Salida por comando de consola al agotar tiempo; comprobación de mundo real al cambiar dimensión y cada segundo, incluyendo entradas por terceros.
+- Bonos diarios acumulables personales y globales, también para quienes entren más tarde; expiran con el día.
+- Aviso de agotamiento y anuncio de las 00:01 personalizables; anuncio diario persistido para evitar duplicados.
+- Menú de mundos, tiempos, rangos, salida y mensajes; consulta time y comandos bonustime.
+
 # 0.1.0-alpha.13
 
 - Corregido el formato incompleto del Text Display que producía Display entityNot a string: se conservan sus propiedades válidas al actualizar el texto.

@@ -1,12 +1,12 @@
 # Progreso de Zian Manager
 
-Actualizado el 8 de octubre de 2026. Versión de pruebas: **0.1.0-alpha.13**.
+Actualizado el 8 de octubre de 2026. Versión de pruebas: **0.1.0-alpha.14**.
 
 ## Estado guardado
 
 El desarrollo está en `feature/dungeon-core` y la propuesta completa está en [PR #1](https://github.com/IANBLK/Zian-Manager/pull/1). Sigue como borrador para las pruebas dentro del juego.
 
-Alpha.13 corrige el formato del cartel y muestra la cuenta atrás explícita de la próxima oleada. El log recibido usaba alpha.11; se requiere reemplazar el JAR para disponer del comando applyzone. Conserva nombres visibles de dungeon, tiempos modificables durante la espera, botón/comando para aplicar y reiniciar y letreros públicos por estado sin recargar la entidad. Conserva el autocompletado de recompensas en revisión, consumo de llaves y componentes. Conserva el contador flotante de regeneración, protección de dos segundos entre usos de llaves y reintento breve de archivos bloqueados. Conserva cofres con llave sin espera, apariciones automáticas dentro de zonas y porcentajes reales de drop solo para mobs normales. Las validaciones locales y límites se documentan en VALIDATION.md. La compilación y los registros también se generan en GitHub Actions; los mundos, cachés y credenciales quedan fuera del repositorio.
+Alpha.14 añade límites diarios, bonos temporales, rangos configurables, exención OP/bypass y anuncio personalizable. Conserva las correcciones de alpha.13: el formato del cartel y muestra la cuenta atrás explícita de la próxima oleada. El log recibido usaba alpha.11; se requiere reemplazar el JAR para disponer del comando applyzone. Conserva nombres visibles de dungeon, tiempos modificables durante la espera, botón/comando para aplicar y reiniciar y letreros públicos por estado sin recargar la entidad. Conserva el autocompletado de recompensas en revisión, consumo de llaves y componentes. Conserva el contador flotante de regeneración, protección de dos segundos entre usos de llaves y reintento breve de archivos bloqueados. Conserva cofres con llave sin espera, apariciones automáticas dentro de zonas y porcentajes reales de drop solo para mobs normales. Las validaciones locales y límites se documentan en VALIDATION.md. La compilación y los registros también se generan en GitHub Actions; los mundos, cachés y credenciales quedan fuera del repositorio.
 
 ## Implementado
 

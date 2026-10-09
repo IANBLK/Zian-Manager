@@ -2,7 +2,7 @@
 
 **Administra dungeons dentro del juego:** mobs personalizados, jefes, zonas con oleadas, loot personal y NPC de diálogo.
 
-**0.1.0-alpha.13 · Minecraft 1.21.1 · NeoForge 21.1.252 · Java 21**
+**0.1.0-alpha.14 · Minecraft 1.21.1 · NeoForge 21.1.252 · Java 21**
 
 Instala el mismo JAR en cliente y servidor. Es independiente de Cobblemon, RCT API y RCT Mod. Lootr y LuckPerms son opcionales.
 
@@ -149,3 +149,7 @@ La prueba usa un mundo aislado bajo `build/`, localhost y puertos 25586/25587. D
 **Alpha.8:** contorno de zona corregido para mantenerse fijo en coordenadas del mundo, centro bloqueado tras crear y tamaño ampliable alrededor del mismo bloque. Nombres y lore de fantasía en armas, con solo reutilización en la información de habilidades. Los NPC permiten hasta ocho botones de comando con esperas independientes.
 
 [Estado del progreso y comprobaciones de GitHub](docs/PROGRESS.md).
+
+## Tiempo diario de dungeon
+
+DEFAULT/VIP configurables, rangos adicionales por permisos, OP/bypass ilimitado, saldo compartido entre mundos, salida al spawn, bonos personales/globales y mensajes editables. Se habilita tras seleccionar mundos. [Guía de tiempo diario](docs/DAILY-TIME.md).

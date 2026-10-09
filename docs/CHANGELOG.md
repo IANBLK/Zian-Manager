@@ -155,3 +155,9 @@
 ## Alpha.19
 
 Salida nativa por cama válida o spawn del mundo principal, selector desde Tiempo diario → Salida y respaldo si el comando de un plugin no existe. Las camas en mundos limitados se descartan. No se mata al jugador ni se cambia su punto de reaparición.
+
+## Alpha.20
+
+Avisos personalizables a 5 minutos, 1 minuto y 30 segundos. Registro persistente evita repetición al reconectar/reiniciar; contempla lag, renovación diaria y bonos. Bloqueo previo de entrada agotada mediante el evento cancelable de viaje de NeoForge, sin bloquear las salidas ni OP/bypass. El respaldo por dimensión y por segundo sigue cubriendo rutas de teleportación alternativas. WorldTimeLimit se usó como referencia funcional, sin nuevas dependencias obligatorias.
+
+Penalización de respaldo: si un jugador sin exención permanece dentro de una dungeon limitada sin saldo, recibe Lentitud V, Oscuridad V y Debilidad V con duración infinita. Se retiran al salir, al recuperar saldo por renovación diaria o bono, al obtener exención o al desactivar los límites. Una limpieza como leche no evita que se vuelvan a aplicar en la siguiente revisión. Los efectos ajenos se conservan mediante la cadena de efectos ocultos de Minecraft, con su duración restante.

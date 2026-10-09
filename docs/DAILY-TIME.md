@@ -1,4 +1,4 @@
-# Tiempo diario de dungeons — alpha.19
+# Tiempo diario de dungeons — alpha.20
 
 En `/zianmanager`, abre **Tiempo diario de dungeons**. Los límites se dejan desactivados hasta que selecciones tus mundos; no se adivinan nombres de Multiverse.
 
@@ -52,3 +52,15 @@ Referencias de integración: [mundos y claves de Multiverse](https://mvplugins.o
 En Tiempo diario de dungeons → Pantalla activa Mostrar temporizador y pulsa Mover temporizador. Arrastra la tarjeta y guarda su posición. También puedes ajustar los porcentajes X/Y de 0 a 100; se adaptan a la resolución y escala de GUI. La posición se guarda en la configuración del servidor.
 
 La tarjeta solo aparece dentro de los mundos configurados mientras el límite diario está habilitado. Muestra HH:MM:SS; OP y bypass ven Tiempo ilimitado. Se oculta al salir, desconectarse o desactivarse. El editor permite una vista previa para colocarla incluso fuera de una dungeon. El saldo proviene del servidor y el cliente solo suaviza la cuenta atrás.
+
+## Avisos y bloqueo previo — alpha.20
+
+El jugador recibe un aviso al pasar por 5 minutos, 1 minuto y 30 segundos restantes. Si entra con poco saldo o el servidor salta varios umbrales por lag, se envía un único aviso con el saldo actual. Los avisos se guardan para evitar duplicarlos al reconectar o reiniciar. Un bono que eleva el saldo vuelve a habilitar los avisos correspondientes. OP/bypass no reciben estos avisos.
+
+En Tiempo diario → Mensajes puedes cambiar **Aviso previo**, conservando `{time}` para insertar el tiempo restante. Las configuraciones antiguas reciben el texto inicial automáticamente.
+
+Los viajes que pasan por `EntityTravelToDimensionEvent` se cancelan antes de entrar a una dimensión limitada si el jugador agotó el saldo. Salir de una dungeon sigue permitido. Se conserva la revisión al cambiar de dimensión y cada segundo: ciertos teleports Bukkit de Youer usan otra ruta, por lo que no se promete bloqueo previo para todos los plugins.
+
+No requiere WorldTimeLimit, CommandAPI ni PlaceholderAPI. Se han adaptado las ideas del plugin compartido por el usuario al registro diario común de Zian Manager. La integración real con TPA, Multiverse y Waystones debe verificarse en Youer.
+
+Penalización de respaldo: si un jugador sin exención permanece dentro de una dungeon limitada sin saldo, recibe Lentitud V, Oscuridad V y Debilidad V con duración infinita. Se retiran al salir, al recuperar saldo por renovación diaria o bono, al obtener exención o al desactivar los límites. Una limpieza como leche no evita que se vuelvan a aplicar en la siguiente revisión. Los efectos ajenos se conservan mediante la cadena de efectos ocultos de Minecraft, con su duración restante.

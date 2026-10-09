@@ -121,3 +121,11 @@ La petición se corrigió a durabilidad vanilla +75, en lugar de 75 totales. El 
 ## Alpha.19: salida sin plugins
 
 Compilación y 66 pruebas unitarias correctas. Prueba nativa con Lootr: cama válida fuera de las dungeons, modo spawn del mundo, respaldo al destruir la cama y expulsión con un comando de plugin inexistente. El escenario utiliza el listener de teleportación vanilla, porque el listener estándar de FakePlayer ignora coordenadas. Reinicio comprobado; la integración real de plugins en Youer sigue pendiente.
+
+## Alpha.20: avisos y penalización infinita
+
+Compilación correcta y 71 pruebas unitarias. Los avisos contemplan persistencia/reinicio, lag, cuotas cortas, renovación diaria y bonos. Configuraciones antiguas reciben el mensaje inicial automáticamente.
+
+Prueba nativa con Lootr y reinicio: entrada agotada cancelada antes del viaje NeoForge, OP permitido, salida por cama/spawn y respaldo de comando ausente. Lentitud V, Oscuridad V y Debilidad V infinitas; limpieza al salir y retiro inmediato al recibir un bono. Verificados efecto previo serializado con su duración restante, capa oculta caducada y efecto externo más fuerte sin borrar los que siguen activos.
+
+Los TP de plugins Bukkit pueden seguir otra ruta en Youer; se conserva el respaldo al cambiar de dimensión y cada segundo. La prueba concreta de Youer/LuckPerms/Multiverse/TPA/Waystones queda pendiente del servidor del usuario. No se han operado servidores reales.

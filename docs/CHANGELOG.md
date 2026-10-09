@@ -1,3 +1,11 @@
+# 0.1.0-alpha.13
+
+- Corregido el formato incompleto del Text Display que producía Display entityNot a string: se conservan sus propiedades válidas al actualizar el texto.
+- Cartel con nombre propio de cada zona y cuenta atrás explícita: Oleada N en X s; regeneración de dungeon independiente.
+- Lista de zonas muestra nombre visible y referencia interna; applyzone usa la referencia con Tab.
+- La prueba de servidor falla si detecta el error de formato del cartel y verifica el contador de la próxima oleada.
+- El log recibido cargaba alpha.11, que todavía no incluía applyzone ni los nombres de zona de alpha.12.
+
 # 0.1.0-alpha.12
 
 - Nombre visible de dungeon, compatible con zonas anteriores que usaban solo una referencia.

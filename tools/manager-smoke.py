@@ -46,7 +46,7 @@ def wait_for(process, log, text, timeout=600, offset=0):
     while time.monotonic() < deadline:
         content = log.read_text(encoding="utf-8", errors="replace") if log.exists() else ""
         tail = content[offset:]
-        if "native smoke FAILED" in tail or "Encountered an unexpected exception" in tail:
+        if "native smoke FAILED" in tail or "Encountered an unexpected exception" in tail or "Display entityNot a string" in tail:
             raise RuntimeError(tail[-12000:])
         if text in tail:
             return

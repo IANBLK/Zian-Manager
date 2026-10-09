@@ -73,3 +73,11 @@ Compilación y 36 pruebas unitarias superadas. Auditoría de 27 modelos activos 
 - Plataforma suspendida en otra dimensión: sin suelo no se preparan mobs; al construir la plataforma aparecen dentro del área y en la dimensión configurada.
 - Prueba completa con Lootr y reinicio correcta.
 - La dimensión personalizada real y sus shaders no se probaron; las apariciones requieren una estructura con suelo firme y espacio libre en el área configurada.
+
+## Alpha.13: diagnóstico del log y cartel de oleadas
+
+El latest.log recibido indica zianmanager-0.1.0-alpha.11.jar. Esa versión no incluía applyzone ni el nombre visible por zona añadidos en alpha.12. También muestra oleadas 1, 2 y 3 y errores repetidos Display entityNot a string.
+
+Se corrige la actualización del texto para conservar el NBT válido del display, incluida su transformación. El cartel usa el nombre individual de zona y muestra Oleada N en X s durante la pausa. La prueba nativa comprueba el cartel durante esa pausa y rechaza la ejecución si reaparece el error de formato.
+
+La ejecución local con Lootr comprobó el comando, los nombres, el contador de oleada y el contador de regeneración sin errores de formato del display. Compilación y 59 pruebas unitarias correctas.

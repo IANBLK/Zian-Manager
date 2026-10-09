@@ -110,7 +110,7 @@ public final class ManagerRuntime {
             for(String section:List.of("mobs","loot","zones","chests","npcs")){var e=new JsonObject();e.addProperty("id",section);e.addProperty("name",section);list.add(e);}
         }else if(type.endsWith("s") || type.equals("lootlist")){
             var ids=switch(type){case "mobs"->store.data().mobs().keySet();case "zones"->store.data().zones().keySet();case "lootlist"->store.data().loot().keySet();default->Set.<String>of();};
-            ids.stream().sorted().forEach(k->{var e=new JsonObject();e.addProperty("id",k);e.addProperty("name",k);list.add(e);});
+            ids.stream().sorted().forEach(k->{var e=new JsonObject();e.addProperty("id",k);e.addProperty("name",type.equals("zones")?store.data().zones().get(k).name()+" · "+k:k);list.add(e);});
             if(type.equals("chests"))store.data().chests().values().stream().filter(c->c.dimension().equals(dimension(player))).forEach(c->{var e=new JsonObject();e.addProperty("id",c.uuid().toString());e.addProperty("name",c.loot()+" · "+c.x()+","+c.y()+","+c.z());list.add(e);});
             if(type.equals("npcs"))store.data().npcs().values().stream().filter(c->c.dimension().equals(dimension(player))).forEach(c->{var e=new JsonObject();e.addProperty("id",c.uuid().toString());e.addProperty("name",c.name());list.add(e);});
         }else if(type.equals("mob")){

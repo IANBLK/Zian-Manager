@@ -1,4 +1,4 @@
-# Objetos, armas, cofres y zonas — alpha.12
+# Objetos, armas, cofres y zonas — alpha.13
 
 ## Pestaña creativa
 
@@ -138,3 +138,5 @@ Guardar nombre, pausa o regeneración aplica el cambio al encuentro actual. Si l
 Para cambios de mobs, oleadas o tamaño durante un encuentro, usa **Aplicar y reiniciar**. También puedes ejecutar `/zianmanager applyzone <referencia>` con Tab. Se retiran los mobs del encuentro anterior, se limpia la espera y la zona vuelve a comenzar si está habilitada y hay jugadores. No entrega recompensas por este reinicio. Una zona desactivada conserva ese estado.
 
 Se usa la dimensión de la zona, también en estructuras construidas en el vacío. Coloca el centro sobre el suelo real de la estructura y ajusta la altura y el radio para abarcarla. Debe existir suelo firme y espacio libre; el mod no genera terreno ni coloca mobs sobre el vacío. Creativo y espectador no activan la dungeon automáticamente; un administrador puede usar Probar encuentro.
+
+El comando usa la referencia interna, por ejemplo `/zianmanager applyzone zona_a`. El nombre visible de cada zona se cambia en **General → Nombre visible → Guardar cambios** y aparece en el cartel. Entre oleadas muestra **Oleada 2 en 30 s** según la pausa configurada; después de la última oleada muestra el tiempo para regenerar la dungeon.

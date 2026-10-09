@@ -12,6 +12,16 @@
     "zianmanager:warrior_reskin",
     "zianmanager:necromancer_reskin",
     "zianmanager:ninja_reskin",
-    "zianmanager:chainsaw"
+    "zianmanager:chainsaw",
+    "zianmanager:reimagined_diamond_axe",
+    "zianmanager:reimagined_gold_axe",
+    "zianmanager:reimagined_iron_axe",
+    "zianmanager:reimagined_stone_axe",
+    "zianmanager:reimagined_wooden_axe",
+    "zianmanager:reimagined_diamond_sword",
+    "zianmanager:reimagined_gold_sword",
+    "zianmanager:reimagined_iron_sword",
+    "zianmanager:reimagined_stone_sword",
+    "zianmanager:reimagined_wooden_sword"
   ]
 }

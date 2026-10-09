@@ -596,6 +596,856 @@
       ],
       "animations": 0,
       "free": false
+    },
+    {
+      "id": "hat_aviator",
+      "source": "Free_Hats_Final_EN.zip :: Blockbench/aviator.bbmodel",
+      "cubes": 62,
+      "vertices": 1488,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/hat_aviator/0.png",
+          "material": "zianmanager:item/imported/hat_aviator/0",
+          "width": 512,
+          "height": 512,
+          "sha256": "23c077ec1c8cc82209ce7e6c685a8ca731c16da4a328189845a1b24879058886"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    },
+    {
+      "id": "hat_axolotl_hood",
+      "source": "Free_Hats_Final_EN.zip :: Blockbench/axolotl_hood.bbmodel",
+      "cubes": 77,
+      "vertices": 1848,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/hat_axolotl_hood/0.png",
+          "material": "zianmanager:item/imported/hat_axolotl_hood/0",
+          "width": 512,
+          "height": 512,
+          "sha256": "d31bcfcaca2ea1c9384a337cb1bb271128de4378855d9961e8cb57ce5c8af04c"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    },
+    {
+      "id": "hat_bloom_crown",
+      "source": "Free_Hats_Final_EN.zip :: Blockbench/bloom_crown.bbmodel",
+      "cubes": 137,
+      "vertices": 3288,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/hat_bloom_crown/0.png",
+          "material": "zianmanager:item/imported/hat_bloom_crown/0",
+          "width": 512,
+          "height": 512,
+          "sha256": "5f29b0de5b9d20b673e65998500f683c7a2c8d0aad56fde9fe8abdea4d1b9d93"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    },
+    {
+      "id": "hat_bumblebee",
+      "source": "Free_Hats_Final_EN.zip :: Blockbench/bumblebee.bbmodel",
+      "cubes": 79,
+      "vertices": 1896,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/hat_bumblebee/0.png",
+          "material": "zianmanager:item/imported/hat_bumblebee/0",
+          "width": 512,
+          "height": 512,
+          "sha256": "0f52cc65eea6b618c311c996d092254f8b00398e0d7fcd9713d1b57d32d682d4"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    },
+    {
+      "id": "hat_bunny_beanie",
+      "source": "Free_Hats_Final_EN.zip :: Blockbench/bunny_beanie.bbmodel",
+      "cubes": 80,
+      "vertices": 1920,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/hat_bunny_beanie/0.png",
+          "material": "zianmanager:item/imported/hat_bunny_beanie/0",
+          "width": 512,
+          "height": 512,
+          "sha256": "b1285c87d467e2d90ae49a9fa032ef7b366f965b2d3c87a9564c9ce03c148e5c"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    },
+    {
+      "id": "hat_chef",
+      "source": "Free_Hats_Final_EN.zip :: Blockbench/chef.bbmodel",
+      "cubes": 52,
+      "vertices": 1248,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/hat_chef/0.png",
+          "material": "zianmanager:item/imported/hat_chef/0",
+          "width": 512,
+          "height": 512,
+          "sha256": "88737357044a7696d61b6a905ef32d9590156f722b5ee0f88c9356cd42011691"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    },
+    {
+      "id": "hat_corsair",
+      "source": "Free_Hats_Final_EN.zip :: Blockbench/corsair.bbmodel",
+      "cubes": 49,
+      "vertices": 1176,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/hat_corsair/0.png",
+          "material": "zianmanager:item/imported/hat_corsair/0",
+          "width": 512,
+          "height": 512,
+          "sha256": "1e76d8a83da92b781692b46e5a7be3f995470646f951fdc0cdda153a2eabf71c"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    },
+    {
+      "id": "hat_cozy_pom",
+      "source": "Free_Hats_Final_EN.zip :: Blockbench/cozy_pom.bbmodel",
+      "cubes": 67,
+      "vertices": 1608,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/hat_cozy_pom/0.png",
+          "material": "zianmanager:item/imported/hat_cozy_pom/0",
+          "width": 512,
+          "height": 512,
+          "sha256": "a0dcf9a23a795905254db348e4c7963c9d61ed70ee58f487c5c4c5080da29a51"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    },
+    {
+      "id": "hat_dusty_cowboy",
+      "source": "Free_Hats_Final_EN.zip :: Blockbench/dusty_cowboy.bbmodel",
+      "cubes": 55,
+      "vertices": 1320,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/hat_dusty_cowboy/0.png",
+          "material": "zianmanager:item/imported/hat_dusty_cowboy/0",
+          "width": 512,
+          "height": 512,
+          "sha256": "53ad9f13f43a01931c8879d285c2a23ecd0608a7d579469292f15f9086e8aa96"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    },
+    {
+      "id": "hat_fiesta",
+      "source": "Free_Hats_Final_EN.zip :: Blockbench/fiesta.bbmodel",
+      "cubes": 86,
+      "vertices": 2064,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/hat_fiesta/0.png",
+          "material": "zianmanager:item/imported/hat_fiesta/0",
+          "width": 512,
+          "height": 512,
+          "sha256": "03b957c341166daad9dfa78cc0116c60244d4e199651ccea0399df4cf3c1b2b5"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    },
+    {
+      "id": "hat_fox_ears",
+      "source": "Free_Hats_Final_EN.zip :: Blockbench/fox_ears.bbmodel",
+      "cubes": 90,
+      "vertices": 2160,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/hat_fox_ears/0.png",
+          "material": "zianmanager:item/imported/hat_fox_ears/0",
+          "width": 512,
+          "height": 512,
+          "sha256": "cafc3d75ce1d74ab5d0bf8181e6964ea5028520b14eb78f5b8b582f1959ec9b2"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    },
+    {
+      "id": "hat_frog_bucket",
+      "source": "Free_Hats_Final_EN.zip :: Blockbench/frog_bucket.bbmodel",
+      "cubes": 79,
+      "vertices": 1896,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/hat_frog_bucket/0.png",
+          "material": "zianmanager:item/imported/hat_frog_bucket/0",
+          "width": 512,
+          "height": 512,
+          "sha256": "61beeb3384e6d941231c75f7c1fdad140726f35c6a851ac5ab6827ecea6eafb7"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    },
+    {
+      "id": "hat_frost_diadem",
+      "source": "Free_Hats_Final_EN.zip :: Blockbench/frost_diadem.bbmodel",
+      "cubes": 55,
+      "vertices": 1320,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/hat_frost_diadem/0.png",
+          "material": "zianmanager:item/imported/hat_frost_diadem/0",
+          "width": 512,
+          "height": 512,
+          "sha256": "0586395daea2fbd5f6cfbcf1aa85ccb826e94da345d647d1e6ce8c5febead422"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    },
+    {
+      "id": "hat_jellyfish",
+      "source": "Free_Hats_Final_EN.zip :: Blockbench/jellyfish.bbmodel",
+      "cubes": 64,
+      "vertices": 1536,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/hat_jellyfish/0.png",
+          "material": "zianmanager:item/imported/hat_jellyfish/0",
+          "width": 512,
+          "height": 512,
+          "sha256": "b5c7978bce33d3c8398fce523119d220f56c096fee2f7e6903e8b0468b6f9ceb"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    },
+    {
+      "id": "hat_little_dragon",
+      "source": "Free_Hats_Final_EN.zip :: Blockbench/little_dragon.bbmodel",
+      "cubes": 75,
+      "vertices": 1800,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/hat_little_dragon/0.png",
+          "material": "zianmanager:item/imported/hat_little_dragon/0",
+          "width": 512,
+          "height": 512,
+          "sha256": "8d54e5bb48534d4aa41c5265af29a6eabfd5374735af86abe66b5ca696334dba"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    },
+    {
+      "id": "hat_midnight_wizard",
+      "source": "Free_Hats_Final_EN.zip :: Blockbench/midnight_wizard.bbmodel",
+      "cubes": 77,
+      "vertices": 1848,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/hat_midnight_wizard/0.png",
+          "material": "zianmanager:item/imported/hat_midnight_wizard/0",
+          "width": 512,
+          "height": 512,
+          "sha256": "f745fb09bae96b692011e8a7d7f42a2eed8b90b01992927df9c3cf6de33fedcb"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    },
+    {
+      "id": "hat_miner",
+      "source": "Free_Hats_Final_EN.zip :: Blockbench/miner.bbmodel",
+      "cubes": 52,
+      "vertices": 1248,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/hat_miner/0.png",
+          "material": "zianmanager:item/imported/hat_miner/0",
+          "width": 512,
+          "height": 512,
+          "sha256": "f07e4bb55d6ac9ed8b8d63ea437338a9f8a2d8f119abba4802b6a382ddb0b040"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    },
+    {
+      "id": "hat_panda_cap",
+      "source": "Free_Hats_Final_EN.zip :: Blockbench/panda_cap.bbmodel",
+      "cubes": 62,
+      "vertices": 1488,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/hat_panda_cap/0.png",
+          "material": "zianmanager:item/imported/hat_panda_cap/0",
+          "width": 512,
+          "height": 512,
+          "sha256": "943f74c904fea46f6ee04ef8d764f54d2bd47d585e1dbd6f1466dd886ae5be9e"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    },
+    {
+      "id": "hat_parcel",
+      "source": "Free_Hats_Final_EN.zip :: Blockbench/parcel.bbmodel",
+      "cubes": 48,
+      "vertices": 1152,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/hat_parcel/0.png",
+          "material": "zianmanager:item/imported/hat_parcel/0",
+          "width": 512,
+          "height": 512,
+          "sha256": "5fb11ccbcc2e0e9ba3ca77ef27762aa17453b602e823767b8107dbf6aa3c299b"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    },
+    {
+      "id": "hat_retro_tv",
+      "source": "Free_Hats_Final_EN.zip :: Blockbench/retro_tv.bbmodel",
+      "cubes": 62,
+      "vertices": 1488,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/hat_retro_tv/0.png",
+          "material": "zianmanager:item/imported/hat_retro_tv/0",
+          "width": 512,
+          "height": 512,
+          "sha256": "20e296c5bf7461663a3e3d6f438a2d839512822dbc1dd4449e6d2f4d9c33b892"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    },
+    {
+      "id": "hat_royal_crown",
+      "source": "Free_Hats_Final_EN.zip :: Blockbench/royal_crown.bbmodel",
+      "cubes": 75,
+      "vertices": 1800,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/hat_royal_crown/0.png",
+          "material": "zianmanager:item/imported/hat_royal_crown/0",
+          "width": 512,
+          "height": 512,
+          "sha256": "ed232259df03fa7a7ff75140d4c6a7e150a99c7a37c473d8e8a4d51cb880d248"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    },
+    {
+      "id": "hat_rubber_duck",
+      "source": "Free_Hats_Final_EN.zip :: Blockbench/rubber_duck.bbmodel",
+      "cubes": 81,
+      "vertices": 1944,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/hat_rubber_duck/0.png",
+          "material": "zianmanager:item/imported/hat_rubber_duck/0",
+          "width": 512,
+          "height": 512,
+          "sha256": "1da7e7991396da0147c45944dc091753b7abd8560c8c416fe4b7e1a7000fcfd4"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    },
+    {
+      "id": "hat_sea_captain",
+      "source": "Free_Hats_Final_EN.zip :: Blockbench/sea_captain.bbmodel",
+      "cubes": 64,
+      "vertices": 1536,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/hat_sea_captain/0.png",
+          "material": "zianmanager:item/imported/hat_sea_captain/0",
+          "width": 512,
+          "height": 512,
+          "sha256": "bd7eace534a3b98084dda6996a0946a0d8436d15eb6480be991e04d451f59a49"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    },
+    {
+      "id": "hat_steam_topper",
+      "source": "Free_Hats_Final_EN.zip :: Blockbench/steam_topper.bbmodel",
+      "cubes": 51,
+      "vertices": 1224,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/hat_steam_topper/0.png",
+          "material": "zianmanager:item/imported/hat_steam_topper/0",
+          "width": 512,
+          "height": 512,
+          "sha256": "bd699e0487b3d9dd1a42ebc5e19c43ab425528ac0756e4a175b2b191643a252b"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    },
+    {
+      "id": "hat_straw_garden",
+      "source": "Free_Hats_Final_EN.zip :: Blockbench/straw_garden.bbmodel",
+      "cubes": 54,
+      "vertices": 1296,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/hat_straw_garden/0.png",
+          "material": "zianmanager:item/imported/hat_straw_garden/0",
+          "width": 512,
+          "height": 512,
+          "sha256": "54c63bd9e763ed1c426d584f03f131b40d1e751d24c46734ee2cfeee2978177a"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    },
+    {
+      "id": "hat_street_cap",
+      "source": "Free_Hats_Final_EN.zip :: Blockbench/street_cap.bbmodel",
+      "cubes": 48,
+      "vertices": 1152,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/hat_street_cap/0.png",
+          "material": "zianmanager:item/imported/hat_street_cap/0",
+          "width": 512,
+          "height": 512,
+          "sha256": "22081671940393db93b83df66cf42cb4ffd55254bbb89270ab5ced63763caf77"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    },
+    {
+      "id": "hat_sushi",
+      "source": "Free_Hats_Final_EN.zip :: Blockbench/sushi.bbmodel",
+      "cubes": 53,
+      "vertices": 1272,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/hat_sushi/0.png",
+          "material": "zianmanager:item/imported/hat_sushi/0",
+          "width": 512,
+          "height": 512,
+          "sha256": "43f595d9edf46e7cdfc566f9fdb8f5aab0b52fa5d9cc556d3485886a4fb13354"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    },
+    {
+      "id": "hat_toadstool",
+      "source": "Free_Hats_Final_EN.zip :: Blockbench/toadstool.bbmodel",
+      "cubes": 106,
+      "vertices": 2544,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/hat_toadstool/0.png",
+          "material": "zianmanager:item/imported/hat_toadstool/0",
+          "width": 512,
+          "height": 512,
+          "sha256": "5a7c0bcde6425da1eeb1bf5fb32e5fc74ead8ee549f7001613a24520fde950d8"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    },
+    {
+      "id": "hat_trailblazer",
+      "source": "Free_Hats_Final_EN.zip :: Blockbench/trailblazer.bbmodel",
+      "cubes": 48,
+      "vertices": 1152,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/hat_trailblazer/0.png",
+          "material": "zianmanager:item/imported/hat_trailblazer/0",
+          "width": 512,
+          "height": 512,
+          "sha256": "0bcfccd3261a40e68df25b420d60d915054aa9ad84f5db0c0ea3020e7c05ecdf"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    },
+    {
+      "id": "hat_ufo",
+      "source": "Free_Hats_Final_EN.zip :: Blockbench/ufo.bbmodel",
+      "cubes": 63,
+      "vertices": 1512,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/hat_ufo/0.png",
+          "material": "zianmanager:item/imported/hat_ufo/0",
+          "width": 512,
+          "height": 512,
+          "sha256": "22219de402c2d2d9f36ef25f88cf9ba9562b2cb8f429744b9f9461577256046d"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    },
+    {
+      "id": "reimagined_diamond_axe",
+      "source": "Reimagined Vanilla Tools.zip :: reimaged_vanilla_tools/Diamond/reimaged_vanilla_tools_diamond_axe.bbmodel",
+      "cubes": 8,
+      "vertices": 192,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/reimagined_diamond_axe/0.png",
+          "material": "zianmanager:item/imported/reimagined_diamond_axe/0",
+          "width": 32,
+          "height": 32,
+          "sha256": "d373f6adbc742378b115b980634704ada7d5b40dc3a8d0b3307b549a31fcd5fb"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    },
+    {
+      "id": "reimagined_diamond_pickaxe",
+      "source": "Reimagined Vanilla Tools.zip :: reimaged_vanilla_tools/Diamond/reimaged_vanilla_tools_diamond_pickaxe.bbmodel",
+      "cubes": 11,
+      "vertices": 264,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/reimagined_diamond_pickaxe/0.png",
+          "material": "zianmanager:item/imported/reimagined_diamond_pickaxe/0",
+          "width": 32,
+          "height": 32,
+          "sha256": "935604a6d234a10b520db274149989c1cbd311475db4cc63a026e255432a046a"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    },
+    {
+      "id": "reimagined_diamond_shovel",
+      "source": "Reimagined Vanilla Tools.zip :: reimaged_vanilla_tools/Diamond/reimaged_vanilla_tools_diamond_shovel.bbmodel",
+      "cubes": 8,
+      "vertices": 192,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/reimagined_diamond_shovel/0.png",
+          "material": "zianmanager:item/imported/reimagined_diamond_shovel/0",
+          "width": 32,
+          "height": 32,
+          "sha256": "c74ad417c287beb64f70af617e8d20877faeaecb4b8b9b61e46f4591d814393b"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    },
+    {
+      "id": "reimagined_diamond_sword",
+      "source": "Reimagined Vanilla Tools.zip :: reimaged_vanilla_tools/Diamond/reimaged_vanilla_tools_diamond_sword.bbmodel",
+      "cubes": 8,
+      "vertices": 192,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/reimagined_diamond_sword/0.png",
+          "material": "zianmanager:item/imported/reimagined_diamond_sword/0",
+          "width": 32,
+          "height": 32,
+          "sha256": "c1bf98bd64ad0c5bb18c53c48868d0d679104a2c74e2f15c432ba05e4b66866b"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    },
+    {
+      "id": "reimagined_gold_axe",
+      "source": "Reimagined Vanilla Tools.zip :: reimaged_vanilla_tools/Gold/reimaged_vanilla_tools_gold_axe.bbmodel",
+      "cubes": 8,
+      "vertices": 192,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/reimagined_gold_axe/0.png",
+          "material": "zianmanager:item/imported/reimagined_gold_axe/0",
+          "width": 32,
+          "height": 32,
+          "sha256": "a93db4105ae009f8c84e1c92d9c9440dbfd7710d1129c7e9b9af1722217db700"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    },
+    {
+      "id": "reimagined_gold_pickaxe",
+      "source": "Reimagined Vanilla Tools.zip :: reimaged_vanilla_tools/Gold/reimaged_vanilla_tools_gold_pickaxe.bbmodel",
+      "cubes": 11,
+      "vertices": 264,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/reimagined_gold_pickaxe/0.png",
+          "material": "zianmanager:item/imported/reimagined_gold_pickaxe/0",
+          "width": 32,
+          "height": 32,
+          "sha256": "791785e256817fb15aab82f96708f40f77e0fcdee40cccb82b26ea70587b845f"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    },
+    {
+      "id": "reimagined_gold_shovel",
+      "source": "Reimagined Vanilla Tools.zip :: reimaged_vanilla_tools/Gold/reimaged_vanilla_tools_gold_shovel.bbmodel",
+      "cubes": 8,
+      "vertices": 192,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/reimagined_gold_shovel/0.png",
+          "material": "zianmanager:item/imported/reimagined_gold_shovel/0",
+          "width": 32,
+          "height": 32,
+          "sha256": "ebbec698ec05eff5d3d0b1ce13a0f5abede55dc5c5b8b1223be1dd1506cc2956"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    },
+    {
+      "id": "reimagined_gold_sword",
+      "source": "Reimagined Vanilla Tools.zip :: reimaged_vanilla_tools/Gold/reimaged_vanilla_tools_gold_sword.bbmodel",
+      "cubes": 8,
+      "vertices": 192,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/reimagined_gold_sword/0.png",
+          "material": "zianmanager:item/imported/reimagined_gold_sword/0",
+          "width": 32,
+          "height": 32,
+          "sha256": "234f01ca57aae3331a1b8bc1ef6c8ba1a1c638b5a59a9d8b95b803891339802c"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    },
+    {
+      "id": "reimagined_iron_axe",
+      "source": "Reimagined Vanilla Tools.zip :: reimaged_vanilla_tools/Iron/reimaged_vanilla_tools_iron_axe.bbmodel",
+      "cubes": 8,
+      "vertices": 192,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/reimagined_iron_axe/0.png",
+          "material": "zianmanager:item/imported/reimagined_iron_axe/0",
+          "width": 32,
+          "height": 32,
+          "sha256": "b94c59162121a5b9bf58f3dcb8637ee4b9ff8d3059bfc70b3f7b9857c0d294d7"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    },
+    {
+      "id": "reimagined_iron_pickaxe",
+      "source": "Reimagined Vanilla Tools.zip :: reimaged_vanilla_tools/Iron/reimaged_vanilla_tools_iron_pickaxe.bbmodel",
+      "cubes": 11,
+      "vertices": 264,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/reimagined_iron_pickaxe/0.png",
+          "material": "zianmanager:item/imported/reimagined_iron_pickaxe/0",
+          "width": 32,
+          "height": 32,
+          "sha256": "5b5db5180ea7f02029e3d30e3ee4db99e3a91ec63c6be78e05c1089a0e0efa31"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    },
+    {
+      "id": "reimagined_iron_shovel",
+      "source": "Reimagined Vanilla Tools.zip :: reimaged_vanilla_tools/Iron/reimaged_vanilla_tools_iron_shovel.bbmodel",
+      "cubes": 8,
+      "vertices": 192,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/reimagined_iron_shovel/0.png",
+          "material": "zianmanager:item/imported/reimagined_iron_shovel/0",
+          "width": 32,
+          "height": 32,
+          "sha256": "39e53dba45e0fd7af2c7817b6faa34e1b9531b87f67b54b92670248795af0b04"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    },
+    {
+      "id": "reimagined_iron_sword",
+      "source": "Reimagined Vanilla Tools.zip :: reimaged_vanilla_tools/Iron/reimaged_vanilla_tools_iron_sword.bbmodel",
+      "cubes": 8,
+      "vertices": 192,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/reimagined_iron_sword/0.png",
+          "material": "zianmanager:item/imported/reimagined_iron_sword/0",
+          "width": 32,
+          "height": 32,
+          "sha256": "df40c98fc4c9ead512625218f6efdbe1b93813f2597932f5f59df4a4696b05bf"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    },
+    {
+      "id": "reimagined_stone_axe",
+      "source": "Reimagined Vanilla Tools.zip :: reimaged_vanilla_tools/Stone/reimaged_vanilla_tools_stone_axe.bbmodel",
+      "cubes": 8,
+      "vertices": 192,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/reimagined_stone_axe/0.png",
+          "material": "zianmanager:item/imported/reimagined_stone_axe/0",
+          "width": 32,
+          "height": 32,
+          "sha256": "13ca3168e1ee8f5a6bef28c5c67f9c5782a4def99b8250a9c48a00855b34b59b"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    },
+    {
+      "id": "reimagined_stone_pickaxe",
+      "source": "Reimagined Vanilla Tools.zip :: reimaged_vanilla_tools/Stone/reimaged_vanilla_tools_stone_pickaxe.bbmodel",
+      "cubes": 11,
+      "vertices": 264,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/reimagined_stone_pickaxe/0.png",
+          "material": "zianmanager:item/imported/reimagined_stone_pickaxe/0",
+          "width": 32,
+          "height": 32,
+          "sha256": "b25f007ffc8fe57d3b6873405acfdec0b4f67d1963109fb870944e6b07ead334"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    },
+    {
+      "id": "reimagined_stone_shovel",
+      "source": "Reimagined Vanilla Tools.zip :: reimaged_vanilla_tools/Stone/reimaged_vanilla_tools_stone_shovel.bbmodel",
+      "cubes": 8,
+      "vertices": 192,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/reimagined_stone_shovel/0.png",
+          "material": "zianmanager:item/imported/reimagined_stone_shovel/0",
+          "width": 32,
+          "height": 32,
+          "sha256": "089a6a5bd462e14a86b7a60110a4dfba2aa5e96cb08488c8062dedd2348bbd3e"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    },
+    {
+      "id": "reimagined_stone_sword",
+      "source": "Reimagined Vanilla Tools.zip :: reimaged_vanilla_tools/Stone/reimaged_vanilla_tools_stone_sword.bbmodel",
+      "cubes": 8,
+      "vertices": 192,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/reimagined_stone_sword/0.png",
+          "material": "zianmanager:item/imported/reimagined_stone_sword/0",
+          "width": 32,
+          "height": 32,
+          "sha256": "944498c6737e3a8bdf93db98117179a83fcf135b4ff0e72da191e34e6a0af44a"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    },
+    {
+      "id": "reimagined_wooden_axe",
+      "source": "Reimagined Vanilla Tools.zip :: reimaged_vanilla_tools/Wood/reimaged_vanilla_tools_wooden_axe.bbmodel",
+      "cubes": 8,
+      "vertices": 192,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/reimagined_wooden_axe/0.png",
+          "material": "zianmanager:item/imported/reimagined_wooden_axe/0",
+          "width": 32,
+          "height": 32,
+          "sha256": "cab02fd0e72a8c741d689a111fbb53989216d4c27cfe77af44b93a4754093880"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    },
+    {
+      "id": "reimagined_wooden_pickaxe",
+      "source": "Reimagined Vanilla Tools.zip :: reimaged_vanilla_tools/Wood/reimaged_vanilla_tools_wooden_pickaxe.bbmodel",
+      "cubes": 11,
+      "vertices": 264,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/reimagined_wooden_pickaxe/0.png",
+          "material": "zianmanager:item/imported/reimagined_wooden_pickaxe/0",
+          "width": 32,
+          "height": 32,
+          "sha256": "95bf7e812acfbc0dbeefb6d8a4d76762a70165220aa9725e9cba121d41ee5f8e"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    },
+    {
+      "id": "reimagined_wooden_shovel",
+      "source": "Reimagined Vanilla Tools.zip :: reimaged_vanilla_tools/Wood/reimaged_vanilla_tools_wooden_shovel.bbmodel",
+      "cubes": 8,
+      "vertices": 192,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/reimagined_wooden_shovel/0.png",
+          "material": "zianmanager:item/imported/reimagined_wooden_shovel/0",
+          "width": 32,
+          "height": 32,
+          "sha256": "cbd0221f17f0d181c43ab2758a50fe70a316f756d05d07c15191d2e90eb53ed1"
+        }
+      ],
+      "animations": 0,
+      "free": false
+    },
+    {
+      "id": "reimagined_wooden_sword",
+      "source": "Reimagined Vanilla Tools.zip :: reimaged_vanilla_tools/Wood/reimaged_vanilla_tools_wooden_sword.bbmodel",
+      "cubes": 8,
+      "vertices": 192,
+      "textures": [
+        {
+          "path": "zianmanager:textures/item/imported/reimagined_wooden_sword/0.png",
+          "material": "zianmanager:item/imported/reimagined_wooden_sword/0",
+          "width": 32,
+          "height": 32,
+          "sha256": "4d9df0e5ca15bd0c2b129d7d28eb371161812b42db23e7f23fe323ffe37b6eca"
+        }
+      ],
+      "animations": 0,
+      "free": false
     }
   ],
   "archives": [
@@ -626,6 +1476,14 @@
     {
       "name": "Chainsaw.zip",
       "sha256": "2316eadc921d835b18b2f02c174711f3e48922109ce4673cb92a9fa4d659534f"
+    },
+    {
+      "name": "Free_Hats_Final_EN.zip",
+      "sha256": "7febaafbae7443ac82ad2254cd7022567b25dd688bb92abe92e99a534410439e"
+    },
+    {
+      "name": "Reimagined Vanilla Tools.zip",
+      "sha256": "5f71b0cc46608a1b3e9d84a7a80f1fd8deb510d46615f58d718f9d56f3121d06"
     }
   ]
 }

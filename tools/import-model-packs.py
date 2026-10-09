@@ -97,12 +97,32 @@ def import_extra_weapons():
      tx.append(texture(id,i,pixels,uv))
     model(id,d,tx,pack+' :: '+n)
 
+def import_hats_tools():
+ for pack in ['Free_Hats_Final_EN.zip','Reimagined Vanilla Tools.zip']:
+  with ZipFile(DOWNLOADS/pack) as z:
+   for n in z.namelist():
+    if not n.endswith('.bbmodel') or pack.startswith('Free_') and not n.startswith('Blockbench/'):continue
+    d=json.loads(z.read(n));stem=Path(n).stem.lower();id='hat_'+stem if pack.startswith('Free_') else stem.replace('reimaged_vanilla_tools_','reimagined_');tx=[]
+    for i,t in enumerate(d['textures']):
+     pixels=base64.b64decode(t['source'].split(',',1)[1]);tx.append(texture(id,i,pixels,[d['resolution']['width'],d['resolution']['height']]))
+    model(id,d,tx,pack+' :: '+n)
+
+if '--hats-tools' in sys.argv:
+ report=json.loads((ROOT/'docs/imported-assets.json').read_text(encoding='utf-8'))
+ manifest=[m for m in report['models'] if not m['id'].startswith(('hat_','reimagined_'))]
+ import_hats_tools()
+ names=['Free_Hats_Final_EN.zip','Reimagined Vanilla Tools.zip']
+ archives=[a for a in report['archives'] if a['name'] not in names]+[{'name':n,'sha256':hashlib.sha256((DOWNLOADS/n).read_bytes()).hexdigest()} for n in names]
+ write(ROOT/'docs/imported-assets.json',{'models':manifest,'archives':archives})
+ print('Imported hats and tools; original PNGs and display transforms retained.')
+ sys.exit(0)
+
 if '--extra' in sys.argv:
  report=json.loads((ROOT/'docs/imported-assets.json').read_text(encoding='utf-8'))
  manifest=[m for m in report['models'] if m['id'] not in {'warrior_reskin','necromancer_reskin','ninja_reskin','chainsaw'}]
  import_extra_weapons()
  archives=[a for a in report['archives'] if a['name'] not in {'WeaponReskins-vol1.zip','Chainsaw.zip'}]
- archives += [{'name':n,'sha256':hashlib.sha256((DOWNLOADS/n).read_bytes()).hexdigest()} for n in ['WeaponReskins-vol1.zip','Chainsaw.zip']]
+ archives += [{'name':n,'sha256':hashlib.sha256((DOWNLOADS/n).read_bytes()).hexdigest()} for n in ['WeaponReskins-vol1.zip','Chainsaw.zip','Free_Hats_Final_EN.zip','Reimagined Vanilla Tools.zip']]
  write(ROOT/'docs/imported-assets.json',{'models':manifest,'archives':archives})
  print('Imported extra weapons; existing models retained and texture bytes unchanged.')
  sys.exit(0)
@@ -142,5 +162,6 @@ with ZipFile(DOWNLOADS/'altarbygwambassn2.zip') as z:
     for f in e['faces'].values():f['texture']=lookup[f['texture'].removeprefix('#')]
    model(id,d,tx,'altarbygwambassn2.zip :: '+n)
 import_extra_weapons()
-write(ROOT/'docs/imported-assets.json',{'models':manifest,'archives':[{'name':n,'sha256':hashlib.sha256((DOWNLOADS/n).read_bytes()).hexdigest()} for n in ['Multicolored Hammer Pack.zip','Fantasy Weapons Pack 1.zip','crate_pack_2.zip','Crates and Stuff Model Pack Update 4.zip','altarbygwambassn2.zip','WeaponReskins-vol1.zip','Chainsaw.zip']]})
+import_hats_tools()
+write(ROOT/'docs/imported-assets.json',{'models':manifest,'archives':[{'name':n,'sha256':hashlib.sha256((DOWNLOADS/n).read_bytes()).hexdigest()} for n in ['Multicolored Hammer Pack.zip','Fantasy Weapons Pack 1.zip','crate_pack_2.zip','Crates and Stuff Model Pack Update 4.zip','altarbygwambassn2.zip','WeaponReskins-vol1.zip','Chainsaw.zip','Free_Hats_Final_EN.zip','Reimagined Vanilla Tools.zip']]})
 print('Imported',len(manifest),'models; texture pixels unmodified.')

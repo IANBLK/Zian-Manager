@@ -1,0 +1,134 @@
+{
+  "parent": "minecraft:block/block",
+  "loader": "neoforge:obj",
+  "model": "zianmanager:models/imported/reimagined_iron_sword.obj",
+  "automatic_culling": false,
+  "flip_v": false,
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "particle": "zianmanager:item/imported/reimagined_iron_sword/0"
+  },
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [
+        -83.4,
+        87.78,
+        95.45
+      ],
+      "translation": [
+        0,
+        2.75,
+        1
+      ],
+      "scale": [
+        1.07031,
+        1.07031,
+        1.07031
+      ]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [
+        -83.4,
+        87.78,
+        95.45
+      ],
+      "translation": [
+        0,
+        2.75,
+        1
+      ],
+      "scale": [
+        1.07031,
+        1.07031,
+        1.07031
+      ]
+    },
+    "firstperson_righthand": {
+      "rotation": [
+        -99.9,
+        87.78,
+        95.45
+      ],
+      "translation": [
+        0,
+        1,
+        1
+      ],
+      "scale": [
+        0.79883,
+        0.79883,
+        0.79883
+      ]
+    },
+    "firstperson_lefthand": {
+      "rotation": [
+        -99.9,
+        87.78,
+        95.45
+      ],
+      "translation": [
+        0,
+        1,
+        1
+      ],
+      "scale": [
+        0.79883,
+        0.79883,
+        0.79883
+      ]
+    },
+    "ground": {
+      "rotation": [
+        -18.5,
+        -24.08,
+        34.4
+      ],
+      "translation": [
+        0,
+        5,
+        0
+      ]
+    },
+    "gui": {
+      "rotation": [
+        -180,
+        -1.25,
+        136
+      ],
+      "translation": [
+        3.25,
+        -3.5,
+        -0.25
+      ],
+      "scale": [
+        0.75195,
+        0.75195,
+        0.75195
+      ]
+    },
+    "head": {
+      "scale": [
+        0,
+        0,
+        0
+      ]
+    },
+    "fixed": {
+      "rotation": [
+        0,
+        0,
+        -44
+      ],
+      "translation": [
+        -3.75,
+        -4,
+        -0.25
+      ],
+      "scale": [
+        0.83203,
+        0.83203,
+        0.83203
+      ]
+    }
+  }
+}

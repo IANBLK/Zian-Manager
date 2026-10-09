@@ -2,13 +2,13 @@
 
 **Administra dungeons dentro del juego:** mobs personalizados, jefes, zonas con oleadas, loot personal y NPC de diálogo.
 
-**0.1.0-alpha.16 · Minecraft 1.21.1 · NeoForge 21.1.252 · Java 21**
+**0.1.0-alpha.17 · Minecraft 1.21.1 · NeoForge 21.1.252 · Java 21**
 
 Instala el mismo JAR en cliente y servidor. Es independiente de Cobblemon, RCT API y RCT Mod. Lootr y LuckPerms son opcionales.
 
 ## 🛠️ Objetos y zonas
 
-Pestaña creativa **Zian Manager**, 31 modelos activos, martillos 3×3×1, armas con habilidades y esperas, nueve variantes de cofre con loot personal (cuatro requieren llave), y vista de esquinas/contorno/puntos de aparición. [Consulta la guía de objetos y zonas](docs/EQUIPMENT.md).
+Pestaña creativa **Zian Manager**, 81 modelos activos, martillos 3×3×1, armas con habilidades y esperas, nueve variantes de cofre con loot personal (cuatro requieren llave), y vista de esquinas/contorno/puntos de aparición. [Consulta la guía de objetos y zonas](docs/EQUIPMENT.md).
 
 ## ✨ Funciones
 
@@ -153,3 +153,7 @@ La prueba usa un mundo aislado bajo `build/`, localhost y puertos 25586/25587. D
 ## Tiempo diario de dungeon
 
 DEFAULT/VIP configurables, rangos adicionales por permisos, OP/bypass ilimitado, saldo compartido entre mundos, salida al spawn, bonos personales/globales y mensajes editables. Se habilita tras seleccionar mundos. [Guía de tiempo diario](docs/DAILY-TIME.md).
+
+## Sombreros y herramientas importadas
+
+30 sombreros equipables como cascos y 20 herramientas reimaginadas. Nombres de fantasía, encantamientos normales, cascos con estadísticas de netherita y +1 de armadura; herramientas con +1 de daño y 75 de durabilidad. [Guía del equipo importado](docs/IMPORTED-GEAR.md).

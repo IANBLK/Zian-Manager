@@ -1,6 +1,11 @@
 {
   "replace": false,
   "values": [
-    "zianmanager:altar_amaxe"
+    "zianmanager:altar_amaxe",
+    "zianmanager:reimagined_diamond_axe",
+    "zianmanager:reimagined_gold_axe",
+    "zianmanager:reimagined_iron_axe",
+    "zianmanager:reimagined_stone_axe",
+    "zianmanager:reimagined_wooden_axe"
   ]
 }

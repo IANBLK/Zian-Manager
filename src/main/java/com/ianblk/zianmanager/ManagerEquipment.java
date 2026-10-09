@@ -44,6 +44,7 @@ public final class ManagerEquipment {
   ALL.put("altar_amaxe",ITEMS.register("altar_amaxe",()->new FlavorAxe(new Item.Properties().rarity(Rarity.UNCOMMON).attributes(AxeItem.createAttributes(Tiers.DIAMOND,5,-3.0f)))));
   ALL.put("altar_ampick",ITEMS.register("altar_ampick",()->new FlavorPickaxe(new Item.Properties().rarity(Rarity.UNCOMMON).attributes(DiggerItem.createAttributes(Tiers.DIAMOND,1,-2.8f)))));
   newSword("warrior_reskin",11,Power.WARRIOR,-2.4f);newSword("necromancer_reskin",9,Power.NECROMANCER,-2.4f);newSword("ninja_reskin",10,Power.NINJA,-2.1f);newSword("chainsaw",11,Power.CHAINSAW,-2.8f);
+  ImportedGear.register(ITEMS,ALL);
   for(String id:List.of("common_key","rare_key","epic_key","legendary_key"))ALL.put(id,ITEMS.register(id,()->new FlavorKey(new Item.Properties().rarity(id.equals("common_key")?Rarity.COMMON:id.equals("rare_key")?Rarity.RARE:Rarity.EPIC))));
  }
  static{for(String id:RETIRED)ITEMS.registerSimpleItem(id,new Item.Properties());}

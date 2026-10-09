@@ -105,3 +105,11 @@ La ejecución local con Lootr comprobó el comando, los nombres, el contador de 
 - Renombrado visual de loot_vote_crate a Cofre de loot diario, sin cambiar ID, tiempo configurado ni tablas asociadas.
 - Compilación y pruebas unitarias; comprobación nativa de asociación BlockItem y registro de llaves, además del consumo/entrega habitual.
 - La presentación en el cliente y la prueba real del servidor híbrido siguen pendientes de la comprobación del usuario.
+
+## Alpha.17: cascos y herramientas
+
+- Compilación correcta y 66 pruebas unitarias. Auditoría de 81 modelos con PNG originales, geometría y materiales válidos.
+- Prueba nativa de los 30 cascos: ArmorItem/HELMET, armadura 4, dureza 3, empuje 0,1, durabilidad igual a netherita (407), Protección/Respiración/Afinidad acuática/Irrompibilidad/Reparación y desgaste real de armadura al recibir daño.
+- Prueba nativa de las 20 herramientas: daño +1 respecto de su equivalente vanilla, misma velocidad de ataque, minería y capacidad de encantamiento; durabilidad 75; encantamientos de espada/minería, Irrompibilidad y Reparación.
+- Servidor aislado con Lootr y reinicio completados. Renderizador de cascos compilado con la API de extensión de armadura y atlas de los modelos originales.
+- La apariencia equipada de los cascos y los modelos de herramientas necesita comprobación visual en el cliente; el servidor híbrido real no se modificó.

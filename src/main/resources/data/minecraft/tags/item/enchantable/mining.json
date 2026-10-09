@@ -6,6 +6,21 @@
     "zianmanager:grey_hammer",
     "zianmanager:red_hammer",
     "zianmanager:altar_ampick",
-    "zianmanager:altar_amaxe"
+    "zianmanager:altar_amaxe",
+    "zianmanager:reimagined_diamond_axe",
+    "zianmanager:reimagined_gold_axe",
+    "zianmanager:reimagined_iron_axe",
+    "zianmanager:reimagined_stone_axe",
+    "zianmanager:reimagined_wooden_axe",
+    "zianmanager:reimagined_diamond_pickaxe",
+    "zianmanager:reimagined_gold_pickaxe",
+    "zianmanager:reimagined_iron_pickaxe",
+    "zianmanager:reimagined_stone_pickaxe",
+    "zianmanager:reimagined_wooden_pickaxe",
+    "zianmanager:reimagined_diamond_shovel",
+    "zianmanager:reimagined_gold_shovel",
+    "zianmanager:reimagined_iron_shovel",
+    "zianmanager:reimagined_stone_shovel",
+    "zianmanager:reimagined_wooden_shovel"
   ]
 }

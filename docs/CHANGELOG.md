@@ -1,3 +1,12 @@
+# 0.1.0-alpha.17
+
+- 30 sombreros como cascos reales: 4 de armadura, dureza/resistencia al empuje y 407 de durabilidad de netherita; encantamientos, reparación y desgaste normales.
+- Renderizador equipado que conserva los modelos originales de sombreros en lugar de usar el casco vanilla.
+- 20 herramientas reimaginadas de cinco materiales y cuatro tipos: estadísticas vanilla, +1 de daño y durabilidad 75.
+- Nombres de fantasía en el estilo existente, sin añadir habilidades ni lore a estos objetos nuevos.
+- Encantamientos de casco, espada, hacha, pico y pala; pestaña creativa propia.
+- Importación incremental sin modificar PNG ni transformaciones de presentación; 81 modelos activos.
+
 # 0.1.0-alpha.16
 
 - Temporizador compacto: ancho ajustado al texto, sin espacio sobrante a la derecha; editor de arrastre usa el mismo tamaño.

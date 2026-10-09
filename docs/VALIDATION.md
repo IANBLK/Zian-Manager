@@ -117,3 +117,7 @@ La ejecución local con Lootr comprobó el comando, los nombres, el contador de 
 ## Alpha.18: corrección de durabilidad
 
 La petición se corrigió a durabilidad vanilla +75, en lugar de 75 totales. El test nativo compara cada una de las 20 herramientas con su objeto vanilla y suma 75 al máximo, manteniendo las comprobaciones de daño +1, velocidades y encantamientos. Sombreros mantienen 407. Valores esperados: madera134, piedra206, hierro325, oro107 y diamante1636.
+
+## Alpha.19: salida sin plugins
+
+Compilación y 66 pruebas unitarias correctas. Prueba nativa con Lootr: cama válida fuera de las dungeons, modo spawn del mundo, respaldo al destruir la cama y expulsión con un comando de plugin inexistente. El escenario utiliza el listener de teleportación vanilla, porque el listener estándar de FakePlayer ignora coordenadas. Reinicio comprobado; la integración real de plugins en Youer sigue pendiente.

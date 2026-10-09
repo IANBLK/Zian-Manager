@@ -151,3 +151,7 @@
 - Diálogo con botón opcional, comando con {player}, espera por jugador y ejecución de servidor sin dar OP al jugador.
 - Diario persistente de comandos: una ejecución ambigua no se repite automáticamente.
 - Migración del NPC anterior conservando UUID, ubicación y texto.
+
+## Alpha.19
+
+Salida nativa por cama válida o spawn del mundo principal, selector desde Tiempo diario → Salida y respaldo si el comando de un plugin no existe. Las camas en mundos limitados se descartan. No se mata al jugador ni se cambia su punto de reaparición.

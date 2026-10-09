@@ -38,5 +38,35 @@ public final class DungeonTimeRuntime {
  public void enforceEntry(ServerPlayer player){if(!inside(player)){logout(player.getUUID());return;}if(ejecting.contains(player.getUUID()) || unlimited(player) || healthy && remaining(player)>0)return;
 if(!settings.day(Instant.now()).equals(notified.put(player.getUUID(),settings.day(Instant.now()))))player.sendSystemMessage(Component.literal(healthy?settings.exhaustedMessage():"No se pudo guardar tu tiempo de dungeon. Regresando al spawn para conservar tu registro."));player.displayClientMessage(Component.literal("Tiempo diario de dungeon agotado. Regresando al spawn…"),true);long millis=System.currentTimeMillis();if(millis<retry.getOrDefault(player.getUUID(),0L))return;retry.put(player.getUUID(),millis+15000);String command=settings.exitCommand().replace("{player}",player.getGameProfile().getName()).replaceFirst("^/","");ejecting.add(player.getUUID());try{if(!exit(player,command))throw new IllegalStateException("El comando no confirmó la salida");}catch(Exception error){ZianManager.LOGGER.error("Dungeon time exit failed for {} using {}; retry in 15s",player.getUUID(),command,error);}finally{ejecting.remove(player.getUUID());}
  }
- private boolean exit(ServerPlayer player,String command)throws Exception{try{var bukkit=Class.forName("org.bukkit.Bukkit");var console=bukkit.getMethod("getConsoleSender").invoke(null);return (Boolean)bukkit.getMethod("dispatchCommand",Class.forName("org.bukkit.command.CommandSender"),String.class).invoke(null,console,command);}catch(ClassNotFoundException pureNeoForge){return server.getCommands().getDispatcher().execute(command,server.createCommandSourceStack().withPermission(4))>0;}}
+ private boolean exit(ServerPlayer player,String command)throws Exception{
+  if(command.equals("bed") || command.equals("worldspawn"))return nativeExit(player,command.equals("bed"));
+  try{
+   boolean accepted;
+   try{var bukkit=Class.forName("org.bukkit.Bukkit");var console=bukkit.getMethod("getConsoleSender").invoke(null);accepted=(Boolean)bukkit.getMethod("dispatchCommand",Class.forName("org.bukkit.command.CommandSender"),String.class).invoke(null,console,command);}
+   catch(ClassNotFoundException pureNeoForge){accepted=server.getCommands().getDispatcher().execute(command,server.createCommandSourceStack().withPermission(4))>0;}
+   if(accepted)return true;
+  }catch(Exception | LinkageError error){ZianManager.LOGGER.warn("Dungeon exit command unavailable; using native bed/world spawn for {}",player.getUUID());}
+  if(!inside(player))return true;
+  return nativeExit(player,true);
+ }
+ /** Native respawn lookup does not kill the player or consume respawn-anchor charges. */
+ boolean nativeExit(ServerPlayer player,boolean preferBed){
+  var destination=new net.minecraft.world.level.portal.DimensionTransition(server.overworld(),player,net.minecraft.world.level.portal.DimensionTransition.DO_NOTHING);
+  if(preferBed){
+   var level=server.getLevel(player.getRespawnDimension());var pos=player.getRespawnPosition();
+   if(level!=null && pos!=null && !limitedWorld(level) && level.getBlockState(pos).getBlock() instanceof net.minecraft.world.level.block.BedBlock && net.minecraft.world.level.block.BedBlock.canSetSpawn(level)){
+    var state=level.getBlockState(pos);
+    var stand=net.minecraft.world.level.block.BedBlock.findStandUpPosition(net.minecraft.world.entity.EntityType.PLAYER,level,pos,state.getValue(net.minecraft.world.level.block.BedBlock.FACING),player.getRespawnAngle());
+    if(stand.isPresent())destination=new net.minecraft.world.level.portal.DimensionTransition(level,stand.get(),net.minecraft.world.phys.Vec3.ZERO,player.getRespawnAngle(),0,net.minecraft.world.level.portal.DimensionTransition.DO_NOTHING);
+   }
+  }
+  if(limitedWorld(destination.newLevel()))throw new IllegalStateException("El spawn de salida pertenece a un mundo con tiempo limitado");
+  player.stopRiding();var point=destination.pos();player.teleportTo(destination.newLevel(),point.x,point.y,point.z,Set.of(),destination.yRot(),destination.xRot());
+  player.setDeltaMovement(net.minecraft.world.phys.Vec3.ZERO);player.fallDistance=0;
+  return !inside(player);
+ }
+ private boolean limitedWorld(net.minecraft.server.level.ServerLevel level){
+  if(settings.worlds().contains(level.dimension().location().toString()))return true;
+  try{var craft=level.getClass().getMethod("getWorld").invoke(level);return settings.worlds().contains((String)Class.forName("org.bukkit.World").getMethod("getName").invoke(craft));}catch(Exception | LinkageError ignored){return false;}
+ }
 }

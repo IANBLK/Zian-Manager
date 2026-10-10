@@ -49,7 +49,7 @@ final class LobbyPasteService {
     placements.sort(Comparator.comparingInt(p->p.position().y()));
     if(!plugin.isEnabled() || ticket!=generation)return;
     Bukkit.getScheduler().runTask(plugin,()->begin(sender,target,placements,ticket));
-   }catch(Exception|LinkageError error){if(ticket==generation)if(ticket==generation)loading=false;plugin.getLogger().log(java.util.logging.Level.SEVERE,"No se pudo preparar el lobby",error);}
+   }catch(Exception|LinkageError error){if(ticket==generation)loading=false;plugin.getLogger().log(java.util.logging.Level.SEVERE,"No se pudo preparar el lobby",error);}
   });
  }
  private void begin(CommandSender sender,World target,List<Placement> blocks,long ticket){
@@ -70,6 +70,22 @@ final class LobbyPasteService {
     if(cursor==blocks.size()){cancel();task=null;target.setSpawnLocation(0,64,0,0);target.save();plugin.getLogger().info("Gyms lobby completed: "+cursor+" non-air blocks, saved; no entities imported");sender.sendMessage("Lobby de Gyms terminado y guardado.");}
    }
   };task.runTaskTimer(plugin,1,1);
+ }
+ void cleanCrops(CommandSender sender){
+  if(loading || task!=null){sender.sendMessage("Hay una operación de Gyms en curso.");return;}
+  World target=Bukkit.getWorld("gyms");if(target==null)return;loading=true;long ticket=++generation;
+  Bukkit.getScheduler().runTaskAsynchronously(plugin,()->{try{
+   File source=new File(plugin.getDataFolder().getParentFile(),"WorldEdit/schematics/freemap18.schem");
+   var format=ClipboardFormats.findByFile(source);Clipboard clip;try(var in=new FileInputStream(source);var reader=format.getReader(in)){clip=reader.read();}
+   List<BlockVector3> crops=new ArrayList<>();Set<String> ids=Set.of("minecraft:carrots","minecraft:potatoes","minecraft:wheat","minecraft:beetroots");
+   for(var point:clip.getRegion())if(ids.contains(clip.getBlock(point).getBlockType().getId()))crops.add(point.subtract(clip.getOrigin()).add(BlockVector3.at(0,64,0)));
+   if(!plugin.isEnabled() || ticket!=generation)return;
+   Bukkit.getScheduler().runTask(plugin,()->{loading=false;task=new BukkitRunnable(){int cursor,removed;
+    public void run(){if(Bukkit.getWorld("gyms")!=target){cancel();task=null;return;}int end=Math.min(cursor+500,crops.size());while(cursor<end){var p=crops.get(cursor++);var b=target.getBlockAt(p.x(),p.y(),p.z());if(Set.of(Material.CARROTS,Material.POTATOES,Material.WHEAT,Material.BEETROOTS).contains(b.getType())){b.setType(Material.AIR,false);removed++;}}
+     if(cursor==crops.size()){cancel();task=null;target.save();plugin.getLogger().info("Gyms decorative crops removed: "+removed+"; checked="+crops.size());sender.sendMessage("Cultivos decorativos retirados de Gyms: "+removed);}
+    }
+   };task.runTaskTimer(plugin,1,1);});
+  }catch(Exception|LinkageError e){if(ticket==generation)loading=false;plugin.getLogger().log(java.util.logging.Level.SEVERE,"Crop cleanup failed",e);}});
  }
  void cancel(){generation++;loading=false;if(task!=null){task.cancel();task=null;}}
 }

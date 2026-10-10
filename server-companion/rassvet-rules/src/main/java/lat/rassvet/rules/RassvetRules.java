@@ -9,6 +9,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.event.world.PortalCreateEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
+import org.bukkit.event.block.BlockGrowEvent;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.potion.*;
 import java.io.File;
@@ -30,6 +31,7 @@ public final class RassvetRules extends JavaPlugin implements Listener,CommandEx
  @Override public void onEnable(){if(Bukkit.getPluginManager().isPluginEnabled("WorldEdit"))lobbyPaste=new LobbyPasteService(this);saveDefaultConfig();lobby=getConfig().getString("lobby-world","world");minimumY=getConfig().getDouble("void-min-y",0);flight=new NamespacedKey(this,"lobby_flight");getServer().getPluginManager().registerEvents(this,this);getCommand("rassvet").setExecutor(this);getCommand("rassvet").setTabCompleter(this);getServer().getOnlinePlayers().forEach(this::checkFlight);refreshSpawn();getServer().getScheduler().runTaskTimer(this,()->{refreshSpawn();backPending.entrySet().removeIf(e->e.getValue()<System.currentTimeMillis());for(Player p:getServer().getOnlinePlayers()){if(rescuePlayer(p) && p.getLocation().getY()<rescueHeight(p))rescue(p);String state=p.isOp()+"/"+p.getWorld().getName()+"/"+p.hasPermission("commandwhitelist.bypass")+"/"+p.hasPermission("commandwhitelist.group.explorador")+"/"+p.hasPermission("commandwhitelist.group.guardian")+"/"+p.hasPermission("commandwhitelist.group.astral");if(!state.equals(commandStates.put(p.getUniqueId(),state)))p.updateCommands();}},20,20);getLogger().info("Death-only /back, 10s Resistance II, TPA menu, void rescue and lobby flight guard enabled");}
  private boolean rescuePlayer(Player p){return (p.getWorld().getName().equals(lobby) || p.getWorld().getName().equals("gyms")) && p.getGameMode()!=GameMode.CREATIVE && p.getGameMode()!=GameMode.SPECTATOR;}
  private double rescueHeight(Player p){return p.getWorld().getName().equals("gyms")?p.getWorld().getMinHeight()+4:minimumY;}
+ @EventHandler(priority=EventPriority.HIGHEST,ignoreCancelled=true) public void cropGrow(BlockGrowEvent e){if(e.getBlock().getWorld().getName().equals("gyms") && Set.of(Material.CARROTS,Material.POTATOES,Material.WHEAT,Material.BEETROOTS).contains(e.getBlock().getType()))e.setCancelled(true);}
  @EventHandler(priority=EventPriority.HIGHEST,ignoreCancelled=true) public void leaves(LeavesDecayEvent e){if(e.getBlock().getWorld().getName().equals("gyms"))e.setCancelled(true);}
  @EventHandler(priority=EventPriority.HIGHEST,ignoreCancelled=true) public void playerPortal(PlayerPortalEvent e){e.setCancelled(true);}
  @EventHandler(priority=EventPriority.HIGHEST,ignoreCancelled=true) public void entityPortal(EntityPortalEvent e){e.setCancelled(true);}
@@ -94,6 +96,7 @@ public final class RassvetRules extends JavaPlugin implements Listener,CommandEx
   if((action.equals("tiempo") || action.equals("tienda")) && sender instanceof Player p){if(args.length!=1){p.sendMessage("§cUsa /rassvet "+action);return true;}publicModAction(p,action);return true;}
   if(!sender.hasPermission("rassvet.admin")){sender.sendMessage("§cComando no disponible.");return true;}
   if(action.equals("lobby") && args.length==1){if(lobbyPaste==null)sender.sendMessage("WorldEdit no está disponible.");else lobbyPaste.start(sender);return true;}
+  if(action.equals("crops") && args.length==1){if(lobbyPaste!=null)lobbyPaste.cleanCrops(sender);return true;}
   if(action.equals("lobbycancel") && args.length==1){if(lobbyPaste!=null)lobbyPaste.cancel();sender.sendMessage("Pegado cancelado; los bloques ya colocados se conservan.");return true;}
   if(action.equals("probar") && args.length==3 && Set.of("tiempo","tienda").contains(args[2])){Player p=Bukkit.getPlayerExact(args[1]);sender.sendMessage(p==null?"Jugador desconectado.":"Acceso público "+args[2]+": "+publicModAction(p,args[2]));return true;}
   if(action.equals("refresh")){getServer().getOnlinePlayers().forEach(Player::updateCommands);sender.sendMessage("Árboles de comandos actualizados.");return true;}

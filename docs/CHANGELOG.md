@@ -1,3 +1,24 @@
+# 0.1.0-alpha.22
+
+- Perfiles de tiempo independientes para Dungeon, Nether, End y Farmeo, configurables desde Tiempos por mundo.
+- Registros separados de consumo, prórrogas y avisos; el temporizador muestra el perfil activo. Se conserva la configuración anterior de dungeon.
+- Consulta de saldos por perfil y comandos administrativos worldtime para dar o descontar minutos de un perfil concreto.
+- Guardas de viaje y revisión cada segundo en cada perfil; los perfiles ajenos no retiran una penalización activa. Se rechazan mundos repetidos entre perfiles activos.
+- 78 pruebas unitarias y pruebas nativas con/sin Lootr y reinicio; acciones de GitHub con Node 24 y Ubuntu 24.04.
+
+# 0.1.0-alpha.21
+
+- Descuento administrativo removetime con saldo limitado a lo disponible y salida inmediata al agotarse.
+- Títulos del temporizador por mundo y conservación de mensajes, configuración y bonos diarios.
+
+# 0.1.0-alpha.20
+
+- Avisos previos persistentes, bloqueo previo de viajes NeoForge y penalizaciones infinitas V mientras un jugador agotado permanece en un mundo limitado.
+
+# 0.1.0-alpha.19
+
+- Salida nativa por cama válida o spawn del mundo principal, con respaldo si no está disponible el comando de un plugin.
+
 # 0.1.0-alpha.18
 
 - Corregida la interpretación de durabilidad: las 20 herramientas tienen vanilla +75 puntos, en vez de 75 totales.

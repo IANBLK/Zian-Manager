@@ -1,4 +1,4 @@
-# Tiempo diario de dungeons — alpha.20
+# Tiempo diario por mundo — alpha.22
 
 En `/zianmanager`, abre **Tiempo diario de dungeons**. Los límites se dejan desactivados hasta que selecciones tus mundos; no se adivinan nombres de Multiverse.
 
@@ -64,3 +64,21 @@ Los viajes que pasan por `EntityTravelToDimensionEvent` se cancelan antes de ent
 No requiere WorldTimeLimit, CommandAPI ni PlaceholderAPI. Se han adaptado las ideas del plugin compartido por el usuario al registro diario común de Zian Manager. La integración real con TPA, Multiverse y Waystones debe verificarse en Youer.
 
 Penalización de respaldo: si un jugador sin exención permanece dentro de una dungeon limitada sin saldo, recibe Lentitud V, Oscuridad V y Debilidad V con duración infinita. Se retiran al salir, al recuperar saldo por renovación diaria o bono, al obtener exención o al desactivar los límites. Una limpieza como leche no evita que se vuelvan a aplicar en la siguiente revisión. Los efectos ajenos se conservan mediante la cadena de efectos ocultos de Minecraft, con su duración restante.
+
+## Tiempos independientes por mundo (alpha.22)
+
+En `/zianmanager` → **Tiempos por mundo** se editan Dungeon, Nether, End y Farmeo. Cada perfil guarda su configuración, consumo diario, avisos y prórrogas en archivos separados. Los límites, permisos de rango, mensajes, salida y posición/nombre del temporizador se pueden cambiar en su formulario. Guarda para aplicar sin reiniciar.
+
+Nether, End y Farmeo se configuraron en Rassvet con 180 minutos para Aventurero y 240 para Explorador, Guardián y Astral, todos los días. Cada mundo tiene su propio saldo; no comparte consumo con dungeon. Spawn y Casas quedan fuera de los perfiles limitados. El reinicio diario sigue a las 00:00 America/Guayaquil y el anuncio a partir de las 00:01. OP y el permiso de bypass configurado conservan tiempo ilimitado.
+
+Consulta pública: `/rassvet tiempo` o el botón **Mis tiempos diarios** de ZianGUI. La consulta nativa es `/zianmanager time [dungeon|nether|end|farmeo]`; en Youer se recomienda el acceso Rassvet por sus permisos específicos.
+
+Comandos administrativos:
+
+- `/zianmanager worldtime nether bonus <jugador> <minutos>`
+- `/zianmanager worldtime farmeo bonus all <minutos>`
+- `/zianmanager worldtime end remove <jugador> <minutos>`
+
+Los comandos anteriores `/zianmanager bonustime ...` y `/zianmanager removetime ...` siguen afectando únicamente dungeon. Las prórrogas vencen al reinicio diario. No se permite asignar un mundo simultáneamente a dos perfiles activos. La salida nativa rechaza camas/spawns dentro de cualquiera de los perfiles limitados; en Rassvet la salida se configuró como `mv tp {player} world --unsafe`.
+
+Verificación: 78 pruebas unitarias y prueba local con Lootr; aislamiento de consumo y bonos, recarga de registros, guardas de destino, exención OP y penalizaciones que no se borran por actualizar un mundo diferente. Los registros previos de dungeon se conservan.

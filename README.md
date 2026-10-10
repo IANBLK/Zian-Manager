@@ -2,7 +2,7 @@
 
 **Administra dungeons dentro del juego:** mobs personalizados, jefes, zonas con oleadas, loot personal y NPC de diálogo.
 
-**0.1.0-alpha.21 · Minecraft 1.21.1 · NeoForge 21.1.252 · Java 21**
+**0.1.0-alpha.22 · Minecraft 1.21.1 · NeoForge 21.1.252+ · Java 21**
 
 Administración del tiempo diario: `/zianmanager removetime <jugador> <minutos>` descuenta entre 1 y 1440 minutos a un jugador conectado, hasta agotar su saldo actual. Requiere consola, OP (salvo denegación explícita) o `zianmanager.admin`, igual que `bonustime`; no se concede a los rangos normales. Conserva bonos, consumo y reinicio diario; rechaza jugadores con tiempo ilimitado. Al agotarse dentro de una dungeon aplica inmediatamente la salida configurada. `/zianmanager bonustime player <jugador> <minutos>` permite devolver minutos para hoy.
 
@@ -24,7 +24,7 @@ Pestaña creativa **Zian Manager**, 81 modelos activos, martillos 3×3×1, armas
 
 ## 🎮 Configuración fácil
 
-Abre `/zianmanager`. El inicio muestra **Mobs y jefes**, **Tablas de recompensas**, **Zonas de dungeon**, **Cofres de dungeon** y **Personajes y diálogos**.
+Abre `/zianmanager`. El inicio muestra **Mobs y jefes**, **Tablas de recompensas**, **Zonas de dungeon**, **Cofres de dungeon** y **Personajes y diálogos** y **Tiempos por mundo**.
 
 ### Recompensas: editor visual como el gacha
 
@@ -152,12 +152,12 @@ La prueba usa un mundo aislado bajo `build/`, localhost y puertos 25586/25587. D
 
 [Estado del progreso y comprobaciones de GitHub](docs/PROGRESS.md).
 
-## Tiempo diario de dungeon
+## Tiempo diario por mundo
 
-DEFAULT/VIP configurables, rangos adicionales por permisos, OP/bypass ilimitado, saldo compartido entre mundos, salida al spawn, bonos personales/globales y mensajes editables. Se habilita tras seleccionar mundos. [Guía de tiempo diario](docs/DAILY-TIME.md).
+Perfiles independientes para Dungeon, Nether, End y Farmeo, con límites DEFAULT/VIP, rangos adicionales por permiso, OP/bypass ilimitado, salida al spawn, bonos personales/globales y mensajes editables. Cada perfil conserva su consumo y prórrogas; los mundos seleccionados dentro de un mismo perfil comparten su saldo. Se habilita tras seleccionar mundos. [Guía de tiempo diario](docs/DAILY-TIME.md).
 
 ## Sombreros y herramientas importadas
 
 30 sombreros equipables como cascos y 20 herramientas reimaginadas. Nombres de fantasía, encantamientos normales, cascos con estadísticas de netherita y +1 de armadura; herramientas con +1 de daño y +75 de durabilidad respecto a vanilla. [Guía del equipo importado](docs/IMPORTED-GEAR.md).
 
-El título del temporizador se configura en `/zianmanager` → Tiempo diario → Pantalla: título predeterminado y «Nombres por mundo». Cada mundo limitado puede tener su propio nombre (hasta 64 caracteres); el saldo sigue siendo compartido. Los títulos largos se recortan para mantener el panel compacto. La configuración anterior sigue siendo válida. Esta versión usa protocolo manager14: actualizar el mod en servidor y clientes juntos.
+El título del temporizador se configura en `/zianmanager` → Tiempos por mundo → el perfil correspondiente → Pantalla: título predeterminado y «Nombres por mundo». Cada mundo limitado puede tener su propio nombre (hasta 64 caracteres); el saldo se comparte únicamente entre los mundos del mismo perfil. Los títulos largos se recortan para mantener el panel compacto. La configuración anterior sigue siendo válida. Esta versión usa protocolo manager14: actualizar el mod en servidor y clientes juntos.

@@ -1,5 +1,5 @@
 name: RassvetRules
-version: 1.0.1
+version: 1.0.2
 main: lat.rassvet.rules.RassvetRules
 api-version: '1.21'
 depend: [EternalCore, LuckPerms, CommandWhitelist]
@@ -15,3 +15,8 @@ permissions:
     default: false
   rassvet.lobbyflight:
     default: op
+
+  rassvet.time:
+    default: false
+  rassvet.shop:
+    default: false

@@ -1,8 +1,9 @@
 name: RassvetRules
-version: 1.0.3
+version: 1.0.4
 main: lat.rassvet.rules.RassvetRules
 api-version: '1.21'
 depend: [EternalCore, LuckPerms, CommandWhitelist]
+softdepend: [WorldEdit]
 commands:
   rassvet:
     description: Menú de TPA y utilidades de Rassvet

@@ -35,14 +35,14 @@ public final class ManagerNetwork {
         };
         public Type<View> type(){return TYPE;}
     }
-    public record Timer(boolean visible,boolean unlimited,long remaining,int x,int y) implements CustomPacketPayload {
+    public record Timer(boolean visible,boolean unlimited,long remaining,int x,int y,String title) implements CustomPacketPayload {
         public static final Type<Timer> TYPE=new Type<>(ResourceLocation.fromNamespaceAndPath("zianmanager","timer"));
-        public static final StreamCodec<RegistryFriendlyByteBuf,Timer> CODEC=new StreamCodec<>(){public Timer decode(RegistryFriendlyByteBuf b){return new Timer(b.readBoolean(),b.readBoolean(),b.readLong(),b.readInt(),b.readInt());}public void encode(RegistryFriendlyByteBuf b,Timer v){b.writeBoolean(v.visible);b.writeBoolean(v.unlimited);b.writeLong(v.remaining);b.writeInt(v.x);b.writeInt(v.y);}};
+        public static final StreamCodec<RegistryFriendlyByteBuf,Timer> CODEC=new StreamCodec<>(){public Timer decode(RegistryFriendlyByteBuf b){return new Timer(b.readBoolean(),b.readBoolean(),b.readLong(),b.readInt(),b.readInt(),b.readUtf(64));}public void encode(RegistryFriendlyByteBuf b,Timer v){b.writeBoolean(v.visible);b.writeBoolean(v.unlimited);b.writeLong(v.remaining);b.writeInt(v.x);b.writeInt(v.y);b.writeUtf(v.title,64);}};
         public Type<Timer> type(){return TYPE;}
     }
     public static void sendTimer(ServerPlayer player,Timer data){PacketDistributor.sendToPlayer(player,data);}
     public static void register(IEventBus bus){bus.addListener((RegisterPayloadHandlersEvent event)->{
-        var channel=event.registrar("manager13");
+        var channel=event.registrar("manager14");
         channel.playToServer(Request.TYPE,Request.CODEC,(v,c)->c.enqueueWork(()->{if(c.player() instanceof ServerPlayer player)ManagerRuntime.get().request(player,v.section,v.id);}));
         channel.playToServer(Action.TYPE,Action.CODEC,(v,c)->c.enqueueWork(()->{if(c.player() instanceof ServerPlayer player)ManagerRuntime.get().action(player,v);}));
         channel.playToClient(Timer.TYPE,Timer.CODEC,(v,c)->c.enqueueWork(()->com.ianblk.zianmanager.client.DungeonTimerHud.accept(v)));

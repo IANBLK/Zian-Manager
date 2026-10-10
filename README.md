@@ -2,7 +2,9 @@
 
 **Administra dungeons dentro del juego:** mobs personalizados, jefes, zonas con oleadas, loot personal y NPC de diálogo.
 
-**0.1.0-alpha.20 · Minecraft 1.21.1 · NeoForge 21.1.252 · Java 21**
+**0.1.0-alpha.21 · Minecraft 1.21.1 · NeoForge 21.1.252 · Java 21**
+
+Administración del tiempo diario: `/zianmanager removetime <jugador> <minutos>` descuenta entre 1 y 1440 minutos a un jugador conectado, hasta agotar su saldo actual. Requiere consola, OP (salvo denegación explícita) o `zianmanager.admin`, igual que `bonustime`; no se concede a los rangos normales. Conserva bonos, consumo y reinicio diario; rechaza jugadores con tiempo ilimitado. Al agotarse dentro de una dungeon aplica inmediatamente la salida configurada. `/zianmanager bonustime player <jugador> <minutos>` permite devolver minutos para hoy.
 
 Instala el mismo JAR en cliente y servidor. Es independiente de Cobblemon, RCT API y RCT Mod. Lootr y LuckPerms son opcionales.
 
@@ -157,3 +159,5 @@ DEFAULT/VIP configurables, rangos adicionales por permisos, OP/bypass ilimitado,
 ## Sombreros y herramientas importadas
 
 30 sombreros equipables como cascos y 20 herramientas reimaginadas. Nombres de fantasía, encantamientos normales, cascos con estadísticas de netherita y +1 de armadura; herramientas con +1 de daño y +75 de durabilidad respecto a vanilla. [Guía del equipo importado](docs/IMPORTED-GEAR.md).
+
+El título del temporizador se configura en `/zianmanager` → Tiempo diario → Pantalla: título predeterminado y «Nombres por mundo». Cada mundo limitado puede tener su propio nombre (hasta 64 caracteres); el saldo sigue siendo compartido. Los títulos largos se recortan para mantener el panel compacto. La configuración anterior sigue siendo válida. Esta versión usa protocolo manager14: actualizar el mod en servidor y clientes juntos.

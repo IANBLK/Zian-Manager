@@ -2,6 +2,9 @@ package lat.rassvet.rules;
 
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.util.SideEffect;
+import com.sk89q.worldedit.util.SideEffectSet;
+import org.bukkit.block.data.type.Leaves;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.extent.clipboard.Clipboard;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormats;
@@ -36,14 +39,17 @@ final class LobbyPasteService {
      var destination=point.subtract(origin).add(anchor);
      if(destination.y()<target.getMinHeight() || destination.y()>=target.getMaxHeight())throw new IOException("Bloque fuera de la altura del mundo: "+destination);
      if(Math.abs(destination.x())>512 || Math.abs(destination.z())>512)throw new IOException("El esquema excede el Ã¡rea de Gyms permitida");
-     placements.add(new Placement(destination,clip.getFullBlock(point)));
+     BaseBlock full=clip.getFullBlock(point);
+     var data=BukkitAdapter.adapt(state);
+     if(data instanceof Leaves leaves){leaves.setPersistent(true);full=BukkitAdapter.adapt(leaves).toBaseBlock();}
+     placements.add(new Placement(destination,full));
      if(placements.size()>1200000)throw new IOException("Demasiados bloques sÃ³lidos");
     }
     if(placements.size()!=911569)throw new IOException("La lectura del esquema no conserva todos los bloques: "+placements.size()+" de 911569");
     placements.sort(Comparator.comparingInt(p->p.position().y()));
     if(!plugin.isEnabled() || ticket!=generation)return;
     Bukkit.getScheduler().runTask(plugin,()->begin(sender,target,placements,ticket));
-   }catch(Exception|LinkageError error){loading=false;plugin.getLogger().log(java.util.logging.Level.SEVERE,"No se pudo preparar el lobby",error);}
+   }catch(Exception|LinkageError error){if(ticket==generation)if(ticket==generation)loading=false;plugin.getLogger().log(java.util.logging.Level.SEVERE,"No se pudo preparar el lobby",error);}
   });
  }
  private void begin(CommandSender sender,World target,List<Placement> blocks,long ticket){
@@ -56,7 +62,8 @@ final class LobbyPasteService {
     if(Bukkit.getWorld("gyms")!=target){cancel();task=null;return;}
     long started=System.nanoTime();int count=0;
     try(var edit=WorldEdit.getInstance().newEditSessionBuilder().world(BukkitAdapter.adapt(target)).maxBlocks(2000).build()){
-     edit.setReorderMode(EditSession.ReorderMode.NONE);edit.disableBuffering();
+     edit.setSideEffectApplier(SideEffectSet.defaults().with(SideEffect.NEIGHBORS,SideEffect.State.OFF).with(SideEffect.VALIDATION,SideEffect.State.OFF).with(SideEffect.UPDATE,SideEffect.State.OFF));
+     edit.setSideEffectApplier(SideEffectSet.defaults().with(SideEffect.NEIGHBORS,SideEffect.State.OFF).with(SideEffect.VALIDATION,SideEffect.State.OFF).with(SideEffect.UPDATE,SideEffect.State.OFF));edit.setReorderMode(EditSession.ReorderMode.NONE);edit.disableBuffering();
      while(cursor<blocks.size() && count<1000 && System.nanoTime()-started<6000000L){var p=blocks.get(cursor);edit.setBlock(p.position(),p.block());cursor++;count++;}
     }catch(Exception|LinkageError error){cancel();task=null;plugin.getLogger().log(java.util.logging.Level.SEVERE,"Lobby paste stopped at block "+cursor,error);return;}
     int percent=blocks.isEmpty()?100:cursor*100/blocks.size();if(percent>=nextNotice){plugin.getLogger().info("Gyms lobby progress: "+percent+"% ("+cursor+"/"+blocks.size()+")");nextNotice=percent+10;}

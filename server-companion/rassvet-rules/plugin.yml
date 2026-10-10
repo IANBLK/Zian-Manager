@@ -1,5 +1,5 @@
 name: RassvetRules
-version: 1.0.4
+version: 1.0.5
 main: lat.rassvet.rules.RassvetRules
 api-version: '1.21'
 depend: [EternalCore, LuckPerms, CommandWhitelist]

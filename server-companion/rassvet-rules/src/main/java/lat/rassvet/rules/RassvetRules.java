@@ -56,7 +56,22 @@ public final class RassvetRules extends JavaPlugin implements Listener,CommandEx
    Object commands=server.getClass().getMethod("getCommands").invoke(server);
    Object dispatcher=commands.getClass().getMethod("getDispatcher").invoke(commands);
    Class<?> type=Class.forName("com.mojang.brigadier.CommandDispatcher");
-   int result=((Number)type.getMethod("execute",String.class,Object.class).invoke(dispatcher,command,source)).intValue();
+   // Youer wraps whole mod roots in a Bukkit permission gate. Invoke only
+   // the fixed public leaf, guarded above, without granting that root permission.
+   Class<?> nodeType=Class.forName("com.mojang.brigadier.tree.CommandNode");
+   Object root=type.getMethod("getRoot").invoke(dispatcher);
+   String[] words=command.split(" ");
+   Object modRoot=nodeType.getMethod("getChild",String.class).invoke(root,words[0]);
+   Object leaf=nodeType.getMethod("getChild",String.class).invoke(modRoot,words[1]);
+   if(leaf==null || !((Boolean)nodeType.getMethod("canUse",Object.class).invoke(leaf,source)))throw new IllegalStateException("Public action is unavailable");
+   Class<?> commandType=Class.forName("com.mojang.brigadier.Command");
+   Object executable=nodeType.getMethod("getCommand").invoke(leaf);
+   Class<?> builderType=Class.forName("com.mojang.brigadier.context.CommandContextBuilder");
+   Object builder=builderType.getConstructor(type,Object.class,nodeType,int.class).newInstance(dispatcher,source,root,0);
+   builderType.getMethod("withCommand",commandType).invoke(builder,executable);
+   Object context=builderType.getMethod("build",String.class).invoke(builder,command);
+   int result=((Number)commandType.getMethod("run",Class.forName("com.mojang.brigadier.context.CommandContext")).invoke(executable,context)).intValue();
+   getLogger().info("Public action "+action+" player="+p.getUniqueId()+" result="+result);
    if(result>0 && action.equals("tiempo"))p.sendMessage("§7Tu tiempo diario se renueva a las §e00:00 UTC -5§7.");
    return result>0;
   }catch(ReflectiveOperationException|RuntimeException error){getLogger().log(java.util.logging.Level.WARNING,"Public mod action failed: "+action,error);p.sendMessage("§cNo se pudo abrir esta opción. Avisa a un administrador.");return false;}
@@ -68,6 +83,7 @@ public final class RassvetRules extends JavaPlugin implements Listener,CommandEx
   if(action.equals("vuelo") && sender instanceof Player p){if(!p.hasPermission("eternalcore.fly") || !p.hasPermission("rassvet.lobbyflight")){p.sendMessage("§cNo tienes permiso para volar.");return true;}if(!exempt(p) && !p.getWorld().getName().equals(lobby)){p.sendMessage("§eEl vuelo de tu rango solo está disponible en Spawn.");return true;}p.performCommand("fly");markFlight(p);return true;}
   if((action.equals("tiempo") || action.equals("tienda")) && sender instanceof Player p){if(args.length!=1){p.sendMessage("§cUsa /rassvet "+action);return true;}publicModAction(p,action);return true;}
   if(!sender.hasPermission("rassvet.admin")){sender.sendMessage("§cComando no disponible.");return true;}
+  if(action.equals("probar") && args.length==3 && Set.of("tiempo","tienda").contains(args[2])){Player p=Bukkit.getPlayerExact(args[1]);sender.sendMessage(p==null?"Jugador desconectado.":"Acceso público "+args[2]+": "+publicModAction(p,args[2]));return true;}
   if(action.equals("refresh")){getServer().getOnlinePlayers().forEach(Player::updateCommands);sender.sendMessage("Árboles de comandos actualizados.");return true;}
   if(action.equals("audit") && args.length==2){Player p=Bukkit.getPlayerExact(args[1]);if(p==null){sender.sendMessage("Jugador desconectado.");return true;}var event=new PlayerCommandSendEvent(p,new TreeSet<>(List.of("plugins","pl","version","ver","about","bukkit:plugins","bukkit:version","lp","mv","ZianGui","ziangui","ZianGTS","ziangts","ZianUtilities","zianutilities","zianmanager","spawn","tpa","fly","back","rassvet","pc","healpokemon","enderchest","workbench","hat")));getServer().getPluginManager().callEvent(event);sender.sendMessage("Rassvet audit "+p.getName()+" op="+p.isOp()+" world="+p.getWorld().getName()+" visible="+String.join(",",event.getCommands()));try{auditing=true;for(String probe:List.of("/plugins","/bukkit:plugins","/lp info","/back")){var attempt=new PlayerCommandPreprocessEvent(p,probe);getServer().getPluginManager().callEvent(attempt);sender.sendMessage("Probe "+probe+" cancelled="+attempt.isCancelled());}}finally{auditing=false;}sender.sendMessage("Permissions: tpa="+p.hasPermission("eternalcore.tpa")+" fly="+p.hasPermission("eternalcore.fly")+" back.death="+p.hasPermission("eternalcore.back.death")+" bypass="+p.hasPermission("commandwhitelist.bypass"));return true;}
   sender.sendMessage("/rassvet audit <jugador> | /rassvet refresh");return true;

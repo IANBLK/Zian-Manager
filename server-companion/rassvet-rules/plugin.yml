@@ -1,0 +1,17 @@
+name: RassvetRules
+version: 1.0.0
+main: lat.rassvet.rules.RassvetRules
+api-version: '1.21'
+depend: [EternalCore, LuckPerms, CommandWhitelist]
+commands:
+  rassvet:
+    description: Menú de TPA y utilidades de Rassvet
+permissions:
+  rassvet.admin:
+    default: op
+  rassvet.flight.bypass:
+    default: op
+  rassvet.tpa:
+    default: false
+  rassvet.lobbyflight:
+    default: op

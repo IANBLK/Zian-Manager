@@ -1,0 +1,12 @@
+package com.ianblk.zianmanager;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.ChatFormatting;
+import java.util.List;
+public final class WeaponFlavor {
+ private WeaponFlavor(){}
+ private static int color(String id){if(id.startsWith("reimagined_")){if(id.contains("diamond"))return 0x48E4DA;if(id.contains("iron"))return 0xCBD5E1;if(id.contains("wooden"))return 0x88D868;if(id.contains("stone"))return 0xB8ABA0;return 0xF2CB68;}if(id.contains("common"))return 0xCBD5E1;if(id.contains("rare"))return 0x79B8FF;if(id.contains("epic"))return 0xC979FF;if(id.contains("cosmetic"))return 0x48E4DA;if(id.contains("blue_"))return 0x79B8FF;if(id.contains("green_"))return 0x88D868;if(id.contains("grey_"))return 0xC8D1DA;if(id.contains("wither") || id.contains("necromancer") || id.contains("void"))return 0xC979FF;if(id.contains("ninja") || id.contains("tide") || id.contains("ancient"))return 0x48E4DA;if(id.contains("flame") || id.contains("chainsaw") || id.contains("red_"))return 0xFF8569;return 0xF2CB68;}
+ public static Component name(ItemStack stack){String id=net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(stack.getItem()).getPath();return Component.translatable(stack.getItem().getDescriptionId()).withStyle(s->s.withColor(color(id)).withBold(true));}
+ public static void append(ItemStack stack,List<Component> lines,int seconds){String id=net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(stack.getItem()).getPath();int c=color(id);lines.add(Component.literal("━━━━━━━━━━ ✦ ━━━━━━━━━━").withStyle(s->s.withColor(c)));lines.add(Component.translatable("flavor.zianmanager."+id+".kind").withStyle(s->s.withColor(c).withBold(true)));lines.add(Component.translatable("flavor.zianmanager."+id+".line1").withStyle(ChatFormatting.GRAY,ChatFormatting.ITALIC));lines.add(Component.translatable("flavor.zianmanager."+id+".line2").withStyle(ChatFormatting.GRAY,ChatFormatting.ITALIC));lines.add(Component.empty());lines.add(Component.translatable("flavor.zianmanager."+id+".legend").withStyle(s->s.withColor(c).withBold(true)));lines.add(Component.translatable("flavor.zianmanager."+id+".line3").withStyle(ChatFormatting.DARK_GRAY));if(seconds>0)lines.add(Component.translatable("tooltip.zianmanager.cooldown",seconds).withStyle(ChatFormatting.GOLD));lines.add(Component.literal("━━━━━━━━━━ ✦ ━━━━━━━━━━").withStyle(s->s.withColor(c)));}
+}

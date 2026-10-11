@@ -1,0 +1,16 @@
+package com.ianblk.zianmanager.core;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+import java.nio.file.Path;
+import java.util.*;
+import static org.junit.jupiter.api.Assertions.*;
+class EquipmentLedgerTest {
+ @TempDir Path dir;
+ @Test void miningPlanesAreExactlyEightNeighborsOneBlockDeep(){for(String axis:List.of("X","Y","Z")){var list=MiningPlane.offsets(axis);assertEquals(8,list.size());var unique=new HashSet<String>();int depth="XYZ".indexOf(axis);for(var o:list){assertEquals(0,o[depth]);assertTrue(Arrays.stream(o).allMatch(v->Math.abs(v)<=1));assertFalse(Arrays.stream(o).allMatch(v->v==0));unique.add(Arrays.toString(o));}assertEquals(8,unique.size());}}
+ @Test void keyConsumedOnceAndNeverAgainAfterRestart()throws Exception{var file=dir.resolve("keys.json");var ledger=new KeyLedger(file);UUID claim=UUID.randomUUID(),player=UUID.randomUUID();int[] count={2};ledger.bind(claim,player,"zianmanager:rare_key");var port=new KeyLedger.Port(){public boolean available(String key){return count[0]>0;}public boolean consumeAndSave(String key){count[0]--;return true;}};ledger.take(claim,player,port);new KeyLedger(file).take(claim,player,port);assertEquals(1,count[0]);}
+ @Test void missingKeyDoesNotStartConsumption()throws Exception{var ledger=new KeyLedger(dir.resolve("keys.json"));UUID c=UUID.randomUUID(),p=UUID.randomUUID();ledger.bind(c,p,"zianmanager:common_key");assertThrows(IllegalArgumentException.class,()->ledger.take(c,p,new KeyLedger.Port(){public boolean available(String k){return false;}public boolean consumeAndSave(String k){fail();return false;}}));assertEquals("RESERVED",ledger.get(c).phase());}
+ @Test void ambiguousKeyConsumptionCannotReplay()throws Exception{var file=dir.resolve("keys.json");var ledger=new KeyLedger(file);UUID c=UUID.randomUUID(),p=UUID.randomUUID();ledger.bind(c,p,"zianmanager:epic_key");assertThrows(Exception.class,()->ledger.take(c,p,new KeyLedger.Port(){public boolean available(String k){return true;}public boolean consumeAndSave(String k)throws Exception{throw new java.io.IOException("crash");}}));assertEquals("REVIEW",new KeyLedger(file).get(c).phase());assertThrows(IllegalArgumentException.class,()->new KeyLedger(file).take(c,p,new KeyLedger.Port(){public boolean available(String k){return true;}public boolean consumeAndSave(String k){fail();return false;}}));}
+ @Test void frozenCostIsNotChangedWhenChestEdited()throws Exception{var ledger=new KeyLedger(dir.resolve("keys.json"));UUID c=UUID.randomUUID(),p=UUID.randomUUID();ledger.bind(c,p,"zianmanager:legendary_key");assertEquals("zianmanager:legendary_key",ledger.bind(c,p,"zianmanager:common_key").key());}
+ @Test void anotherPlayerCannotUseCostIntent()throws Exception{var ledger=new KeyLedger(dir.resolve("keys.json"));UUID c=UUID.randomUUID(),p=UUID.randomUUID();ledger.bind(c,p,"zianmanager:rare_key");assertThrows(IllegalArgumentException.class,()->ledger.bind(c,UUID.randomUUID(),"zianmanager:rare_key"));}
+ @Test void oldChestDefinitionsRetainOriginalBlock(){var gson=new com.google.gson.Gson();var chest=gson.fromJson("{\"uuid\":\"00000000-0000-0000-0000-000000000113\",\"dimension\":\"minecraft:overworld\",\"x\":1,\"y\":70,\"z\":1,\"loot\":\"test\",\"minutes\":10}",Definitions.ChestSpec.class);assertEquals("zianmanager:loot_common_crate",chest.block());assertEquals("north",chest.facing());}
+}

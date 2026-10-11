@@ -1,0 +1,4 @@
+lobby-world: world
+# Rescue survival/adventure players below this height in the lobby only.
+void-min-y: 0
+back-wait-seconds: 5

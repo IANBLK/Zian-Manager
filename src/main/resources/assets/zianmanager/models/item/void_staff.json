@@ -1,0 +1,99 @@
+{
+  "parent": "minecraft:block/block",
+  "loader": "neoforge:obj",
+  "model": "zianmanager:models/imported/void_staff.obj",
+  "automatic_culling": false,
+  "flip_v": false,
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "particle": "zianmanager:item/imported/void_staff/0"
+  },
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [
+        170.42,
+        -86.39,
+        170.13
+      ],
+      "translation": [
+        0,
+        7.5,
+        0.5
+      ]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [
+        170.42,
+        -86.39,
+        170.13
+      ],
+      "translation": [
+        0,
+        7.5,
+        0.5
+      ]
+    },
+    "firstperson_righthand": {
+      "rotation": [
+        150.67,
+        -86.39,
+        170.13
+      ],
+      "translation": [
+        0,
+        7.5,
+        0.5
+      ]
+    },
+    "firstperson_lefthand": {
+      "rotation": [
+        151.42,
+        -86.39,
+        170.13
+      ],
+      "translation": [
+        0,
+        7.5,
+        0.5
+      ]
+    },
+    "ground": {
+      "translation": [
+        0,
+        14.75,
+        0
+      ]
+    },
+    "gui": {
+      "rotation": [
+        0,
+        0,
+        -39.75
+      ],
+      "translation": [
+        -1,
+        -1,
+        0
+      ],
+      "scale": [
+        0.4668,
+        0.4668,
+        0.4668
+      ]
+    },
+    "head": {
+      "scale": [
+        0,
+        0,
+        0
+      ]
+    },
+    "fixed": {
+      "rotation": [
+        0,
+        0,
+        40.25
+      ]
+    }
+  }
+}

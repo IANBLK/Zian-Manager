@@ -1,0 +1,85 @@
+{
+  "parent": "minecraft:block/block",
+  "loader": "neoforge:obj",
+  "model": "zianmanager:models/imported/common_key.obj",
+  "automatic_culling": false,
+  "flip_v": false,
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "particle": "zianmanager:item/imported/common_key/0"
+  },
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [
+        -79.34,
+        2.81,
+        172.97
+      ],
+      "translation": [
+        0,
+        0,
+        0.25
+      ]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [
+        -79.34,
+        2.81,
+        172.97
+      ],
+      "translation": [
+        0,
+        0,
+        0.25
+      ]
+    },
+    "firstperson_righthand": {
+      "rotation": [
+        -157.62,
+        -5.03,
+        -1.03
+      ],
+      "translation": [
+        -0.75,
+        5.75,
+        -0.25
+      ]
+    },
+    "firstperson_lefthand": {
+      "rotation": [
+        -157.62,
+        -5.03,
+        -1.03
+      ],
+      "translation": [
+        -0.75,
+        5.75,
+        -0.25
+      ]
+    },
+    "gui": {
+      "rotation": [
+        -80.6,
+        45.86,
+        83.23
+      ],
+      "translation": [
+        0,
+        1,
+        0
+      ],
+      "scale": [
+        1.53516,
+        1.53516,
+        1.53516
+      ]
+    },
+    "fixed": {
+      "rotation": [
+        -80.92,
+        -56.91,
+        -84.69
+      ]
+    }
+  }
+}

@@ -1,0 +1,114 @@
+{
+  "parent": "minecraft:block/block",
+  "loader": "neoforge:obj",
+  "model": "zianmanager:models/imported/altar_ancientblade.obj",
+  "automatic_culling": false,
+  "flip_v": false,
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "particle": "zianmanager:item/imported/altar_ancientblade/0"
+  },
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [
+        10,
+        -90,
+        10
+      ],
+      "translation": [
+        0,
+        2,
+        2
+      ]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [
+        10,
+        -90,
+        10
+      ],
+      "translation": [
+        0,
+        2,
+        2
+      ]
+    },
+    "firstperson_righthand": {
+      "rotation": [
+        15.08,
+        -87,
+        8.97
+      ],
+      "translation": [
+        3.25,
+        0.5,
+        -2.25
+      ],
+      "scale": [
+        1.1,
+        1.1,
+        1.1
+      ]
+    },
+    "firstperson_lefthand": {
+      "rotation": [
+        -174.46,
+        82.05,
+        -179.07
+      ],
+      "translation": [
+        3.25,
+        0.75,
+        -2.25
+      ]
+    },
+    "ground": {
+      "translation": [
+        0,
+        4.75,
+        0
+      ]
+    },
+    "gui": {
+      "rotation": [
+        0,
+        0,
+        -44.75
+      ],
+      "translation": [
+        -2.25,
+        -1.5,
+        0
+      ],
+      "scale": [
+        0.8,
+        0.8,
+        0.8
+      ]
+    },
+    "head": {
+      "translation": [
+        0,
+        14.5,
+        0
+      ]
+    },
+    "fixed": {
+      "rotation": [
+        -90,
+        0,
+        0
+      ],
+      "translation": [
+        0,
+        0.25,
+        -41.75
+      ],
+      "scale": [
+        2.25781,
+        2.52149,
+        2.50782
+      ]
+    }
+  }
+}

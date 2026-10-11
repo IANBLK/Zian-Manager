@@ -1,0 +1,149 @@
+{
+  "parent": "minecraft:block/block",
+  "loader": "neoforge:obj",
+  "model": "zianmanager:models/imported/red_hammer.obj",
+  "automatic_culling": false,
+  "flip_v": false,
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "particle": "zianmanager:item/imported/red_hammer/0"
+  },
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [
+        -24.33,
+        89.11,
+        25.75
+      ],
+      "translation": [
+        0,
+        4.5,
+        0.25
+      ],
+      "scale": [
+        1.35547,
+        1.35547,
+        1.35547
+      ]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [
+        -24.33,
+        89.11,
+        25.75
+      ],
+      "translation": [
+        0,
+        4.5,
+        0.25
+      ],
+      "scale": [
+        1.35547,
+        1.35547,
+        1.35547
+      ]
+    },
+    "firstperson_righthand": {
+      "rotation": [
+        -57.33,
+        89.11,
+        25.75
+      ],
+      "translation": [
+        0,
+        7.75,
+        0.25
+      ],
+      "scale": [
+        1.35547,
+        1.35547,
+        1.35547
+      ]
+    },
+    "firstperson_lefthand": {
+      "rotation": [
+        -57.33,
+        89.11,
+        25.75
+      ],
+      "translation": [
+        0,
+        7.75,
+        0.25
+      ],
+      "scale": [
+        1.35547,
+        1.35547,
+        1.35547
+      ]
+    },
+    "ground": {
+      "rotation": [
+        -57.33,
+        89.11,
+        25.75
+      ],
+      "translation": [
+        0,
+        4.25,
+        0.25
+      ],
+      "scale": [
+        1.35547,
+        1.35547,
+        1.35547
+      ]
+    },
+    "gui": {
+      "rotation": [
+        0,
+        0,
+        35.75
+      ],
+      "translation": [
+        -2.5,
+        4.25,
+        0
+      ],
+      "scale": [
+        1.75586,
+        1.75586,
+        1.75586
+      ]
+    },
+    "head": {
+      "rotation": [
+        -1.91,
+        51.96,
+        -119.07
+      ],
+      "translation": [
+        3.75,
+        14,
+        -3.25
+      ],
+      "scale": [
+        2.18359,
+        2.18359,
+        2.18359
+      ]
+    },
+    "fixed": {
+      "rotation": [
+        0,
+        0,
+        35.75
+      ],
+      "translation": [
+        -2.5,
+        3.5,
+        0
+      ],
+      "scale": [
+        1.75586,
+        1.75586,
+        1.75586
+      ]
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "zianmanager:reimagined_diamond_shovel",
+    "zianmanager:reimagined_gold_shovel",
+    "zianmanager:reimagined_iron_shovel",
+    "zianmanager:reimagined_stone_shovel",
+    "zianmanager:reimagined_wooden_shovel"
+  ]
+}

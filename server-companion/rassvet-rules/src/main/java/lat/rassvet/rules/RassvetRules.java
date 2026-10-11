@@ -1,0 +1,108 @@
+package lat.rassvet.rules;
+import org.bukkit.*;
+import org.bukkit.command.*;
+import org.bukkit.entity.Player;
+import org.bukkit.event.*;
+import org.bukkit.event.player.*;
+import org.bukkit.event.inventory.*;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityPortalEvent;
+import org.bukkit.event.world.PortalCreateEvent;
+import org.bukkit.event.block.LeavesDecayEvent;
+import org.bukkit.event.block.BlockGrowEvent;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.potion.*;
+import java.io.File;
+import java.util.regex.Pattern;
+import org.bukkit.inventory.*;
+import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.plugin.java.JavaPlugin;
+import java.util.*;
+
+/** Small server companion: preserve EternalCore permissions and death tracking. */
+public final class RassvetRules extends JavaPlugin implements Listener,CommandExecutor,TabCompleter {
+ private LobbyPasteService lobbyPaste;
+ private NamespacedKey flight;private String lobby;private double minimumY;private Location spawn;private long spawnStamp=-1;private final Map<UUID,Long> rescue=new HashMap<>(),backPending=new HashMap<>();private final Map<UUID,String> commandStates=new HashMap<>();private boolean auditing;
+ private static final Pattern POSITION=Pattern.compile("Position\\{x=([-0-9.]+), y=([-0-9.]+), z=([-0-9.]+), yaw=([-0-9.]+), pitch=([-0-9.]+), world='([^']+)'\\}");
+ private static final class TpaMenu implements InventoryHolder {
+  private Inventory inventory;private final Map<Integer,UUID> targets=new HashMap<>();
+  public Inventory getInventory(){return inventory;}
+ }
+ @Override public void onEnable(){if(Bukkit.getPluginManager().isPluginEnabled("WorldEdit"))lobbyPaste=new LobbyPasteService(this);saveDefaultConfig();lobby=getConfig().getString("lobby-world","world");minimumY=getConfig().getDouble("void-min-y",0);flight=new NamespacedKey(this,"lobby_flight");getServer().getPluginManager().registerEvents(this,this);getCommand("rassvet").setExecutor(this);getCommand("rassvet").setTabCompleter(this);getServer().getOnlinePlayers().forEach(this::checkFlight);refreshSpawn();getServer().getScheduler().runTaskTimer(this,()->{refreshSpawn();backPending.entrySet().removeIf(e->e.getValue()<System.currentTimeMillis());for(Player p:getServer().getOnlinePlayers()){if(rescuePlayer(p) && p.getLocation().getY()<rescueHeight(p))rescue(p);String state=p.isOp()+"/"+p.getWorld().getName()+"/"+p.hasPermission("commandwhitelist.bypass")+"/"+p.hasPermission("commandwhitelist.group.explorador")+"/"+p.hasPermission("commandwhitelist.group.guardian")+"/"+p.hasPermission("commandwhitelist.group.astral");if(!state.equals(commandStates.put(p.getUniqueId(),state)))p.updateCommands();}},20,20);getLogger().info("Death-only /back, 10s Resistance II, TPA menu, void rescue and lobby flight guard enabled");}
+ private boolean rescuePlayer(Player p){return (p.getWorld().getName().equals(lobby) || p.getWorld().getName().equals("gyms")) && p.getGameMode()!=GameMode.CREATIVE && p.getGameMode()!=GameMode.SPECTATOR;}
+ private double rescueHeight(Player p){return p.getWorld().getName().equals("gyms")?p.getWorld().getMinHeight()+4:minimumY;}
+ @EventHandler(priority=EventPriority.HIGHEST,ignoreCancelled=true) public void cropGrow(BlockGrowEvent e){if(e.getBlock().getWorld().getName().equals("gyms") && Set.of(Material.CARROTS,Material.POTATOES,Material.WHEAT,Material.BEETROOTS).contains(e.getBlock().getType()))e.setCancelled(true);}
+ @EventHandler(priority=EventPriority.HIGHEST,ignoreCancelled=true) public void leaves(LeavesDecayEvent e){if(e.getBlock().getWorld().getName().equals("gyms"))e.setCancelled(true);}
+ @EventHandler(priority=EventPriority.HIGHEST,ignoreCancelled=true) public void playerPortal(PlayerPortalEvent e){e.setCancelled(true);}
+ @EventHandler(priority=EventPriority.HIGHEST,ignoreCancelled=true) public void entityPortal(EntityPortalEvent e){e.setCancelled(true);}
+ @EventHandler(priority=EventPriority.HIGHEST,ignoreCancelled=true) public void portalCreate(PortalCreateEvent e){e.setCancelled(true);}
+ private boolean lobbyPlayer(Player p){return p.getWorld().getName().equals(lobby) && p.getGameMode()!=GameMode.CREATIVE && p.getGameMode()!=GameMode.SPECTATOR;}
+ private void refreshSpawn(){File file=new File(getDataFolder().getParentFile(),"EternalCore/locations.yml");if(file.lastModified()==spawnStamp)return;spawnStamp=file.lastModified();String value=YamlConfiguration.loadConfiguration(file).getString("spawn","");var match=POSITION.matcher(value);if(match.matches()){World world=Bukkit.getWorld(match.group(6));if(world!=null && world.getName().equals(lobby))spawn=new Location(world,Double.parseDouble(match.group(1)),Double.parseDouble(match.group(2)),Double.parseDouble(match.group(3)),Float.parseFloat(match.group(4)),Float.parseFloat(match.group(5)));}if(spawn==null){World world=Bukkit.getWorld(lobby);if(world!=null)spawn=world.getSpawnLocation();}}
+ private void rescue(Player p){long now=System.currentTimeMillis();Location destination=p.getWorld().getName().equals("gyms")?p.getWorld().getSpawnLocation().clone().add(0.5,0,0.5):spawn;if(now<rescue.getOrDefault(p.getUniqueId(),0L) || destination==null)return;rescue.put(p.getUniqueId(),now+2000);p.setFallDistance(0);if(p.teleport(destination,PlayerTeleportEvent.TeleportCause.PLUGIN)){p.setFallDistance(0);p.sendMessage("§eTe devolvimos al Spawn para evitar el vacío.");}}
+ private void requestBack(Player p){if(!p.hasPermission("eternalcore.back") || !p.hasPermission("eternalcore.back.death")){p.sendMessage("§cNo tienes permiso para volver a tu muerte.");return;}if(backPending.containsKey(p.getUniqueId())){p.sendMessage("§eYa tienes un regreso pendiente.");return;}Location death=p.getLastDeathLocation();if(death==null || death.getWorld()==null){p.sendMessage("§cNo hay una última muerte registrada.");return;}if(death.getY()<death.getWorld().getMinHeight() || death.getY()>=death.getWorld().getMaxHeight()){p.sendMessage("§cLa última muerte está fuera de los límites del mundo.");return;}Location destination=death.clone().add(0.5,0.1,0.5),start=p.getLocation();int wait=Math.max(0,Math.min(60,getConfig().getInt("back-wait-seconds",5)));long token=System.currentTimeMillis()+wait*1000L+2000;backPending.put(p.getUniqueId(),token);p.sendMessage("§eRegresarás a tu última muerte en "+wait+" segundos. No te muevas.");getServer().getScheduler().runTaskLater(this,()->{if(!Objects.equals(backPending.get(p.getUniqueId()),token))return;backPending.remove(p.getUniqueId());if(!p.isOnline() || !p.hasPermission("eternalcore.back.death") || !p.hasPermission("eternalcore.back"))return;if(!p.getWorld().equals(start.getWorld()) || p.getLocation().distanceSquared(start)>0.0625){p.sendMessage("§cRegreso cancelado porque te moviste.");return;}if(p.teleport(destination,PlayerTeleportEvent.TeleportCause.PLUGIN)){p.setFallDistance(0);getServer().getScheduler().runTask(this,()->{if(p.isOnline() && p.getWorld().equals(destination.getWorld()) && p.getLocation().distanceSquared(destination)<=64){p.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE,200,1,false,true,true));p.sendMessage("§aRegresaste a tu última muerte. Resistencia II durante 10 segundos.");}});}else p.sendMessage("§cNo se pudo regresar a tu última muerte.");},wait*20L);}
+ @EventHandler(ignoreCancelled=true) public void move(PlayerMoveEvent e){if(e.getTo()!=null && rescuePlayer(e.getPlayer()) && e.getTo().getY()<rescueHeight(e.getPlayer()))rescue(e.getPlayer());}
+ @EventHandler(priority=EventPriority.HIGHEST,ignoreCancelled=true) public void damage(EntityDamageEvent e){if(!(e.getEntity() instanceof Player p))return;if(backPending.remove(p.getUniqueId())!=null)p.sendMessage("§cRegreso cancelado porque recibiste daño.");if(rescuePlayer(p) && e.getCause()==EntityDamageEvent.DamageCause.VOID){e.setCancelled(true);rescue(p);}}
+ @EventHandler public void quit(PlayerQuitEvent e){rescue.remove(e.getPlayer().getUniqueId());backPending.remove(e.getPlayer().getUniqueId());commandStates.remove(e.getPlayer().getUniqueId());}
+ @EventHandler(priority=EventPriority.MONITOR,ignoreCancelled=true) public void backTeleport(PlayerTeleportEvent e){Player p=e.getPlayer();Long until=backPending.get(p.getUniqueId());Location death=p.getLastDeathLocation();if(until==null || until<System.currentTimeMillis() || death==null || e.getTo()==null || !death.getWorld().equals(e.getTo().getWorld()) || death.distanceSquared(e.getTo())>64)return;backPending.remove(p.getUniqueId());Location destination=e.getTo().clone();getServer().getScheduler().runTask(this,()->{if(p.isOnline() && p.getWorld().equals(destination.getWorld()) && p.getLocation().distanceSquared(destination)<=64)p.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE,200,1,false,true,true));});}
+ private boolean owned(Player p){return p.getPersistentDataContainer().has(flight,PersistentDataType.BYTE);}
+ private boolean exempt(Player p){return p.isOp() || p.hasPermission("rassvet.flight.bypass") || p.getGameMode()==GameMode.CREATIVE || p.getGameMode()==GameMode.SPECTATOR;}
+ private void checkFlight(Player p){if(!owned(p) || exempt(p) || p.getWorld().getName().equals(lobby))return;p.setFlying(false);p.setAllowFlight(false);p.getPersistentDataContainer().remove(flight);p.sendMessage("§eEl vuelo de tu rango solo está disponible en Spawn.");}
+ private void markFlight(Player p){getServer().getScheduler().runTask(this,()->{if(!p.isOnline())return;if(p.getAllowFlight() && p.getWorld().getName().equals(lobby))p.getPersistentDataContainer().set(flight,PersistentDataType.BYTE,(byte)1);else p.getPersistentDataContainer().remove(flight);checkFlight(p);});}
+ @EventHandler(priority=EventPriority.HIGHEST,ignoreCancelled=true) public void command(PlayerCommandPreprocessEvent e){if(auditing)return;String[] words=e.getMessage().substring(1).trim().split("\\s+");String root=words[0].toLowerCase(Locale.ROOT);String bare=root.substring(root.lastIndexOf(':')+1);Player p=e.getPlayer();if(bare.equals("back") && (words.length==1 || words.length==2 && words[1].equalsIgnoreCase("death")) && p.hasPermission("eternalcore.back") && p.hasPermission("eternalcore.back.death")){e.setCancelled(true);requestBack(p);return;}if(bare.equals("fly") && !exempt(p) && p.hasPermission("rassvet.lobbyflight")){if(!p.getWorld().getName().equals(lobby)){e.setCancelled(true);p.sendMessage("§eEl vuelo de tu rango solo está disponible en Spawn.");}else markFlight(p);}}
+ @EventHandler public void changedWorld(PlayerChangedWorldEvent e){checkFlight(e.getPlayer());getServer().getScheduler().runTask(this,e.getPlayer()::updateCommands);}
+ @EventHandler public void join(PlayerJoinEvent e){getServer().getScheduler().runTask(this,()->checkFlight(e.getPlayer()));}
+ @EventHandler(priority=EventPriority.HIGHEST,ignoreCancelled=true) public void flight(PlayerToggleFlightEvent e){if(owned(e.getPlayer()) && !exempt(e.getPlayer()) && !e.getPlayer().getWorld().getName().equals(lobby)){e.setCancelled(true);checkFlight(e.getPlayer());}}
+ private void tpa(Player p){var holder=new TpaMenu();holder.inventory=Bukkit.createInventory(holder,54,"Solicitar teletransporte");int slot=0;for(Player target:getServer().getOnlinePlayers()){if(slot>=54)break;if(target.equals(p) || !p.canSee(target))continue;var item=new ItemStack(Material.ENDER_PEARL);var meta=item.getItemMeta();meta.setDisplayName("§b"+target.getName());meta.setLore(List.of("§7Enviar una solicitud de TPA","§8Requiere que acepte la solicitud"));item.setItemMeta(meta);holder.inventory.setItem(slot,item);holder.targets.put(slot++,target.getUniqueId());}p.openInventory(holder.inventory);}
+ @EventHandler(priority=EventPriority.HIGHEST) public void inventoryClick(InventoryClickEvent e){if(!(e.getView().getTopInventory().getHolder() instanceof TpaMenu menu))return;e.setCancelled(true);if(!(e.getWhoClicked() instanceof Player p) || e.getRawSlot()<0 || e.getRawSlot()>=54)return;UUID targetId=menu.targets.get(e.getRawSlot());if(targetId==null)return;p.closeInventory();Player target=Bukkit.getPlayer(targetId);if(!p.hasPermission("rassvet.tpa") || !p.hasPermission("eternalcore.tpa") || target==null || !p.canSee(target)){p.sendMessage("§cLa solicitud ya no está disponible.");return;}p.performCommand("tpa "+target.getName());}
+ @EventHandler(priority=EventPriority.HIGHEST) public void inventoryDrag(InventoryDragEvent e){if(e.getView().getTopInventory().getHolder() instanceof TpaMenu)e.setCancelled(true);}
+ // Only these two self-service actions may use the native mod dispatcher.
+ // Keep the player's own command source and never accept a command from input.
+ private boolean publicModAction(Player p,String action){
+  String permission,command;
+  switch(action){case "tiempo":permission="rassvet.time";command="zianmanager time";break;case "tienda":permission="rassvet.shop";command="avecoins shop";break;default:return false;}
+  if(!p.hasPermission(permission) || (action.equals("tienda") && !p.hasPermission("avecoins.shop.use"))){p.sendMessage("§cNo tienes permiso para esta opción.");return false;}
+  try{
+   Object handle=p.getClass().getMethod("getHandle").invoke(p);
+   Object source=handle.getClass().getMethod("createCommandSourceStack").invoke(handle);
+   Object server=handle.getClass().getMethod("getServer").invoke(handle);
+   Object commands=server.getClass().getMethod("getCommands").invoke(server);
+   Object dispatcher=commands.getClass().getMethod("getDispatcher").invoke(commands);
+   Class<?> type=Class.forName("com.mojang.brigadier.CommandDispatcher");
+   // Youer wraps whole mod roots in a Bukkit permission gate. Invoke only
+   // the fixed public leaf, guarded above, without granting that root permission.
+   Class<?> nodeType=Class.forName("com.mojang.brigadier.tree.CommandNode");
+   Object root=type.getMethod("getRoot").invoke(dispatcher);
+   String[] words=command.split(" ");
+   Object modRoot=nodeType.getMethod("getChild",String.class).invoke(root,words[0]);
+   Object leaf=nodeType.getMethod("getChild",String.class).invoke(modRoot,words[1]);
+   if(leaf==null || !((Boolean)nodeType.getMethod("canUse",Object.class).invoke(leaf,source)))throw new IllegalStateException("Public action is unavailable");
+   Class<?> commandType=Class.forName("com.mojang.brigadier.Command");
+   Object executable=nodeType.getMethod("getCommand").invoke(leaf);
+   Class<?> builderType=Class.forName("com.mojang.brigadier.context.CommandContextBuilder");
+   Object builder=builderType.getConstructor(type,Object.class,nodeType,int.class).newInstance(dispatcher,source,root,0);
+   builderType.getMethod("withCommand",commandType).invoke(builder,executable);
+   Object context=builderType.getMethod("build",String.class).invoke(builder,command);
+   int result=((Number)commandType.getMethod("run",Class.forName("com.mojang.brigadier.context.CommandContext")).invoke(executable,context)).intValue();
+   getLogger().info("Public action "+action+" player="+p.getUniqueId()+" result="+result);
+   if(result>0 && action.equals("tiempo"))p.sendMessage("§7Tu tiempo diario se renueva a las §e00:00 UTC -5§7.");
+   return result>0;
+  }catch(ReflectiveOperationException|RuntimeException error){getLogger().log(java.util.logging.Level.WARNING,"Public mod action failed: "+action,error);p.sendMessage("§cNo se pudo abrir esta opción. Avisa a un administrador.");return false;}
+ }
+ @Override public boolean onCommand(CommandSender sender,Command command,String label,String[] args){
+  String action=args.length==0?"tpa":args[0].toLowerCase(Locale.ROOT);
+  if(action.equals("tpa") && sender instanceof Player p){if(!p.hasPermission("rassvet.tpa") || !p.hasPermission("eternalcore.tpa")){p.sendMessage("§cNo tienes permiso para solicitar TPA.");return true;}tpa(p);return true;}
+  if(action.equals("regreso") && sender instanceof Player p){requestBack(p);return true;}
+  if(action.equals("vuelo") && sender instanceof Player p){if(!p.hasPermission("eternalcore.fly") || !p.hasPermission("rassvet.lobbyflight")){p.sendMessage("§cNo tienes permiso para volar.");return true;}if(!exempt(p) && !p.getWorld().getName().equals(lobby)){p.sendMessage("§eEl vuelo de tu rango solo está disponible en Spawn.");return true;}p.performCommand("fly");markFlight(p);return true;}
+  if((action.equals("tiempo") || action.equals("tienda")) && sender instanceof Player p){if(args.length!=1){p.sendMessage("§cUsa /rassvet "+action);return true;}publicModAction(p,action);return true;}
+  if(!sender.hasPermission("rassvet.admin")){sender.sendMessage("§cComando no disponible.");return true;}
+  if(action.equals("lobby") && args.length==1){if(lobbyPaste==null)sender.sendMessage("WorldEdit no está disponible.");else lobbyPaste.start(sender);return true;}
+  if(action.equals("crops") && args.length==1){if(lobbyPaste!=null)lobbyPaste.cleanCrops(sender);return true;}
+  if(action.equals("lobbycancel") && args.length==1){if(lobbyPaste!=null)lobbyPaste.cancel();sender.sendMessage("Pegado cancelado; los bloques ya colocados se conservan.");return true;}
+  if(action.equals("probar") && args.length==3 && Set.of("tiempo","tienda").contains(args[2])){Player p=Bukkit.getPlayerExact(args[1]);sender.sendMessage(p==null?"Jugador desconectado.":"Acceso público "+args[2]+": "+publicModAction(p,args[2]));return true;}
+  if(action.equals("refresh")){getServer().getOnlinePlayers().forEach(Player::updateCommands);sender.sendMessage("Árboles de comandos actualizados.");return true;}
+  if(action.equals("audit") && args.length==2){Player p=Bukkit.getPlayerExact(args[1]);if(p==null){sender.sendMessage("Jugador desconectado.");return true;}var event=new PlayerCommandSendEvent(p,new TreeSet<>(List.of("plugins","pl","version","ver","about","bukkit:plugins","bukkit:version","lp","mv","ZianGui","ziangui","ZianGTS","ziangts","ZianUtilities","zianutilities","zianmanager","spawn","tpa","fly","back","rassvet","pc","healpokemon","enderchest","workbench","hat")));getServer().getPluginManager().callEvent(event);sender.sendMessage("Rassvet audit "+p.getName()+" op="+p.isOp()+" world="+p.getWorld().getName()+" visible="+String.join(",",event.getCommands()));try{auditing=true;for(String probe:List.of("/plugins","/bukkit:plugins","/lp info","/back")){var attempt=new PlayerCommandPreprocessEvent(p,probe);getServer().getPluginManager().callEvent(attempt);sender.sendMessage("Probe "+probe+" cancelled="+attempt.isCancelled());}}finally{auditing=false;}sender.sendMessage("Permissions: tpa="+p.hasPermission("eternalcore.tpa")+" fly="+p.hasPermission("eternalcore.fly")+" back.death="+p.hasPermission("eternalcore.back.death")+" bypass="+p.hasPermission("commandwhitelist.bypass"));return true;}
+  sender.sendMessage("/rassvet audit <jugador> | /rassvet refresh");return true;
+ }
+ @Override public void onDisable(){if(lobbyPaste!=null)lobbyPaste.cancel();}
+ @Override public List<String> onTabComplete(CommandSender sender,Command cmd,String alias,String[] args){if(args.length!=1)return List.of();var choices=new ArrayList<String>();if(sender.hasPermission("rassvet.time"))choices.add("tiempo");if(sender.hasPermission("rassvet.shop") && sender.hasPermission("avecoins.shop.use"))choices.add("tienda");if(sender.hasPermission("rassvet.tpa"))choices.add("tpa");if(sender.hasPermission("eternalcore.back.death"))choices.add("regreso");if(sender.hasPermission("rassvet.lobbyflight") && sender.hasPermission("eternalcore.fly") && (!(sender instanceof Player p) || p.getWorld().getName().equals(lobby) || exempt(p)))choices.add("vuelo");if(sender.hasPermission("rassvet.admin"))choices.addAll(List.of("audit","refresh","lobby","lobbycancel"));return choices.stream().filter(s->s.startsWith(args[0].toLowerCase(Locale.ROOT))).toList();}
+}

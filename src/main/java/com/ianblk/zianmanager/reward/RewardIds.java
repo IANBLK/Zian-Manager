@@ -1,0 +1,1 @@
+package com.ianblk.zianmanager.reward; public final class RewardIds { public static void validId(String id){if(id==null || !id.matches("[a-z0-9_.-]{1,128}"))throw new IllegalArgumentException("ID de premio inválido");} }

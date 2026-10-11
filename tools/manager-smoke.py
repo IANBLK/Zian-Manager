@@ -92,5 +92,13 @@ if __name__ == "__main__":
     (GAME / "config").mkdir(parents=True, exist_ok=True)
     (GAME / "eula.txt").write_text("eula=true\n", encoding="utf-8")
     (GAME / "server.properties").write_text(f"server-ip=127.0.0.1\nserver-port=25586\nonline-mode=false\nenable-rcon=true\nrcon.password={PASSWORD}\nrcon.port=25587\ndifficulty=normal\nlevel-type=minecraft:flat\nmax-players=4\nview-distance=2\nsimulation-distance=2\n", encoding="utf-8")
+    if os.environ.get("ZIAN_STORAGE_SHARDED_SMOKE") == "true":
+        import uuid
+        data = GAME / "world/data/zianmanager"
+        data.mkdir(parents=True, exist_ok=True)
+        for filename, field, version in [("claims.json", "schemaVersion", 3), ("keys.json", "schema", 2)]:
+            name=filename+".players-"+str(uuid.uuid4())
+            (data/name).mkdir()
+            (data/filename).write_text(json.dumps({field:version,"layout":"per-player-v1","directory":name,"cacheLimit":32}),encoding="utf-8")
     run(1)
     run(2)

@@ -15,8 +15,11 @@ public final class AtomicJson {
         for(int attempt=0;;attempt++)try{Files.move(temp,file,StandardCopyOption.ATOMIC_MOVE,StandardCopyOption.REPLACE_EXISTING);return;}catch(AccessDeniedException locked){if(attempt>=4)throw locked;try{Thread.sleep(10L*(attempt+1));}catch(InterruptedException interrupted){Thread.currentThread().interrupt();throw new IOException("Escritura interrumpida",interrupted);}}
     }
     public static void write(Path file,Object value) throws IOException{
-        String encoded=GSON.toJson(value);if(encoded.getBytes(StandardCharsets.UTF_8).length>16*1024*1024)throw new IOException("Archivo demasiado grande");
+        writeEncoded(file,GSON.toJson(value));
+    }
+    public static void writeEncoded(Path file,String encoded) throws IOException{
+        if(encoded.getBytes(StandardCharsets.UTF_8).length>16*1024*1024)throw new IOException("Archivo demasiado grande");
         Files.createDirectories(file.toAbsolutePath().getParent());Path temp=Files.createTempFile(file.toAbsolutePath().getParent(),"zianmanager-",".tmp");
-        try{Files.writeString(temp,encoded,StandardCharsets.UTF_8);try(var channel=FileChannel.open(temp,StandardOpenOption.WRITE)){channel.force(true);}replace(temp,file);}finally{Files.deleteIfExists(temp);}
+        try{Files.writeString(temp,encoded,StandardCharsets.UTF_8);try(var channel=FileChannel.open(temp,StandardOpenOption.WRITE)){channel.force(true);}replace(temp,file);if(!System.getProperty("os.name").toLowerCase(java.util.Locale.ROOT).contains("windows"))try(var directory=FileChannel.open(file.toAbsolutePath().getParent(),StandardOpenOption.READ)){directory.force(true);}}finally{Files.deleteIfExists(temp);}
     }
 }

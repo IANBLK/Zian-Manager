@@ -18,6 +18,9 @@ final class RewardFiles {
             return JsonParser.parseReader(reader);
         } catch (RuntimeException error) { throw new IOException("JSON inválido: " + file, error); }
     }
+    static void writeEncoded(Path file, String encoded) throws IOException {
+        com.ianblk.zianmanager.core.AtomicJson.writeEncoded(file,encoded);
+    }
     static void write(Path file, Object data) throws IOException {
         com.ianblk.zianmanager.core.AtomicJson.write(file,data);
     }

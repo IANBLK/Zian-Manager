@@ -13,7 +13,7 @@ Subir únicamente `zianmanager-0.1.0-beta.1.jar` como archivo del mod. El ZIP de
 - Autor visible: **IANBLK**.
 - Descripción principal: copiar `DESCRIPTION-EN.md`. `DESCRIPTION-ES.md` queda como traducción complementaria.
 - Licencia de proyecto: **Custom**, con `PROJECT-LICENSE.txt` y el texto de `LICENSE.txt`, porque MIT cubre el código y el arte conserva permisos separados.
-- Icono: `images/icon.png`; banner y galería son opcionales. Las imágenes de galería son capturas reales y el icono es ilustración del proyecto.
+- Logo: `images/logo-zian-manager.png` (alternativa sin texto: `images/icon.png`); banner y galería son opcionales. Las imágenes de galería son capturas reales y el icono es ilustración del proyecto.
 - Fuente: https://github.com/IANBLK/Zian-Manager/tree/feature/dungeon-core
 - Incidencias: https://github.com/IANBLK/Zian-Manager/issues
 
@@ -34,3 +34,7 @@ Comparar el SHA-256 del JAR con `SHA256SUMS.txt`. No subir mundos, configuracion
 El paquete está preparado para una carga manual. No se ha creado ni enviado un proyecto de CurseForge, ni se garantiza la aprobación de moderación.
 
 Referencias oficiales: https://support.curseforge.com/support/solutions/articles/9000197241-creating-and-submitting-a-project y https://support.curseforge.com/support/solutions/articles/9000197242 (la guía actualizada en 2026 permite que una Beta aprobada sincronice el proyecto con la aplicación cuando el usuario selecciona betas).
+
+## Contenido WYSIWYG
+
+Abrir `PREVIEW-WYSIWYG.html`, copiar los bloques visuales y pegarlos en el editor WYSIWYG. `description.html` y `changes-0.1.0-beta.1.html` contienen el HTML equivalente para el modo de código. `summary.txt` se pega como texto simple.

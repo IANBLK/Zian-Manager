@@ -1,0 +1,7 @@
+Abre PREVIEW-WYSIWYG.html en tu navegador.
+1. Summary: copiar como texto simple.
+2. Descripción: seleccionar solo el contenido bajo «Descripción completa», copiar y pegar en el editor visual de CurseForge.
+3. Cambios: repetir con el bloque «Cambios beta.1».
+4. Si prefieres importar HTML, usa description.html y changes-0.1.0-beta.1.html en modo HTML, cuando el editor lo permita.
+5. Logo: subir images/logo-zian-manager.png. icon.png sigue disponible como alternativa sin texto y es el icono incluido en el JAR.
+Los archivos principales están en inglés, siguiendo el estilo de los otros mods de Zian; DESCRIPTION-ES.md conserva la versión en español.

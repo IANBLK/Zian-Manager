@@ -2,11 +2,13 @@
 
 **Administra dungeons dentro del juego:** mobs personalizados, jefes, zonas con oleadas, loot personal y NPC de diálogo.
 
-**0.1.0-alpha.22 · Minecraft 1.21.1 · NeoForge 21.1.252+ · Java 21**
+**0.1.0-beta.1 · Minecraft 1.21.1 · NeoForge 21.1.252+ · Java 21**
 
 Administración del tiempo diario: `/zianmanager removetime <jugador> <minutos>` descuenta entre 1 y 1440 minutos a un jugador conectado, hasta agotar su saldo actual. Requiere consola, OP (salvo denegación explícita) o `zianmanager.admin`, igual que `bonustime`; no se concede a los rangos normales. Conserva bonos, consumo y reinicio diario; rechaza jugadores con tiempo ilimitado. Al agotarse dentro de una dungeon aplica inmediatamente la salida configurada. `/zianmanager bonustime player <jugador> <minutos>` permite devolver minutos para hoy.
 
 Instala el mismo JAR en cliente y servidor. Es independiente de Cobblemon, RCT API y RCT Mod. Lootr y LuckPerms son opcionales.
+
+Paquete de publicación y textos para CurseForge: [release/curseforge](release/curseforge/SUBIR-A-CURSEFORGE.md). Los complementos de Rassvet y el generador de Casas son herramientas separadas del servidor; no forman parte del JAR del mod.
 
 ## 🛠️ Objetos y zonas
 

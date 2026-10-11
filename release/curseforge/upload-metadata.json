@@ -1,0 +1,23 @@
+{
+  "projectName": "Zian Manager",
+  "summary": "Create configurable dungeon encounters, personal loot chests and command-driven dialogue NPCs with an in-game editor.",
+  "author": "IANBLK",
+  "releaseType": "beta",
+  "displayName": "Zian Manager 0.1.0-beta.1 — NeoForge 1.21.1",
+  "minecraftVersions": [
+    "1.21.1"
+  ],
+  "loaders": [
+    "NeoForge"
+  ],
+  "java": 21,
+  "minimumNeoForge": "21.1.252",
+  "installation": "client-and-server",
+  "optionalRelations": [
+    "Lootr"
+  ],
+  "license": "Custom: MIT code; separate artwork permissions",
+  "source": "https://github.com/IANBLK/Zian-Manager/tree/feature/dungeon-core",
+  "issues": "https://github.com/IANBLK/Zian-Manager/issues",
+  "published": false
+}

@@ -1,3 +1,10 @@
+# 0.1.0-beta.1
+
+- Primera beta pública, basada en alpha.22; conserva los ID, configuración y protocolo de red.
+- Metadatos de publicación para Minecraft 1.21.1, NeoForge 21.1.252+ y Java 21.
+- Documentación de instalación, migración, compatibilidad y avisos de recursos para CurseForge.
+- Los complementos de servidor Rassvet y el generador de Casas se distribuyen por separado; no son funciones del JAR.
+
 # 0.1.0-alpha.22
 
 - Perfiles de tiempo independientes para Dungeon, Nether, End y Farmeo, configurables desde Tiempos por mundo.

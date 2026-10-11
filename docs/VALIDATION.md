@@ -1,3 +1,19 @@
+# Validación actual — 0.1.0-beta.1
+
+## Primera beta pública
+
+La beta se promueve desde alpha.22 sin cambiar los IDs, los formatos de configuración ni el protocolo de red. Se comprobó el JAR publicado, sus metadatos, logo, avisos de recursos y ausencia de archivos privados o complementos de Rassvet.
+
+- Compilación Java 21 / Minecraft 1.21.1 / NeoForge 21.1.252 correcta.
+- 78 pruebas unitarias, sin fallos ni errores.
+- 81 modelos: geometría, jerarquía, referencias e integridad de PNG originales verificadas.
+- Entorno nuevo sin Lootr: encuentros, oleadas, renovación, equipo, cofres, NPC, entregas y controles de tiempo correctos.
+- Reinicio de ese entorno con Lootr: cofres, NPC, recibos y cooldowns conservados.
+- Entorno nuevo con Lootr desde el inicio: encuentros completos y persistencia comprobados; su segunda pasada verifica el reinicio con Lootr.
+- El ejecutor crea un mundo aislado nuevo por invocación; los dos pasos de una invocación comparten únicamente su mundo para validar persistencia. Se evita reutilizar un marcador antiguo cuando su cooldown ya caducó.
+
+Las validaciones históricas que siguen describen el estado de cada alpha en su fecha. El uso posterior en un servidor Youer configurado aportó comprobaciones reales de loot, NPC, zonas, permisos y tiempo; no garantiza todas las combinaciones de plugins ni reemplaza pruebas visuales de cada renderizador o paquete de recursos. El complemento Rassvet y la generación de Casas no forman parte del JAR del mod.
+
 # Validación de 0.1.0-alpha.2
 
 - Java 21, Minecraft 1.21.1, NeoForge 21.1.252.

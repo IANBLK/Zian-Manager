@@ -1,3 +1,4 @@
+import tempfile
 """Dedicated API-only integration test; localhost ports and an isolated build world."""
 import json
 import os
@@ -8,7 +9,10 @@ import subprocess
 import time
 
 ROOT = Path(__file__).resolve().parents[1]
-GAME = ROOT / ("build/manager-smoke-lootr" if os.environ.get("ZIANMANAGER_WITH_LOOTR")=="true" else "build/manager-smoke")
+# Each invocation starts fresh; only its two passes share the fixture world.
+# Reusing a previous smoke.marker makes legitimate cooldown expiry look like failure.
+(ROOT / "build").mkdir(exist_ok=True)
+GAME = Path(tempfile.mkdtemp(prefix="manager-smoke-lootr-run-" if os.environ.get("ZIANMANAGER_WITH_LOOTR")=="true" else "manager-smoke-run-", dir=ROOT / "build"))
 EVIDENCE = ROOT / ("build/manager-smoke-lootr-evidence" if os.environ.get("ZIANMANAGER_WITH_LOOTR")=="true" else "build/manager-smoke-evidence")
 PASSWORD = "zian-standalone-local-test"
 

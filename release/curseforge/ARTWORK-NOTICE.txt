@@ -1,0 +1,7 @@
+Artwork notice
+
+The MIT license applies to the original program code. Imported models, textures and supplied character skins retain their separate rights and permissions; they are not relicensed as MIT by this project.
+
+The project owner confirms that the resource creators permit redistribution of the supplied artwork within this mod, including purchased and freely distributed packs. This notice records that authorization; it does not claim independent verification of private agreements or grant an additional standalone-artwork license.
+
+IANBLK maintains Zian Manager. Asset provenance and integrity are recorded in the project documentation.

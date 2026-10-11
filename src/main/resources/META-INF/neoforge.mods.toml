@@ -1,10 +1,13 @@
 modLoader="javafml"
 loaderVersion="[4,)"
-license="MIT"
+issueTrackerURL="https://github.com/IANBLK/Zian-Manager/issues"
+license="MIT (code); separate artwork permissions — see META-INF/ARTWORK-NOTICE.txt"
 [[mods]]
 modId="zianmanager"
 version="${mod_version}"
 displayName="Zian Manager"
+displayURL="https://github.com/IANBLK/Zian-Manager"
+logoFile="icon.png"
 authors="IANBLK"
 description="Dungeon mob templates, shared encounter zones, waves, personal loot chests and dialogue NPCs."
 [[dependencies.zianmanager]]
@@ -15,7 +18,7 @@ side="BOTH"
 [[dependencies.zianmanager]]
 modId="neoforge"
 type="required"
-versionRange="[21.1,)"
+versionRange="[21.1.252,)"
 side="BOTH"
 [[dependencies.zianmanager]]
 modId="lootr"

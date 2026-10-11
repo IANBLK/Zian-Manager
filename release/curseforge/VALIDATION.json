@@ -1,0 +1,42 @@
+{
+  "version": "0.1.0-beta.1",
+  "date": "2026-10-10",
+  "timezone": "America/Guayaquil",
+  "minecraft": "1.21.1",
+  "neoforgeTested": "21.1.252",
+  "java": 21,
+  "unitTests": 78,
+  "unitFailures": 0,
+  "unitErrors": 0,
+  "verifiedModels": 81,
+  "nativeScenarios": [
+    {
+      "scenario": "manager-smoke-evidence",
+      "pass": 1,
+      "result": "passed"
+    },
+    {
+      "scenario": "manager-smoke-evidence",
+      "pass": 2,
+      "result": "passed"
+    },
+    {
+      "scenario": "manager-smoke-lootr-evidence",
+      "pass": 1,
+      "result": "passed"
+    },
+    {
+      "scenario": "manager-smoke-lootr-evidence",
+      "pass": 2,
+      "result": "passed"
+    }
+  ],
+  "jarSha256": "56f42d4d57dbf27493c84042f2beda8e46f656dfdd9729ac4bba8618637da0f1",
+  "publishedToCurseForge": false,
+  "serverCompanionsIncluded": false,
+  "remarks": [
+    "Gameplay identifiers, data formats and protocol retained from alpha.22.",
+    "Publication preparation only; no CurseForge submission performed.",
+    "Native test runs use localhost fixture servers; no production server changes."
+  ]
+}

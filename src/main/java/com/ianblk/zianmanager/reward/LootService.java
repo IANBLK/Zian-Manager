@@ -19,6 +19,9 @@ import java.util.*;
 
 /** Adapted from ZianRCT's durable intent and inventory readback delivery. */
 public final class LootService {
+    private final ChestDeliveryDelay animationGate=new ChestDeliveryDelay();
+    public void scheduleChest(ServerPlayer player,UUID claim){animationGate.schedule(player.getUUID(),claim,server.getTickCount());}
+    public void tick(){for(var e:animationGate.ready(server.getTickCount())){var player=server.getPlayerList().getPlayer(e.player());if(player==null)continue;try{deliver(player,e.claim());}catch(Exception error){com.ianblk.zianmanager.ZianManager.LOGGER.error("Delayed chest delivery preserved for review player={} claim={}",e.player(),e.claim(),error);player.sendSystemMessage(com.ianblk.zianmanager.Messages.format(Component.literal("No se pudo completar la entrega. Tu recompensa sigue registrada; consulta /zianmanager pending.")));}}}
     private final MinecraftServer server;private final ManagerStore store;private final RewardJournal journal;private final com.ianblk.zianmanager.core.KeyLedger keys;
     public LootService(MinecraftServer server,ManagerStore store) throws java.io.IOException{
         this.server=server;this.store=store;keys=new com.ianblk.zianmanager.core.KeyLedger(server.getWorldPath(LevelResource.ROOT).resolve("data/zianmanager/keys.json"));journal=RewardJournal.open(server.getWorldPath(LevelResource.ROOT).resolve("data/zianmanager/claims.json"));
@@ -53,7 +56,7 @@ public final class LootService {
     public void grant(ServerPlayer player,String key,String preset,int minutes,BlockPos pos) throws Exception{
         if(!com.ianblk.zianmanager.ManagerRuntime.get().dungeonTime().allowed(player))return;
         if(!com.ianblk.zianmanager.permission.ManagerPermissions.allows(player.createCommandSourceStack(),"loot",false))return;
-        if(minutes>0 && remaining(player,key,minutes)>0){player.sendSystemMessage(Component.literal("Próximo loot en "+((remaining(player,key,minutes)+59999)/60000)+" minuto(s)."));return;}
+        if(minutes>0 && remaining(player,key,minutes)>0){player.sendSystemMessage(com.ianblk.zianmanager.Messages.format(Component.literal("Próximo loot en "+((remaining(player,key,minutes)+59999)/60000)+" minuto(s).")));return;}
         var claim=reserve(player,key,preset,minutes,pos);deliver(player,claim.id());
     }
     public List<RewardClaim> pending(UUID uuid){return journal.forPlayer(uuid).stream().filter(c->!c.complete()).toList();}
@@ -61,11 +64,12 @@ public final class LootService {
     public List<RewardClaim> keyReviews(UUID player){return pending(player).stream().filter(c->{var cost=keys.get(player,c.id());return cost!=null && (cost.phase().equals("REVIEW") || cost.phase().equals("APPLYING"));}).toList();}
     public List<String> reviewParts(UUID player,UUID id){var claim=journal.get(player,id);if(claim==null || !claim.player().equals(player))return List.of();var out=new ArrayList<String>();for(int i=0;i<claim.parts().size();i++){var phase=claim.parts().get(i).phase();if(phase==RewardClaim.Phase.APPLYING || phase==RewardClaim.Phase.REVIEW_REQUIRED)out.add(""+(i+1));}return out;}
     public void deliver(ServerPlayer player,UUID id) throws Exception{
+        if(animationGate.blocked(player.getUUID(),id,server.getTickCount())){player.displayClientMessage(Component.literal("✦ El cofre se está abriendo…"),true);return;}
         if(!com.ianblk.zianmanager.ManagerRuntime.get().dungeonTime().allowed(player))throw new IllegalArgumentException("Tiempo diario de dungeon agotado");
         if(!com.ianblk.zianmanager.permission.ManagerPermissions.allows(player.createCommandSourceStack(),"loot",false))throw new IllegalArgumentException("No tienes permiso para recibir loot Zian");
         var existing=journal.get(player.getUUID(),id);if(existing==null || !existing.player().equals(player.getUUID()))throw new IllegalArgumentException("Reclamación inexistente");
-        if(existing.complete())return;if(!player.isAlive() || player.isRemoved()){player.sendSystemMessage(Component.literal("Jugador no disponible para recibir loot."));return;}if(existing.review()){player.sendSystemMessage(Component.literal("Entrega en revisión; no se consumirá otra llave."));return;}bindKey(player,existing,existing.trainer());
-        var cost=keys.get(player.getUUID(),id);if(!existing.trainer().startsWith("chest.") && cost!=null && !cost.phase().equals("PAID")){var first=existing.parts().stream().filter(p->p.phase()!=RewardClaim.Phase.DELIVERED).findFirst().orElseThrow();if(!player.isAlive() || !fits(player,item(player,first.data()))){player.sendSystemMessage(Component.literal("Libera espacio; la llave no se ha consumido."));return;}}
+        if(existing.complete())return;if(!player.isAlive() || player.isRemoved()){player.sendSystemMessage(com.ianblk.zianmanager.Messages.format(Component.literal("Jugador no disponible para recibir loot.")));return;}if(existing.review()){player.sendSystemMessage(com.ianblk.zianmanager.Messages.format(Component.literal("Entrega en revisión; no se consumirá otra llave.")));return;}bindKey(player,existing,existing.trainer());
+        var cost=keys.get(player.getUUID(),id);if(!existing.trainer().startsWith("chest.") && cost!=null && !cost.phase().equals("PAID")){var first=existing.parts().stream().filter(p->p.phase()!=RewardClaim.Phase.DELIVERED).findFirst().orElseThrow();if(!player.isAlive() || !fits(player,item(player,first.data()))){player.sendSystemMessage(com.ianblk.zianmanager.Messages.format(Component.literal("Libera espacio; la llave no se ha consumido.")));return;}}
         keys.take(id,player.getUUID(),new com.ianblk.zianmanager.core.KeyLedger.Port(){public boolean available(String key){return hasKey(player,key);}public boolean consumeAndSave(String key)throws Exception{var wanted=net.minecraft.core.registries.BuiltInRegistries.ITEM.get(net.minecraft.resources.ResourceLocation.parse(key));for(int i=0;i<player.getInventory().getContainerSize();i++)if(player.getInventory().getItem(i).is(wanted)){player.getInventory().removeItem(i,1);player.getInventory().setChanged();player.inventoryMenu.broadcastChanges();var expected=player.saveWithoutId(new CompoundTag()).get("Inventory");server.getPlayerList().save(player);var file=server.getWorldPath(LevelResource.PLAYER_DATA_DIR).resolve(player.getUUID()+".dat");try(var channel=java.nio.channels.FileChannel.open(file,StandardOpenOption.WRITE)){channel.force(true);}return expected.equals(NbtIo.readCompressed(file,NbtAccounter.create(8L*1024*1024)).get("Inventory"));}return false;}});
         if(existing.trainer().startsWith("chest.")){directChest(player,id);return;}
         RewardDelivery.deliver(journal,player.getUUID(),id,new RewardDelivery.Port(){
@@ -83,7 +87,7 @@ public final class LootService {
                 return expected!=null && expected.equals(read.get("Inventory"))?RewardDelivery.Result.APPLIED:RewardDelivery.Result.UNCERTAIN;
             }
         });
-        var claim=journal.get(player.getUUID(),id);player.sendSystemMessage(Component.literal(claim.complete()?"Loot entregado.":claim.review()?"Entrega en revisión. No se repetirá automáticamente.":"Loot pendiente. Libera espacio y usa /zianmanager pending."));
+        var claim=journal.get(player.getUUID(),id);player.sendSystemMessage(com.ianblk.zianmanager.Messages.format(Component.literal(claim.complete()?"Loot entregado.":claim.review()?"Entrega en revisión. No se repetirá automáticamente.":"Loot pendiente. Libera espacio y usa /zianmanager pending.")));
     }
     private void directChest(ServerPlayer player,UUID id)throws Exception{
         var drops=new ArrayList<net.minecraft.world.entity.item.ItemEntity>();var expectedDrops=new ArrayList<ItemStack>();var notices=new ArrayList<DeliveredNotice>();
@@ -96,13 +100,13 @@ public final class LootService {
             }}
             public boolean commit()throws Exception{player.getInventory().setChanged();player.inventoryMenu.broadcastChanges();var expected=player.saveWithoutId(new CompoundTag()).get("Inventory");server.getPlayerList().save(player);var file=server.getWorldPath(LevelResource.PLAYER_DATA_DIR).resolve(player.getUUID()+".dat");try(var channel=java.nio.channels.FileChannel.open(file,StandardOpenOption.WRITE)){channel.force(true);}if(!drops.isEmpty())player.serverLevel().save(null,true,false);var saved=NbtIo.readCompressed(file,NbtAccounter.create(8L*1024*1024));if(!expected.equals(saved.get("Inventory")))return false;for(int i=0;i<drops.size();i++)if(drops.get(i).isRemoved() || player.serverLevel().getEntity(drops.get(i).getUUID())!=drops.get(i) || !ItemStack.matches(drops.get(i).getItem(),expectedDrops.get(i)))return false;return true;}
         });
-        var claim=journal.get(player.getUUID(),id);var summary=Component.literal("[Cofre] Recibiste: ").withStyle(net.minecraft.ChatFormatting.GOLD);boolean announced=false;
+        var claim=journal.get(player.getUUID(),id);var summary=Component.literal("✦ Tesoro desbloqueado » ").withStyle(net.minecraft.ChatFormatting.GOLD);boolean announced=false;
         for(var notice:notices)if(claim.parts().get(notice.index()).phase()==RewardClaim.Phase.DELIVERED){if(notice.inventory()>0){if(announced)summary.append(Component.literal(", ").withStyle(net.minecraft.ChatFormatting.GRAY));summary.append(noticePart(notice.item(),notice.inventory(),"inventario",net.minecraft.ChatFormatting.GREEN));announced=true;}if(notice.ground()>0){if(announced)summary.append(Component.literal(", ").withStyle(net.minecraft.ChatFormatting.GRAY));summary.append(noticePart(notice.item(),notice.ground(),"suelo",net.minecraft.ChatFormatting.YELLOW));announced=true;}}
-        if(announced)player.sendSystemMessage(summary.append(Component.literal(".").withStyle(net.minecraft.ChatFormatting.GRAY)));
+        if(announced)player.sendSystemMessage(com.ianblk.zianmanager.Messages.format(summary.append(Component.literal(".").withStyle(net.minecraft.ChatFormatting.GRAY))));
         player.displayClientMessage(Component.literal(claim.complete()?(drops.isEmpty()?"Loot recibido.":"Loot recibido; el sobrante está en el suelo."):claim.review()?"Entrega en revisión; no se repetirá automáticamente.":"Loot pendiente."),true);
     }
     private record DeliveredNotice(int index,ItemStack item,int inventory,int ground){}
-    private static Component noticePart(ItemStack stack,int count,String location,net.minecraft.ChatFormatting color){return Component.literal(count+" × ").withStyle(color).append(stack.getHoverName().copy().withStyle(color)).append(Component.literal(" ("+location+")").withStyle(net.minecraft.ChatFormatting.GRAY));}
+    private static Component noticePart(ItemStack stack,int count,String location,net.minecraft.ChatFormatting color){return Component.literal(count+" × ").withStyle(color).append(stack.getHoverName().copy()).append(Component.literal(location.equals("suelo")?" · a tus pies":"").withStyle(net.minecraft.ChatFormatting.GRAY));}
     private static void insertDirect(ServerPlayer player,ItemStack stack){
         var inventory=player.getInventory();for(int i=0;i<36 && !stack.isEmpty();i++){var slot=inventory.getItem(i);if(!slot.isEmpty() && ItemStack.isSameItemSameComponents(slot,stack)){int amount=Math.min(stack.getCount(),Math.max(0,Math.min(slot.getMaxStackSize(),inventory.getMaxStackSize())-slot.getCount()));slot.grow(amount);stack.shrink(amount);}}
         for(int i=0;i<36 && !stack.isEmpty();i++)if(inventory.getItem(i).isEmpty()){int amount=Math.min(stack.getCount(),Math.min(stack.getMaxStackSize(),inventory.getMaxStackSize()));inventory.setItem(i,stack.copyWithCount(amount));stack.shrink(amount);}

@@ -33,5 +33,5 @@ public final class WorldTimeRuntime {
  public boolean denyTravel(ServerPlayer p,net.minecraft.resources.ResourceKey<net.minecraft.world.level.Level> target){return profiles().values().stream().anyMatch(t->t.denyTravel(p,target));}
  public void changedDimension(ServerPlayer p){for(var t:profiles().values())t.changedDimension(p);present(p);}
  public void logout(UUID id){profiles().values().forEach(t->t.logout(id));}
- public void describe(ServerPlayer p,String id){var selected=id==null?profiles():Map.of(id,profile(id));for(var e:selected.entrySet()){var t=e.getValue();p.sendSystemMessage(Component.literal(e.getKey()+": "+(!t.settings().enabled()?"sin límite configurado":t.unlimited(p)?"ilimitado":ZoneHolograms.countdown(t.remaining(p)*1000))));}}
+ public void describe(ServerPlayer p,String id){var selected=id==null?profiles():Map.of(id,profile(id));for(var e:selected.entrySet()){var t=e.getValue();p.sendSystemMessage(com.ianblk.zianmanager.Messages.format(Component.literal(e.getKey()+": "+(!t.settings().enabled()?"sin límite configurado":t.unlimited(p)?"ilimitado":ZoneHolograms.countdown(t.remaining(p)*1000)))));}}
 }

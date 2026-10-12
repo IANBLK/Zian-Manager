@@ -94,7 +94,7 @@ public final class ManagerRuntime {
     private static double dec(JsonObject f,String key,double fallback){return Double.parseDouble(str(f,key,""+fallback));}
     public void request(ServerPlayer player,String type,String id){
         try{ready();if(!admin(player))throw new IllegalArgumentException("Necesitas zianmanager.admin");view(player,type,id,null,"");}
-        catch(Exception error){player.sendSystemMessage(Component.literal(error.getMessage()));}
+        catch(Exception error){player.sendSystemMessage(com.ianblk.zianmanager.Messages.format(Component.literal(error.getMessage())));}
     }
     public void openChest(ServerPlayer player,BlockPos pos){
         try{ready();var chest=store.data().chests().values().stream().filter(c->c.dimension().equals(dimension(player)) && new BlockPos(c.x(),c.y(),c.z()).equals(pos)).findFirst().orElse(null);
@@ -103,10 +103,10 @@ public final class ManagerRuntime {
             if(chest==null)throw new IllegalArgumentException("Cofre sin configurar. El administrador debe usar Shift + clic derecho.");
             if(!ManagerBlocks.keyFor(chest.block()).isEmpty()){long delay=keyUseGate.enter(player.getUUID(),server.getTickCount());if(delay>0){player.displayClientMessage(Component.literal("Espera "+((delay+19)/20)+" segundo(s) para usar otra llave."),true);return;}}
             if(!worldTime.allowed(player))throw new IllegalArgumentException("Tiempo diario de dungeon agotado");
-            long wait=loot.remaining(player,"chest."+chest.uuid(),chest.minutes());if(wait>0)throw new IllegalArgumentException("Loot disponible en "+((wait+59999)/60000)+" minuto(s)");
+            long wait=loot.remaining(player,"chest."+chest.uuid(),chest.minutes());if(wait>0)throw new IllegalArgumentException("Este tesoro volverá a abrirse en "+((wait+59999)/60000)+" min.");
             var claim=loot.reserve(player,"chest."+chest.uuid(),chest.loot(),chest.minutes(),pos);
-            if(claim.review()){player.sendSystemMessage(Component.literal("Entrega pendiente de revisión; no se repetirá."));return;}player.serverLevel().blockEvent(pos,player.serverLevel().getBlockState(pos).getBlock(),1,1);loot.deliver(player,claim.id());
-        }catch(Exception error){if(error instanceof java.io.IOException)ZianManager.LOGGER.error("Chest delivery failed player={} position={}; preserved for review",player.getUUID(),pos,error);player.sendSystemMessage(Component.literal(error.getMessage()));}
+            if(claim.review()){player.sendSystemMessage(com.ianblk.zianmanager.Messages.format(Component.literal("Entrega pendiente de revisión; no se repetirá.")));return;}player.serverLevel().blockEvent(pos,player.serverLevel().getBlockState(pos).getBlock(),1,1);loot.scheduleChest(player,claim.id());
+        }catch(Exception error){if(error instanceof java.io.IOException)ZianManager.LOGGER.error("Chest delivery failed player={} position={}; preserved for review",player.getUUID(),pos,error);player.sendSystemMessage(com.ianblk.zianmanager.Messages.format(Component.literal(error.getMessage())));}
     }
     public void view(ServerPlayer player,String type,String id,BlockPos context,String notice){
         UUID token=UUID.randomUUID();sessions.put(player.getUUID(),new Session(token,type,id,System.currentTimeMillis()+300000,context));
@@ -212,7 +212,7 @@ public final class ManagerRuntime {
                 UUID uuid=id.isEmpty()?UUID.randomUUID():UUID.fromString(id);var old=store.data().npcs().get(uuid);Point point=old==null || operation.equals("move")?here(player):old.point();var npc=new NpcSpec(uuid,old==null?dimension(player):old.dimension(),point,str(f,"name","Guía"),str(f,"text","Bienvenido"),str(f,"skin","heraldo_real"),str(f,"button","Continuar"),str(f,"command",""),num(f,"cooldownSeconds",60),Arrays.asList(AtomicJson.GSON.fromJson(str(f,"extraActions","[]"),NpcButton[].class)));store.put(npc);id=uuid.toString();placeNpc(npc);if(operation.equals("reset_npc_actions")){npcCommands.reset(uuid);notice="Usos del NPC restablecidos por el administrador";}
             }
             ZianManager.LOGGER.info("[ZIAN-MANAGER] admin={} type={} id={} action={}",player.getUUID(),session.type,id,action.operation());view(player,session.type,id,session.pos,notice);
-        }catch(Exception error){player.sendSystemMessage(Component.literal(error.getMessage()==null?"No se pudo aplicar":error.getMessage()));if(admin(player))try{view(player,session.type,id,session.pos,error.getMessage());}catch(Exception ignored){}}
+        }catch(Exception error){player.sendSystemMessage(com.ianblk.zianmanager.Messages.format(Component.literal(error.getMessage()==null?"No se pudo aplicar":error.getMessage())));if(admin(player))try{view(player,session.type,id,session.pos,error.getMessage());}catch(Exception ignored){}}
     }
     private static net.minecraft.world.phys.Vec3 Vec3(BlockPos pos){return net.minecraft.world.phys.Vec3.atCenterOf(pos);}
     private boolean activeUses(String template){return !template.isEmpty() && ledger.all().stream().anyMatch(r->(r.phase()==Phase.ACTIVE || r.phase()==Phase.WAITING) && store.data().zones().get(r.zone())!=null && store.data().zones().get(r.zone()).team().contains(template));}
@@ -268,7 +268,7 @@ public final class ManagerRuntime {
         }catch(Exception error){ZianManager.LOGGER.error("Encounter death/reward needs review",error);}
     }
     public void openDialogue(ServerPlayer player,NpcSpec npc){
-        if(!ManagerPermissions.allows(player.createCommandSourceStack(),"npc",false)){player.sendSystemMessage(Component.literal("No tienes permiso para hablar con este NPC."));return;}
+        if(!ManagerPermissions.allows(player.createCommandSourceStack(),"npc",false)){player.sendSystemMessage(com.ianblk.zianmanager.Messages.format(Component.literal("No tienes permiso para hablar con este NPC.")));return;}
         UUID token=UUID.randomUUID();sessions.put(player.getUUID(),new Session(token,"dialogue",npc.uuid().toString(),System.currentTimeMillis()+300000,null));
         var out=new JsonObject();out.addProperty("type","dialogue");out.addProperty("token",token.toString());out.addProperty("title",npc.name());out.addProperty("text",npc.text().replace("\\n","\n"));out.addProperty("button",npc.button());var actions=new JsonArray();if(!npc.command().isBlank()){var a=new JsonObject();a.addProperty("id","main");a.addProperty("label",npc.button());actions.add(a);}for(var button:npc.extraActions()){var a=new JsonObject();a.addProperty("id",button.id());a.addProperty("label",button.label());actions.add(a);}out.add("actions",actions);out.addProperty("available",!actions.isEmpty());ManagerNetwork.send(player,out.toString());
     }
@@ -278,7 +278,7 @@ public final class ManagerRuntime {
         ((ManagerNpcs.DialogueNpc)entity).skin(npc.skin());entity.setCustomName(Component.literal(npc.name()));entity.setCustomNameVisible(true);entity.teleportTo(npc.point().x(),npc.point().y(),npc.point().z());entity.setYRot(npc.point().yaw());if(entity instanceof LivingEntity living){living.setYHeadRot(npc.point().yaw());living.setYBodyRot(npc.point().yaw());}
     }
     private void tick(ServerTickEvent.Post event){
-        if(event.getServer()!=server || store==null)return;for(var death:List.copyOf(deaths.values()))died(death);deaths.clear();if(++ticks%20!=0)return;long now=System.currentTimeMillis();sessions.values().removeIf(s->s.until<now);
+        if(event.getServer()!=server || store==null)return;for(var death:List.copyOf(deaths.values()))died(death);deaths.clear();loot.tick();if(++ticks%20!=0)return;long now=System.currentTimeMillis();sessions.values().removeIf(s->s.until<now);
         try{
             worldTime.tick();keyUseGate.expire(server.getTickCount());holograms.update(server,store,ledger,now);
             previews.entrySet().removeIf(e->{if(e.getValue().tickCount>400 || e.getValue().isRemoved()){e.getValue().discard();return true;}return false;});

@@ -1,4 +1,5 @@
 package com.ianblk.zianmanager;
+import com.ianblk.zianmanager.storage.StorageFiles;
 import com.ianblk.zianmanager.core.Definitions.*;
 import com.ianblk.zianmanager.core.EncounterLedger;
 import com.ianblk.zianmanager.core.EncounterLedger.Phase;
@@ -31,7 +32,7 @@ public final class ManagerSmoke {
         if(!"127.0.0.1".equals(server.getLocalIp()))throw new IllegalStateException("Integration fixtures require localhost");
         var runtime=ManagerRuntime.get();var store=runtime.store();ServerLevel level=server.overworld();Path marker=server.getWorldPath(LevelResource.ROOT).resolve("data/zianmanager/smoke.marker");
         if(phase==0){
-            var saved=Files.exists(marker)?Files.readString(marker).split("\n"):null;
+            var saved=StorageFiles.exists(marker)?StorageFiles.readString(marker).split("\n"):null;
             firstId=saved==null?UUID.randomUUID():UUID.fromString(saved[0]);secondId=saved==null?UUID.randomUUID():UUID.fromString(saved[1]);
             first=FakePlayerFactory.get(level,new GameProfile(firstId,"ZianMgrSmoke1"));second=FakePlayerFactory.get(level,new GameProfile(secondId,"ZianMgrSmoke2"));
             var channelField=net.minecraft.network.Connection.class.getDeclaredField("channel");channelField.setAccessible(true);
@@ -40,7 +41,7 @@ public final class ManagerSmoke {
             var playerList=net.minecraft.server.players.PlayerList.class.getDeclaredField("players");playerList.setAccessible(true);@SuppressWarnings("unchecked") var players=(List<ServerPlayer>)playerList.get(server.getPlayerList());players.add(first);players.add(second);
             var spawn=level.getSharedSpawnPos();int x=spawn.getX(),y=spawn.getY()+2,z=spawn.getZ();chest=new BlockPos(x+8,y,z);
             first.moveTo(x,y,z,0,0);second.moveTo(x+1,y,z,0,0);first.gameMode.changeGameModeForPlayer(GameType.SURVIVAL);second.gameMode.changeGameModeForPlayer(GameType.SURVIVAL);
-            if(Files.exists(marker)){
+            if(StorageFiles.exists(marker)){
                 var c=store.data().chests().get(CHEST);if(c==null || !level.getBlockState(new BlockPos(c.x(),c.y(),c.z())).is(ManagerBlocks.CRATES.get("loot_common_crate").get()))throw new IllegalStateException("Chest missing after restart");
                 if(runtime.loot().remaining(first,"chest."+CHEST,10)<=0 || !runtime.loot().pending(firstId).isEmpty())throw new IllegalStateException("Personal cooldown/receipt missing after restart");
                 if(store.data().npcs().get(NPC)==null || !(level.getEntity(NPC) instanceof ManagerNpcs.DialogueNpc))throw new IllegalStateException("Dialogue NPC missing after restart");
@@ -99,6 +100,6 @@ public final class ManagerSmoke {
         if(phase==2 && run.phase()==Phase.WAITING){for(var e:level.getAllEntities())if(e instanceof net.minecraft.world.entity.Display.TextDisplay && e.saveWithoutId(new net.minecraft.nbt.CompoundTag()).getString("text").contains("Oleada 2 en "))waveLabelChecked=true;}
         if(phase==2 && ++ticks>80){if(!waveLabelChecked)throw new IllegalStateException("Next wave countdown label missing");if(run.wave()!=2 || run.phase()!=Phase.ACTIVE || !run.uuid().equals(originalRun))throw new IllegalStateException("Second wave missing or duplicate encounter");for(var slot:run.spawns())((Mob)level.getEntity(slot.uuid())).hurt(level.damageSources().playerAttack(first),1000);phase=3;ticks=0;return;}
         if(phase==3 && ++ticks>25){if(run.phase()!=Phase.COMPLETE)throw new IllegalStateException("Zone did not complete");boolean hologram=false;for(var e:level.getAllEntities())if(e instanceof net.minecraft.world.entity.Display.TextDisplay && e.getPersistentData().getBoolean("ZianManagerCountdown")){var tag=e.saveWithoutId(new net.minecraft.nbt.CompoundTag());if(tag.getString("text").contains("La zona se regenerar"))hologram=true;}if(!hologram)throw new IllegalStateException("Dungeon regeneration countdown hologram missing");ZianManager.LOGGER.info("Zian Manager countdown hologram smoke passed");ZoneRefreshSmoke.verify(runtime,first);phase=4;ticks=0;return;}
-        if(phase==4){if(run.uuid().equals(originalRun)){if(++ticks>400)throw new IllegalStateException("Cooldown did not spawn a fresh encounter");return;}if(run.phase()!=Phase.ACTIVE)throw new IllegalStateException("Respawn not active");runtime.cancel("smoke_room");if(!runtime.loot().pending(firstId).isEmpty())throw new IllegalStateException("Native loot remained unconfirmed");DailyTimeSmoke.verify(runtime,first);TimeAdminSmoke.verify(runtime,first);WorldTimeSmoke.verify(runtime,first);Files.writeString(marker,firstId+"\n"+secondId+"\n");ZianManager.LOGGER.info("Zian Manager native smoke passed: shared automatic single-template zone, 1-3 mobs plus two per extra player, respawn, item readback, personal chest, survival protection/creative admin removal/no recipe, dialogue NPC; Lootr={}",net.neoforged.fml.ModList.get().isLoaded("lootr"));done=true;}
+        if(phase==4){if(run.uuid().equals(originalRun)){if(++ticks>400)throw new IllegalStateException("Cooldown did not spawn a fresh encounter");return;}if(run.phase()!=Phase.ACTIVE)throw new IllegalStateException("Respawn not active");runtime.cancel("smoke_room");if(!runtime.loot().pending(firstId).isEmpty())throw new IllegalStateException("Native loot remained unconfirmed");DailyTimeSmoke.verify(runtime,first);TimeAdminSmoke.verify(runtime,first);WorldTimeSmoke.verify(runtime,first);StorageFiles.writeString(marker,firstId+"\n"+secondId+"\n");ZianManager.LOGGER.info("Zian Manager native smoke passed: shared automatic single-template zone, 1-3 mobs plus two per extra player, respawn, item readback, personal chest, survival protection/creative admin removal/no recipe, dialogue NPC; Lootr={}",net.neoforged.fml.ModList.get().isLoaded("lootr"));done=true;}
     }catch(Exception error){done=true;ZianManager.LOGGER.error("Zian Manager native smoke FAILED",error);}}
 }

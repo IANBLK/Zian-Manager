@@ -1,4 +1,5 @@
 package com.ianblk.zianmanager.reward;
+import com.ianblk.zianmanager.storage.StorageFiles;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -13,8 +14,8 @@ final class RewardFiles {
     static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
     private RewardFiles() {}
     static JsonElement read(Path file, long limit) throws IOException {
-        if (Files.size(file) > limit) throw new IOException("Archivo de recompensas demasiado grande: " + file);
-        try (var reader = Files.newBufferedReader(file, StandardCharsets.UTF_8)) {
+        if (StorageFiles.size(file) > limit) throw new IOException("Archivo de recompensas demasiado grande: " + file);
+        try (var reader = StorageFiles.newBufferedReader(file, StandardCharsets.UTF_8)) {
             return JsonParser.parseReader(reader);
         } catch (RuntimeException error) { throw new IOException("JSON inválido: " + file, error); }
     }

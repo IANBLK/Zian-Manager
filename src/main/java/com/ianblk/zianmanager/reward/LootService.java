@@ -1,4 +1,5 @@
 package com.ianblk.zianmanager.reward;
+import com.ianblk.zianmanager.storage.StorageFiles;
 import com.ianblk.zianmanager.core.*;
 import com.ianblk.zianmanager.core.Definitions.*;
 import net.minecraft.server.MinecraftServer;

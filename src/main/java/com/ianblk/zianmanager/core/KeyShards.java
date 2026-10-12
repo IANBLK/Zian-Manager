@@ -1,4 +1,5 @@
 package com.ianblk.zianmanager.core;
+import com.ianblk.zianmanager.storage.StorageFiles;
 
 import com.google.gson.JsonObject;
 import java.io.*;
@@ -23,7 +24,7 @@ final class KeyShards {
       throw new IOException("Directorio de llaves inválido");
     directory = path.toAbsolutePath().getParent().resolve(name);
     limit = json.get("cacheLimit").getAsBigDecimal().intValueExact();
-    if (limit < 1 || limit > 64 || !Files.isDirectory(directory) || Files.isSymbolicLink(directory))
+    if (limit < 1 || limit > 64 || !StorageFiles.isDirectory(directory) || StorageFiles.isSymbolicLink(directory))
       throw new IOException("Caché de llaves inválida");
   }
 
@@ -32,7 +33,7 @@ final class KeyShards {
     if (current != null) return current;
     try {
       Path file = directory.resolve(player + ".json");
-      if (Files.isSymbolicLink(file)) throw new IOException("Enlace de llaves rechazado");
+      if (StorageFiles.isSymbolicLink(file)) throw new IOException("Enlace de llaves rechazado");
       var json = AtomicJson.read(file, JsonObject.class, null);
       if (json != null && json.get("schema").getAsInt() != 1)
         throw new IOException("Esquema de llaves de jugador inválido");

@@ -100,5 +100,11 @@ if __name__ == "__main__":
             name=filename+".players-"+str(uuid.uuid4())
             (data/name).mkdir()
             (data/filename).write_text(json.dumps({field:version,"layout":"per-player-v1","directory":name,"cacheLimit":32}),encoding="utf-8")
+    if os.environ.get("ZIAN_STORAGE_SQLITE_SMOKE") == "true":
+        world=GAME/"world"
+        world.mkdir(parents=True,exist_ok=True)
+        java=Path(os.environ["JAVA_HOME"])/"bin"/("java.exe" if os.name=="nt" else "java")
+        classpath=os.pathsep.join([str(ROOT/"build/classes/java/main"),str(ROOT/"build/resources/main")])
+        subprocess.run([str(java),"-cp",classpath,"com.ianblk.zianmanager.storage.StorageMaintenance","migrate-offline",str(world)],check=True)
     run(1)
     run(2)

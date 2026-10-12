@@ -1,4 +1,5 @@
 package com.ianblk.zianmanager.core;
+import com.ianblk.zianmanager.storage.StorageFiles;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -35,7 +36,7 @@ public final class KeyLedger {
 
   public KeyLedger(Path path) throws IOException {
     this.path = path;
-    if (java.nio.file.Files.exists(path.resolveSibling(path.getFileName() + ".maintenance")))
+    if (StorageFiles.exists(path.resolveSibling(path.getFileName() + ".maintenance")))
       throw new IOException("Mantenimiento de llaves en curso");
     try {
       var json = AtomicJson.read(path, com.google.gson.JsonObject.class, null);
@@ -127,7 +128,7 @@ public final class KeyLedger {
   }
 
   private void put(UUID claim, Cost cost) throws IOException {
-    if (java.nio.file.Files.exists(path.resolveSibling(path.getFileName() + ".maintenance")))
+    if (StorageFiles.exists(path.resolveSibling(path.getFileName() + ".maintenance")))
       throw new IOException("Mantenimiento de llaves en curso");
     var map = new HashMap<>(data.entries());
     map.put(claim, cost);

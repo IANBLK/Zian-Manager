@@ -1,4 +1,5 @@
 package com.ianblk.zianmanager.core;
+import com.ianblk.zianmanager.storage.StorageFiles;
 
 import com.google.gson.*;
 import java.io.IOException;
@@ -10,10 +11,10 @@ import java.util.*;
 public final class KeyStorageMaintenance {
   public static Path migrateOffline(Path path) throws IOException {
     path = path.toAbsolutePath().normalize();
-    if (Files.isSymbolicLink(path)) throw new IOException("Symlink key ledger refused");
-    boolean exists = Files.exists(path);
-    if (exists && Files.size(path) > 16777216) throw new IOException("Oversized key ledger");
-    byte[] before = exists ? Files.readAllBytes(path) : null;
+    if (StorageFiles.isSymbolicLink(path)) throw new IOException("Symlink key ledger refused");
+    boolean exists = StorageFiles.exists(path);
+    if (exists && StorageFiles.size(path) > 16777216) throw new IOException("Oversized key ledger");
+    byte[] before = exists ? StorageFiles.readAllBytes(path) : null;
     var old = new KeyLedger(path);
     var snapshot = old.snapshot();
     var groups = new LinkedHashMap<UUID, Map<UUID, KeyLedger.Cost>>();
@@ -21,19 +22,19 @@ public final class KeyStorageMaintenance {
         (id, cost) ->
             groups.computeIfAbsent(cost.player(), p -> new LinkedHashMap<>()).put(id, cost));
     Path parent = path.getParent();
-    Files.createDirectories(parent);
+    StorageFiles.createDirectories(parent);
     String token = UUID.randomUUID().toString(), name = path.getFileName() + ".players-" + token;
     Path stage = parent.resolve(name + ".staging"),
         directory = parent.resolve(name),
         marker = path.resolveSibling(path.getFileName() + ".maintenance");
     boolean ownsMarker = false;
     try {
-      Files.writeString(
+      StorageFiles.writeString(
           marker, "Offline key migration; directory=" + name, StandardOpenOption.CREATE_NEW);
       ownsMarker = true;
       forceFile(marker);
       forceDirectory(parent);
-      Files.createDirectory(stage);
+      StorageFiles.createDirectory(stage);
       for (var entry : groups.entrySet()) {
         Path target = stage.resolve(entry.getKey() + ".json");
         AtomicJson.write(target, new KeyLedger.Data(1, entry.getValue()));
@@ -42,16 +43,16 @@ public final class KeyStorageMaintenance {
       }
       forceDirectory(stage);
       if (exists) {
-        if (!Arrays.equals(before, Files.readAllBytes(path)))
+        if (!Arrays.equals(before, StorageFiles.readAllBytes(path)))
           throw new IOException("Keys changed; server must be offline");
         Path archive = parent.resolve(path.getFileName() + ".archive-" + token);
-        Files.write(archive, before, StandardOpenOption.CREATE_NEW);
+        StorageFiles.write(archive, before, StandardOpenOption.CREATE_NEW);
         forceFile(archive);
-        if (!Arrays.equals(before, Files.readAllBytes(archive)))
+        if (!Arrays.equals(before, StorageFiles.readAllBytes(archive)))
           throw new IOException("Key archive verification failed");
-      } else if (Files.exists(path)) throw new IOException("Keys appeared; server must be offline");
+      } else if (StorageFiles.exists(path)) throw new IOException("Keys appeared; server must be offline");
       forceDirectory(parent);
-      Files.move(stage, directory, StandardCopyOption.ATOMIC_MOVE);
+      StorageFiles.move(stage, directory, StandardCopyOption.ATOMIC_MOVE);
       forceDirectory(parent);
       var manifest = new JsonObject();
       manifest.addProperty("schema", 2);
@@ -61,7 +62,7 @@ public final class KeyStorageMaintenance {
       AtomicJson.write(path, manifest);
     } finally {
       if (ownsMarker) {
-        Files.deleteIfExists(marker);
+        StorageFiles.deleteIfExists(marker);
         forceDirectory(parent);
       }
     }
@@ -69,14 +70,14 @@ public final class KeyStorageMaintenance {
   }
 
   private static void forceFile(Path path) throws IOException {
-    try (var c = FileChannel.open(path, StandardOpenOption.WRITE)) {
+    try (var c = StorageFiles.channel(path, StandardOpenOption.WRITE)) {
       c.force(true);
     }
   }
 
   private static void forceDirectory(Path path) throws IOException {
     if (!System.getProperty("os.name").toLowerCase(Locale.ROOT).contains("windows"))
-      try (var c = FileChannel.open(path, StandardOpenOption.READ)) {
+      try (var c = StorageFiles.channel(path, StandardOpenOption.READ)) {
         c.force(true);
       }
   }

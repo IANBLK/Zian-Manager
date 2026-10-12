@@ -13,7 +13,7 @@ public final class ManagerScreen extends ManagerThemedScreen {
  private final Map<String,int[]> labels=new LinkedHashMap<>();private String tab;private int page,left,top,w,h;
  public ManagerScreen(JsonObject data){super(Component.literal(EditorSections.title(data.get("type").getAsString())+(data.get("type").getAsString().equals("time") && !data.get("id").getAsString().isEmpty()?" · "+data.get("id").getAsString():"")));this.data=data;type=data.get("type").getAsString();id=data.get("id").getAsString();token=UUID.fromString(data.get("token").getAsString());if(data.has("fields"))data.getAsJsonObject("fields").entrySet().forEach(e->values.put(e.getKey(),e.getValue().getAsString()));tab=LAST_TAB.getOrDefault(type,EditorSections.groups(type).keySet().stream().findFirst().orElse(""));}
  private boolean list(){return type.equals("root") || type.endsWith("s") || type.equals("lootlist") || type.equals("claim");}
- @Override protected void init(){w=Math.min(430,width-24);h=Math.min(294,height-16);left=(width-w)/2;top=(height-h)/2;inputs.clear();labels.clear();
+ @Override protected void init(){fitViewport(600,360);w=Math.min(430,width-24);h=Math.min(294,height-16);left=(width-w)/2;top=(height-h)/2;inputs.clear();labels.clear();
   if(list()){listWidgets();return;}
   var groups=EditorSections.groups(type);if(!groups.containsKey(tab))tab=groups.keySet().iterator().next();int i=0,tw=(w-24)/Math.max(1,groups.size());
   for(String name:groups.keySet()){var b=button(left+12+i++*tw,top+32,tw-3,name,()->{tab=name;LAST_TAB.put(type,tab);page=0;rebuildWidgets();});b.active=!name.equals(tab);}
@@ -91,8 +91,8 @@ public final class ManagerScreen extends ManagerThemedScreen {
   if(type.equals("npc"))return tab.equals("Acción")?"Opcional: un botón ejecuta tu comando. {player} es el jugador.":tab.equals("Diálogo")?"Escribe el diálogo; puedes usar varias líneas.":"Elige nombre y skin; el personaje aparece en tu posición.";
   return "Selecciona sus recompensas y cada cuánto se renuevan.";
  }
- @Override public void render(GuiGraphics g,int mx,int my,float dt){panel(g,left,top,w,h);g.drawString(font,font.plainSubstrByWidth(help(),w-24),left+12,top+(list()?38:61),0xFFAAAAAA);
+ @Override protected void renderCanvas(GuiGraphics g,int mx,int my,float dt){panel(g,left,top,w,h);g.drawString(font,font.plainSubstrByWidth(help(),w-24),left+12,top+(list()?38:61),0xFFAAAAAA);
   if(!list() && !(type.equals("loot") && tab.equals("Objetos"))){String notice=data.has("notice")?data.get("notice").getAsString():"";g.drawString(font,font.plainSubstrByWidth(notice,w-24),left+12,top+76,0xFFF7E2AC);}
-  for(var e:labels.entrySet()){var pos=e.getValue();g.drawString(font,font.plainSubstrByWidth(label(e.getKey()),pos[2]),pos[0],pos[1],0xFFDDDDDD);}super.render(g,mx,my,dt);
+  for(var e:labels.entrySet()){var pos=e.getValue();g.drawString(font,font.plainSubstrByWidth(label(e.getKey()),pos[2]),pos[0],pos[1],0xFFDDDDDD);}renderWidgets(g,mx,my,dt);
  }
 }

@@ -6,7 +6,7 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 /** Charcoal/gold style adapted from the owner's MIT Zian GUI theme. */
-public abstract class ManagerThemedScreen extends Screen {
+public abstract class ManagerThemedScreen extends ResponsiveScreen {
     protected ManagerThemedScreen(Component title){super(title);}
     @Override public boolean isPauseScreen(){return false;}
     // Screen.render calls this after our panel. Never apply vanilla blur over UI.

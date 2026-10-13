@@ -9,7 +9,7 @@ displayName="Zian Manager"
 displayURL="https://github.com/IANBLK/Zian-Manager"
 logoFile="icon.png"
 authors="IANBLK"
-description="Dungeon mob templates, shared encounter zones, waves, personal loot chests and dialogue NPCs."
+description="Dungeon encounters, delayed personal loot, dialogue NPCs, random arrival points and configurable daily world time."
 [[dependencies.zianmanager]]
 modId="minecraft"
 type="required"

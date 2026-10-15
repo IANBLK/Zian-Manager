@@ -2,13 +2,13 @@
 
 **Administra dungeons dentro del juego:** mobs personalizados, jefes, zonas con oleadas, loot personal y NPC de diálogo.
 
-**0.1.0-beta.1 · Minecraft 1.21.1 · NeoForge 21.1.252+ · Java 21**
+**0.1.1 · Minecraft 1.21.1 · NeoForge 21.1.252+ · Java 21**
 
 Administración del tiempo diario: `/zianmanager removetime <jugador> <minutos>` descuenta entre 1 y 1440 minutos a un jugador conectado, hasta agotar su saldo actual. Requiere consola, OP (salvo denegación explícita) o `zianmanager.admin`, igual que `bonustime`; no se concede a los rangos normales. Conserva bonos, consumo y reinicio diario; rechaza jugadores con tiempo ilimitado. Al agotarse dentro de una dungeon aplica inmediatamente la salida configurada. `/zianmanager bonustime player <jugador> <minutos>` permite devolver minutos para hoy.
 
 Instala el mismo JAR en cliente y servidor. Es independiente de Cobblemon, RCT API y RCT Mod. Lootr y LuckPerms son opcionales.
 
-Paquete de publicación y textos para CurseForge: [release/curseforge](release/curseforge/SUBIR-A-CURSEFORGE.md). Los complementos de Rassvet y el generador de Casas son herramientas separadas del servidor; no forman parte del JAR del mod.
+Paquete de publicación y textos para CurseForge: [release/curseforge/0.1.1](release/curseforge/0.1.1/LEEME.md). Los complementos de Rassvet y el generador de Casas son herramientas separadas del servidor; no forman parte del JAR del mod.
 
 ## 🛠️ Objetos y zonas
 
@@ -21,7 +21,8 @@ Pestaña creativa **Zian Manager**, 81 modelos activos, martillos 3×3×1, armas
 - Zonas con apariciones automáticas: **1–3 mobs iniciales, +2 por jugador adicional y máximo 8 por oleada**, hasta 16 oleadas, pausa y reaparición configurable.
 - Tablas **MOB, BOSS y CHEST**, con selección ponderada sin repetir entradas.
 - Cofres importados: **sin receta**, protegido contra rotura en supervivencia, explosiones y empuje. Loot renovable por jugador, sin inventario accesible a tolvas.
-- NPC humano Alex/slim, diez skins y diálogo con botón de comando configurable.
+- NPC humanos con 18 skins, brazos clásicos o delgados según la apariencia, y diálogo con botones de comandos configurables.
+- Bóvedas vanilla reutilizables por jugador, con tiempos independientes para normales y ominosas; [guía de administración](docs/VAULT_COOLDOWNS.md).
 - Configuraciones, encuentros y entregas persistentes.
 
 ## 🎮 Configuración fácil
@@ -83,7 +84,9 @@ Para retirar el cofre usa **Eliminar confirmado** en el editor o rómpelo en cre
 
 ## 💬 NPC, skins y acciones
 
-Las skins suministradas usan el modelo **Alex/slim** de brazos delgados:
+![Ocho apariencias nuevas](art/npc-skins-review/catalogo-0.1.1.png)
+
+El catálogo selecciona el modelo **clásico o Alex/slim** según la skin; las diez apariencias anteriores conservan su modelo:
 
 1. Heraldo real
 2. Guardián celeste
@@ -95,6 +98,14 @@ Las skins suministradas usan el modelo **Alex/slim** de brazos delgados:
 8. Explorador de bronce
 9. Guardiana celestial
 10. Hechicera aurora
+11. Aurelia Solar
+12. Sakura de Nácar
+13. Lía del Bosque
+14. Raven Nocturna
+15. Kael del Ocaso
+16. Akari Imperial
+17. Centinela Ámbar
+18. Guardián Boreal
 
 El editor permite seleccionar skin, texto del diálogo, nombre del botón, comando y espera en segundos por jugador (0 permite repetir). El comando se configura sin barra inicial y se ejecuta con autoridad del servidor al pulsar el botón. Usa `{player}` para el nombre del jugador; solo los administradores configuran el comando. Ejemplos:
 

@@ -5,7 +5,7 @@ base { archivesName='zianmanager' }
 java.toolchain.languageVersion=JavaLanguageVersion.of(21)
 repositories { mavenCentral(); maven { url='https://www.cursemaven.com' } }
 neoForge {
- version='21.1.252'
+ version='21.1.259'
  accessTransformers.from(file('src/main/resources/META-INF/accesstransformer.cfg'))
  runs {
   client { client() }

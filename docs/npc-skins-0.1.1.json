@@ -1,0 +1,58 @@
+[
+  {
+    "source": "d1d638e2e67701e8.png",
+    "id": "aurelia_solar",
+    "name": "Aurelia Solar",
+    "slim": true,
+    "sha256": "60a9ca64fa87308e8a5e8130e3c6bda510686f4e471d2d4121ae9963ef587bd8"
+  },
+  {
+    "source": "bf834e4ff15b6694.png",
+    "id": "sakura_nacar",
+    "name": "Sakura de Nácar",
+    "slim": false,
+    "sha256": "bd5dfcec8a43a332f504b34a7f5c120aa50d8967c0901280a688c02e27006a66"
+  },
+  {
+    "source": "a500c4579130d3c2.png",
+    "id": "lia_bosque",
+    "name": "Lía del Bosque",
+    "slim": true,
+    "sha256": "e87500f13fb44b86439b87693bab180b2018e0beb2123a9fec900951cf86b21a"
+  },
+  {
+    "source": "c1c0600b9cc63b1a.png",
+    "id": "raven_nocturna",
+    "name": "Raven Nocturna",
+    "slim": false,
+    "sha256": "f8bb7fab48ed9306e944e0b0117924edf8905bf06eca9d9cc137f72f256633a1"
+  },
+  {
+    "source": "89986e616d52b2bf.png",
+    "id": "kael_ocaso",
+    "name": "Kael del Ocaso",
+    "slim": true,
+    "sha256": "7745a7ff41e45eb8f102dd3cc4df650aae69b464ccc0a867dde32d4031b221a9"
+  },
+  {
+    "source": "3ce8f75b557fe8fd.png",
+    "id": "akari_imperial",
+    "name": "Akari Imperial",
+    "slim": true,
+    "sha256": "4f8069c367da8d12d9ead6c31d203b16a3d7f674bbf7211cfa2c5679552a51f2"
+  },
+  {
+    "source": "8a173fa03c6d80fe.png",
+    "id": "centinela_ambar",
+    "name": "Centinela Ámbar",
+    "slim": false,
+    "sha256": "5ed32c57b7345374543bc9e1f80bb558c160bcb4507e35fa69524a29e3e49e08"
+  },
+  {
+    "source": "c3ace1d6a78a677d.png",
+    "id": "guardian_boreal",
+    "name": "Guardián Boreal",
+    "slim": false,
+    "sha256": "ef231296555b77274082faf68dfaf632922b1a52e95ec869080db985fe4714ad"
+  }
+]

@@ -1,0 +1,1 @@
+{"required":true,"minVersion":"0.8","package":"com.ianblk.zianmanager.mixin","compatibilityLevel":"JAVA_21","mixins":["VaultServerMixin"],"injectors":{"defaultRequire":1}}

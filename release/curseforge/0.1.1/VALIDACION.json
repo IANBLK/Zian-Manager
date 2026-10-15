@@ -1,0 +1,38 @@
+{
+  "version": "0.1.1",
+  "releaseType": "release",
+  "dateLocal": "2026-10-14",
+  "sha256": "e8027c4a1d3dccb8597c17dc0b89b7d4664c3249f70a4e12382ddc9f997774d6",
+  "automatedTests": {
+    "tests": 113,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "skins": {
+    "total": 18,
+    "added": 8,
+    "sourcePngsUnmodified": true,
+    "layouts": "classic and slim",
+    "clientVisualCheck": "pending installation of 0.1.1 on client"
+  },
+  "serverValidation": {
+    "youer": "4239b0d9",
+    "neoforge": "21.1.259",
+    "smoke": "PASS",
+    "cleanExitCode": 0,
+    "outOfMemory": false,
+    "previousBetaSavedWorldPersistence": "PASS",
+    "testEnvironmentNote": "The initial run hit the default Youer watchdog during delayed RCT initialization and could not shut down cleanly. The isolated repeat used a 300-second watchdog timeout and completed with a clean shutdown. Production settings were not changed."
+  },
+  "playerValidationReported": {
+    "normalVault": true,
+    "ominousVault": true,
+    "independentPlayers": true,
+    "keyAndLootIntegrity": true,
+    "adminPermissions": true,
+    "cooldownSurvivesRestart": true
+  },
+  "activeServerJarReplaced": false,
+  "curseforgePublished": false
+}

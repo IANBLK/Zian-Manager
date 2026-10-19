@@ -26,6 +26,10 @@ public final class LootService {
     public LootService(MinecraftServer server,ManagerStore store) throws java.io.IOException{
         this.server=server;this.store=store;keys=new com.ianblk.zianmanager.core.KeyLedger(server.getWorldPath(LevelResource.ROOT).resolve("data/zianmanager/keys.json"));journal=RewardJournal.open(server.getWorldPath(LevelResource.ROOT).resolve("data/zianmanager/claims.json"));
     }
+    private com.ianblk.zianmanager.core.HumanReferences references;
+    private com.ianblk.zianmanager.core.HumanReferences references(){if(references==null)try{references=new com.ianblk.zianmanager.core.HumanReferences(server.getWorldPath(LevelResource.ROOT).resolve("data/zianmanager/references.json"),"PREMIO");}catch(java.io.IOException e){throw new IllegalStateException(e);}return references;}
+    public String reference(UUID owner,UUID id){var p=server.getPlayerList().getPlayer(owner);String name=p==null?server.getProfileCache().get(owner).map(com.mojang.authlib.GameProfile::getName).orElse("JUGADOR"):p.getGameProfile().getName();return references().reference(id,owner,name);}
+    public UUID resolveReference(UUID owner,String value){return references().resolve(value,owner);}
     public long remaining(ServerPlayer player,String key,int minutes){
         var last=journal.latest(player.getUUID(),key);if(last==null)return 0;if(!last.complete())return -1;if(minutes==0 && !requiredKey(key).isEmpty())return 0;
         return Math.max(0,last.nextEligibleAt()-System.currentTimeMillis());

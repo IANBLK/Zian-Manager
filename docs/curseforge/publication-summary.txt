@@ -1,1 +1,0 @@
-Configure dungeon encounters, personal loot, NPCs and daily world time in game.

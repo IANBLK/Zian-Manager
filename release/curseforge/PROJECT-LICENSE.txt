@@ -1,4 +1,0 @@
-Zian Manager — distribution notice
-
-Original code: MIT. See LICENSE.txt supplied with this release.
-Bundled artwork: separate permissions, as described in ARTWORK-NOTICE.txt. The project owner confirms public redistribution is permitted. Artwork is not automatically covered by the MIT code license.

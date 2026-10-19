@@ -1,176 +1,38 @@
-# 🏰 Zian Manager
+# Zian Manager 0.3.0
 
-**Administra dungeons dentro del juego:** mobs personalizados, jefes, zonas con oleadas, loot personal y NPC de diálogo.
+**Language notice:** The current in-game interface, preset dialogues and administrator messages are primarily Spanish. English localization is incomplete. The English guide explains the controls and includes their Spanish button names. Changing Minecraft to English does not translate administrator-written NPC names, dialogues or configuration text.
 
-**0.1.1 · Minecraft 1.21.1 · NeoForge 21.1.252+ · Java 21**
+[English guide](docs/GUIDE.md) · [Guía en español](docs/GUIA_ES.md) · [Updating and recovery](docs/UPDATING.md) · [Current changes](CHANGELOG.md) · [Download](https://github.com/IANBLK/Zian-Manager/releases/latest)
 
-Administración del tiempo diario: `/zianmanager removetime <jugador> <minutos>` descuenta entre 1 y 1440 minutos a un jugador conectado, hasta agotar su saldo actual. Requiere consola, OP (salvo denegación explícita) o `zianmanager.admin`, igual que `bonustime`; no se concede a los rangos normales. Conserva bonos, consumo y reinicio diario; rechaza jugadores con tiempo ilimitado. Al agotarse dentro de una dungeon aplica inmediatamente la salida configurada. `/zianmanager bonustime player <jugador> <minutos>` permite devolver minutos para hoy.
+## Dungeon configuration moved to Zian Mobs / Configuración de dungeons trasladada
 
-Instala el mismo JAR en cliente y servidor. Es independiente de Cobblemon, RCT API y RCT Mod. Lootr y LuckPerms son opcionales.
+Dungeon zones, mobs, bosses, waves, encounters and mob/boss loot tables have moved from **Zian Manager to Zian Mobs**. Configure combat in Zian Mobs. Manager retains chest loot, vaults, NPCs/trades, entrances and world time limits. For existing Manager definitions, use the guarded import preview in Mobs after backing up the world; pending delivery receipts are not moved.
 
-Paquete de publicación y textos para CurseForge: [release/curseforge/0.1.1](release/curseforge/0.1.1/LEEME.md). Los complementos de Rassvet y el generador de Casas son herramientas separadas del servidor; no forman parte del JAR del mod.
+La configuración de zonas de dungeon, mobs, jefes, oleadas, encuentros y tablas de loot de mobs/jefes pasó de **Zian Manager a Zian Mobs**. Las definiciones antiguas se conservan para importarlas con la vista previa protegida de Mobs; respalda el mundo antes y no elimines los datos antiguos. Los recibos de entregas pendientes no se trasladan.
 
-## 🛠️ Objetos y zonas
+Build the services around your dungeon with native administrator menus: personal reward chests, reusable vanilla vaults, dialogue NPCs, physical trading, dungeon entrances and per-world playtime limits.
 
-Pestaña creativa **Zian Manager**, 81 modelos activos, martillos 3×3×1, armas con habilidades y esperas, nueve variantes de cofre con loot personal (cuatro requieren llave), y vista de esquinas/contorno/puntos de aparición. [Consulta la guía de objetos y zonas](docs/EQUIPMENT.md).
+## Personal rewards and vaults
+Configure chest reward tables, per-player renewal and key requirements in game. Each player receives their own reward roll and cooldown. Vaults support independent normal/ominous cooldown settings through both GUI and commands. Pending deliveries retain their recorded result for recovery and review.
 
-## ✨ Funciones
+## Dialogue NPCs and unlimited trades
+Administrators configure appearance, dialogue and command buttons. Merchants exchange up to four payment stacks for up to four result stacks with fixed quantities and unlimited stock. Vanilla and modded items keep their components. Setup copies hotbar slots 1–4 for payment and 6–9 for results without consuming them; slot 5 separates both sides. Players use their inventory to pay and must have room for the complete result. The GUI separates offers, payment, rewards and inventory.
 
-- Plantillas de mobs: entidad, nombre, vida, daño, armadura, dureza, resistencia al empuje, efectos y seis ranuras de equipo. Conservan la IA original.
-- Jefes con barra de vida y loot configurable.
-- Zonas con apariciones automáticas: **1–3 mobs iniciales, +2 por jugador adicional y máximo 8 por oleada**, hasta 16 oleadas, pausa y reaparición configurable.
-- Tablas **MOB, BOSS y CHEST**, con selección ponderada sin repetir entradas.
-- Cofres importados: **sin receta**, protegido contra rotura en supervivencia, explosiones y empuje. Loot renovable por jugador, sin inventario accesible a tolvas.
-- NPC humanos con 18 skins, brazos clásicos o delgados según la apariencia, y diálogo con botones de comandos configurables.
-- Bóvedas vanilla reutilizables por jugador, con tiempos independientes para normales y ominosas; [guía de administración](docs/VAULT_COOLDOWNS.md).
-- Configuraciones, encuentros y entregas persistentes.
+## Dungeon services
+Configure entrances and daily time by world. Players can consult their own remaining time; configuration remains administrator-only. Combat definitions, mobs, bosses, waves, encounters and combat reward tables are now managed by **Zian Mobs**, a separate mod. Existing Manager combat definitions are retained for its guarded import workflow.
 
-## 🎮 Configuración fácil
+## Installation
+Minecraft 1.21.1, Java 21 and NeoForge 21.1.252 or newer for Minecraft 1.21.1. Install on client and server. Lootr and LuckPerms are optional integrations; Cobblemon and RCT API are not required. Open /zianmanager with administrative access. Existing saves must be backed up before migration. Rassvet-specific server plugins and Mundo Casas tools are separate and are not bundled.
 
-Abre `/zianmanager`. El inicio muestra **Mobs y jefes**, **Tablas de recompensas**, **Zonas de dungeon**, **Cofres de dungeon** y **Personajes y diálogos** y **Tiempos por mundo**.
+## License and credits
+Original code uses MIT. Imported models, skins and other artwork retain their separate rights and notices. The maintainer identifies https://es.namemc.com/ as the source of the 27 additional NPC skins and states they are publicly distributed; this is source attribution, not a claim that NameMC or Zian authored them or that they are MIT licensed.
 
-### Recompensas: editor visual como el gacha
+## Latest update — 0.3.0
 
-1. Abre **Tablas de recompensas → Crear nuevo**. La referencia se genera automáticamente; puedes cambiarla antes de crear la tabla.
-2. Elige **Mobs**, **Jefes** o **Cofres** y usa **− / +** para indicar cuántos objetos se sortean en cada entrega.
-3. Sostén un objeto y pulsa **Añadir objeto que tengo en la mano**. Se copian sus componentes, incluidos encantamientos; el objeto de tu mano no se consume.
-4. La lista muestra su icono, nombre, porcentaje y cantidad. Los botones **− / +** de cada fila ajustan su probabilidad relativa. El porcentaje se recalcula entre todas las entradas.
-5. Pulsa el objeto para ajustar cantidad mínima/máxima; usa **Quitar** para eliminar esa entrada, con confirmación.
-6. **Opciones** conserva el uso de una tabla externa; es opcional y sustituye el sorteo de entradas propias.
+Manager now focuses on personal dungeon chests and chest reward tables, reusable vaults with GUI and commands, dialogue/trading NPCs, dungeon entrances and per-world time limits. Combat editing belongs to Zian Mobs. Legacy combat definitions remain available for guarded import; existing active encounters retain their completion and delivery handling. Physical NPC trades exchange 1–4 payment stacks for 1–4 result stacks with unlimited stock, including modded item components. Administrator setup copies hotbar slots 1–4 as payment and 6–9 as output; slot 5 is ignored. The trading GUI has more spacing and full hover details. Protocol manager20: update both sides.
 
-### Mobs, zonas y personajes
+## Novedades — Español
 
-- **Mobs y jefes:** pestañas **Básico**, **Combate**, **Equipo**, **Efectos** y **Avanzado**. Elige entidad y recompensas con selectores. Para equipar, elige la ranura y copia el objeto en mano. El selector de efectos permite elegir nombre, nivel y duración; el formato manual sigue disponible en Avanzado. La vista previa dura 20 segundos, es inmóvil y no da loot.
-- **Zonas:** pestañas **General**, **Ubicación**, **Tamaño** y **Oleadas**. El selector permite elegir de 1 a 8 tipos de mob. Crea la zona desde el bloque bajo tus pies, ajusta su tamaño alrededor del centro ; los mobs aparecen automáticamente sobre suelo libre dentro del área. Configura pausas, reaparición y recompensa de finalización. Al completar la dungeon aparece un texto flotante fijo sobre el centro con el tiempo restante para su regeneración. Activa la zona cuando esté lista. Puedes probar o detener el encuentro desde Oleadas.
-- **Personajes:** pestañas **Apariencia**, **Diálogo** y **Acción**. Elige la skin, escribe el diálogo en varias líneas y configura el botón/comando opcional. Puedes mover el personaje a tu posición y restablecer sus usos después de revisar entregas.
-- **Cofres:** el botón **Obtener cofre** evita escribir otro comando. Colócalo y usa **Shift + clic derecho**; selecciona la tabla y su renovación. En las variantes con llave puedes activar **Sin tiempo de reutilización**.
+Manager conserva cofres y sus tablas de loot, bóvedas con GUI/comandos, NPC y comercios, entradas y tiempos por mundo. Mobs, jefes, zonas y sus tablas de combate se gestionan en Zian Mobs. Intercambios físicos ilimitados de hasta cuatro pagos por cuatro resultados, con objetos de mods y componentes. Solo los administradores configuran las ofertas; los jugadores intercambian.
 
-Los ID se generan para los mobs nuevos. Las referencias admiten minúsculas, números y guion bajo, hasta 32 caracteres. Una referencia guardada se mantiene estable. Los ajustes se guardan por sección y la interfaz conserva la pestaña al recibir la respuesta. Las selecciones de equipo y efectos requieren **Aplicar** y después **Guardar cambios**.
-
-Las oleadas comparten composición en esta alpha. Varios jugadores participan en un encuentro compartido, sin duplicar mobs. Creativo y espectador no activan las zonas automáticamente; **Probar encuentro** permite hacerlo como administrador. El loot de mob se entrega al jugador que lo mata; el de finalización a participantes conectados que siguen dentro de la zona. El loot personalizado sustituye los objetos normales del mob y se entrega al inventario, no al suelo.
-
-## 🎲 Tablas y probabilidades
-
-Tus ejemplos están cubiertos:
-
-- **Mob:** 10 entradas, sortear **2**.
-- **Boss:** 10 entradas, sortear **5**.
-- **Cofre:** 20 entradas, sortear **10**.
-
-Solo para **Mobs**, el botón **Modo: porcentaje real** comprueba cada objeto por separado: una llave común al 10% y otra rara al 5% pueden no aparecer. Pueden salir ambas; con esos valores, ninguna aparece en el 85,5% de las muertes. Este modo admite hasta 32 entradas y no usa la cantidad de sorteos ni tablas externas. **Jefes y cofres conservan el sorteo por peso**, que elige las entradas configuradas. Las tablas antiguas mantienen su modo hasta que lo cambies.
-
-El **peso** expresa una probabilidad relativa: peso 20 tiene el doble de probabilidad que peso 10. La interfaz muestra el porcentaje **del primer sorteo**. Después de cada elección se recalculan los porcentajes entre las entradas restantes; no son probabilidades independientes y fijas de caída.
-
-Los sorteos cuentan **entradas/stacks**, no unidades: una entrada puede entregar tres diamantes. Cada entrada elegida produce una cantidad entre mínimo y máximo. Máximo 64 entradas y 32 sorteos por tabla; si faltan entradas, se entregan las disponibles. Una entrada no se repite, pero añadir dos entradas del mismo objeto permite obtenerlo dos veces.
-
-Sin entradas propias puedes indicar una tabla nativa de **cofre**, por ejemplo `minecraft:chests/simple_dungeon`. Se limita la salida generada, que puede contener menos stacks que el límite. Esta alpha no ofrece el contexto completo de tablas nativas de entidades: para mobs y jefes usa las entradas propias del editor.
-
-## 🗝️ Cofres personales
-
-Usa `/zianmanager givechest`, coloca el cofre y **Shift + clic derecho** para asignarle tabla y renovación en minutos. Cada jugador tiene su propio sorteo y tiempo. En un cofre con llave, **Sin tiempo de reutilización** permite abrirlo de nuevo inmediatamente consumiendo otra llave, con una espera de seguridad de dos segundos entre usos por jugador; los cofres sin llave mantienen una renovación de al menos un minuto.
-
-**Clic derecho entrega el loot automáticamente**, sin pantalla de premios, para poder ver la animación. Los objetos van al inventario; lo que no cabe aparece al suelo junto al jugador, también en creativo. Cada entrega conserva el sorteo y el registro de consumo de llave. Las entregas ambiguas quedan en revisión y no se repiten automáticamente.
-
-El tiempo de renovación comienza al completar la entrega. Para reclamar entregas pendientes anteriores:
-
-```text
-/zianmanager pending
-/zianmanager claim <UUID>
-```
-
-Para retirar el cofre usa **Eliminar confirmado** en el editor o rómpelo en creativo con `zianmanager.admin`. Se elimina su registro y no reaparece. Un cofre registrado se restaura si desaparece mientras su zona está cargada; herramientas externas de edición de mundo o quitar el mod quedan fuera de esta protección.
-
-**Lootr:** se utiliza un bloque propio y un diario personal propio, excluidos mediante sus etiquetas públicas de conversión. Los cofres normales de Lootr siguen usando Lootr. No es una extensión de su inventario.
-
-## 💬 NPC, skins y acciones
-
-![Ocho apariencias nuevas](art/npc-skins-review/catalogo-0.1.1.png)
-
-El catálogo selecciona el modelo **clásico o Alex/slim** según la skin; las diez apariencias anteriores conservan su modelo:
-
-1. Heraldo real
-2. Guardián celeste
-3. Centinela sombrío
-4. Caballero infernal
-5. Guardián abisal
-6. Maga prismática
-7. Paladín dorado
-8. Explorador de bronce
-9. Guardiana celestial
-10. Hechicera aurora
-11. Aurelia Solar
-12. Sakura de Nácar
-13. Lía del Bosque
-14. Raven Nocturna
-15. Kael del Ocaso
-16. Akari Imperial
-17. Centinela Ámbar
-18. Guardián Boreal
-
-El editor permite seleccionar skin, texto del diálogo, nombre del botón, comando y espera en segundos por jugador (0 permite repetir). El comando se configura sin barra inicial y se ejecuta con autoridad del servidor al pulsar el botón. Usa `{player}` para el nombre del jugador; solo los administradores configuran el comando. Ejemplos:
-
-```text
-minecraft:tp {player} 100 70 -200
-minecraft:give {player} minecraft:diamond 1
-```
-
-Un comando vacío deja solo el diálogo. Las sesiones solo permiten una pulsación y verifican la cercanía al NPC. El diario conserva la espera después de reiniciar. Si una ejecución queda ambigua o devuelve fallo, se bloquea para revisión y no se repite sola; revisar el resultado antes de compensar. El botón administrativo **Reiniciar usos**, con confirmación, borra las esperas y revisiones de ese NPC.
-
-## Permisos
-
-En **npcs**, crea un NPC en tu posición, configura nombre y texto. Clic derecho abre el diálogo y el botón configurado. Escribe `\n` para saltos de línea. Puedes moverlo a tu posición o eliminarlo desde el editor. Los NPC antiguos se convierten al modelo humano manteniendo posición y texto.
-
-- `zianmanager.admin`: editor y administración; sin LuckPerms requiere OP de nivel 2.
-- `zianmanager.npc`: conversar y pulsar acciones; permitido por defecto.
-- `zianmanager.loot`: abrir y recibir loot; sin una regla explícita se permite a los jugadores.
-
-LuckPerms es opcional. Una denegación explícita también se respeta para OP. Los jugadores no necesitan OP.
-
-## 💾 Persistencia y revisión
-
-Respalda `<mundo>/data/zianmanager/` junto al mundo. Un archivo ilegible se conserva y deshabilita el sistema para evitar sobrescribirlo.
-
-Las entregas registran intención y confirmación por componente. Una entrega ambigua después de un cierre requiere revisión y no se repite automáticamente. Después de verificar o compensar manualmente, un administrador puede cerrar el componente con evidencia:
-
-```text
-/zianmanager resolve <jugador conectado> <UUID entrega> <componente 1–32> <evidencia>
-```
-
-Esto confirma la revisión; no genera objetos de nuevo. Un encuentro con un mob desaparecido se pausa: revisa la causa, cancela explícitamente desde el editor y vuelve a habilitar la zona. Cancelar deshabilita la zona y retira los mobs.
-
-## 🧪 Validación y límites
-
-45 pruebas automáticas de selección, persistencia y entregas. Pruebas locales de servidor dedicado con dos jugadores simulados, oleadas compartidas, reaparición, NPC, protección del cofre, loot personal y reinicio. También probado con **Lootr 1.11.37.122**.
-
-Falta una prueba visual en tu cliente. Esta alpha no está validada en Youer ni con Cataclysm. El selector permite entidades instaladas que hereden de `Mob`, pero sus ataques, fases y atributos especiales pueden requerir adaptaciones. El cofre es un modelo estático, sin animación de tapa.
-
-## 🛠️ Desarrollo
-
-```text
-./gradlew build
-python tools/manager-smoke.py
-```
-
-La prueba usa un mundo aislado bajo `build/`, localhost y puertos 25586/25587. Define `ZIANMANAGER_WITH_LOOTR=true` para incluir Lootr desde el primer arranque. La segunda pasada verifica el reinicio con Lootr. Requiere Java 21 y acceso a las dependencias.
-
-[Procedencia](docs/REUSE.md) · [Textura y prompt](art/PROMPT.md) · MIT © IANBLK
-
-**Alpha.5:** retirado el cofre original del creativo; sus bloques e inventarios se migran al cofre común conservando los registros. Corregidas las rutas de iconos/texturas y separados los datos de animación de los modelos del juego.
-
-**Alpha.6:** retirados los trece accesorios y objetos decorativos señalados por el usuario del creativo, visores compatibles y sorteos nuevos. Cada entrega de cofre informa en el chat cantidades, nombres y destino (inventario/suelo).
-
-**Alpha.7:** balance y efectos revisados según lo solicitado; encantamientos de espada/pico/hacha/tridente, Rompeolas lanzable y zonas creadas desde un centro con tamaño editable y vista previa en vivo. Las esperas de 120 s pasan a 90 s; Lanza Ígnea 1 s y Bastón del Vacío 10 s.
-
-**Alpha.8:** contorno de zona corregido para mantenerse fijo en coordenadas del mundo, centro bloqueado tras crear y tamaño ampliable alrededor del mismo bloque. Nombres y lore de fantasía en armas, con solo reutilización en la información de habilidades. Los NPC permiten hasta ocho botones de comando con esperas independientes.
-
-[Estado del progreso y comprobaciones de GitHub](docs/PROGRESS.md).
-
-## Tiempo diario por mundo
-
-Perfiles independientes para Dungeon, Nether, End y Farmeo, con límites DEFAULT/VIP, rangos adicionales por permiso, OP/bypass ilimitado, salida al spawn, bonos personales/globales y mensajes editables. Cada perfil conserva su consumo y prórrogas; los mundos seleccionados dentro de un mismo perfil comparten su saldo. Se habilita tras seleccionar mundos. [Guía de tiempo diario](docs/DAILY-TIME.md).
-
-## Sombreros y herramientas importadas
-
-30 sombreros equipables como cascos y 20 herramientas reimaginadas. Nombres de fantasía, encantamientos normales, cascos con estadísticas de netherita y +1 de armadura; herramientas con +1 de daño y +75 de durabilidad respecto a vanilla. [Guía del equipo importado](docs/IMPORTED-GEAR.md).
-
-El título del temporizador se configura en `/zianmanager` → Tiempos por mundo → el perfil correspondiente → Pantalla: título predeterminado y «Nombres por mundo». Cada mundo limitado puede tener su propio nombre (hasta 64 caracteres); el saldo se comparte únicamente entre los mundos del mismo perfil. Los títulos largos se recortan para mantener el panel compacto. La configuración anterior sigue siendo válida. Esta versión usa protocolo manager14: actualizar el mod en servidor y clientes juntos.
+Minecraft 1.21.1 · NeoForge · Java 21. Install the same mod version on client and server. Back up your world before upgrading; replace the old JAR instead of keeping both copies.

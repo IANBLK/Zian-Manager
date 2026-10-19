@@ -1,0 +1,13 @@
+package com.ianblk.zianmanager;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import java.util.*;
+class NpcTradingDataTest {
+ @Test void copiesConfigurationAndRejectsOversizedOrUnknownSchema(){
+  var id=UUID.randomUUID();var row=new com.ianblk.zianmanager.core.NpcTradeData.Offer("iron","","gold");var rows=new ArrayList<>(List.of(row));var map=new HashMap<UUID,List<com.ianblk.zianmanager.core.NpcTradeData.Offer>>();map.put(id,rows);var saved=new com.ianblk.zianmanager.core.NpcTradeData.Data(2,map);rows.clear();map.clear();assertEquals(List.of(row),saved.npcs().get(id));assertThrows(UnsupportedOperationException.class,()->saved.npcs().clear());
+  assertThrows(IllegalArgumentException.class,()->new com.ianblk.zianmanager.core.NpcTradeData.Data(3,Map.of()));assertThrows(IllegalArgumentException.class,()->new com.ianblk.zianmanager.core.NpcTradeData.Data(2,Map.of(id,Collections.nCopies(65,row))));
+ }
+ @Test void cannotConfigureFreeOrMissingOutputTrades(){assertThrows(IllegalArgumentException.class,()->new com.ianblk.zianmanager.core.NpcTradeData.Offer("","","gold"));assertThrows(IllegalArgumentException.class,()->new com.ianblk.zianmanager.core.NpcTradeData.Offer("iron","",""));assertThrows(IllegalArgumentException.class,()->new com.ianblk.zianmanager.core.NpcTradeData.Offer("iron",null,"gold"));}
+ @Test void migratesLegacyCostsAndOutputWithoutDroppingAnything(){var id=UUID.randomUUID();var raw=new com.google.gson.JsonObject();raw.addProperty("schema",1);var npcs=new com.google.gson.JsonObject();var rows=new com.google.gson.JsonArray();var row=new com.google.gson.JsonObject();row.addProperty("payment","iron");row.addProperty("extra","diamond");row.addProperty("result","gold");rows.add(row);npcs.add(id.toString(),rows);raw.add("npcs",npcs);var migrated=com.ianblk.zianmanager.core.NpcTradeData.decode(raw);assertEquals(2,migrated.schema());assertEquals(List.of("iron","diamond"),migrated.npcs().get(id).getFirst().payments());assertEquals(List.of("gold"),migrated.npcs().get(id).getFirst().results());assertEquals(migrated,com.ianblk.zianmanager.core.NpcTradeData.decode(com.ianblk.zianmanager.core.AtomicJson.GSON.toJsonTree(migrated).getAsJsonObject()));}
+ @Test void acceptsFourPricesAndFourRewardsAndRejectsFive(){var values=List.of("a","b","c","d");assertEquals(values,new com.ianblk.zianmanager.core.NpcTradeData.Offer(values,values).payments());assertThrows(IllegalArgumentException.class,()->new com.ianblk.zianmanager.core.NpcTradeData.Offer(List.of("a","b","c","d","e"),values));assertThrows(IllegalArgumentException.class,()->new com.ianblk.zianmanager.core.NpcTradeData.Offer(values,List.of()));}
+}

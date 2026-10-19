@@ -5,22 +5,22 @@ import java.io.IOException;
 import java.util.*;
 public final class ManagerStore {
     public record Data(int schema,Map<String,MobSpec> mobs,Map<String,LootSpec> loot,Map<String,ZoneSpec> zones,Map<UUID,ChestSpec> chests,Map<UUID,NpcSpec> npcs){
-        public Data{if(schema!=1)throw new IllegalArgumentException("Versión desconocida");mobs=Map.copyOf(mobs);loot=Map.copyOf(loot);zones=Map.copyOf(zones);chests=Map.copyOf(chests);npcs=Map.copyOf(npcs);if(mobs.size()>128 || loot.size()>128 || zones.size()>64 || chests.size()>512 || npcs.size()>256)throw new IllegalArgumentException("Demasiadas definiciones");
+        public Data{if(schema!=1&&schema!=2)throw new IllegalArgumentException("Versión desconocida");mobs=Map.copyOf(mobs);loot=Map.copyOf(loot);zones=Map.copyOf(zones);chests=Map.copyOf(chests);npcs=Map.copyOf(npcs);if(mobs.size()>128 || loot.size()>128 || zones.size()>64 || chests.size()>512 || npcs.size()>256)throw new IllegalArgumentException("Demasiadas definiciones");
             for(var table:loot.values())if(table.independent() && (mobs.values().stream().anyMatch(m->m.boss() && m.loot().equals(table.id())) || chests.values().stream().anyMatch(c->c.loot().equals(table.id())) || zones.values().stream().anyMatch(z->z.completionLoot().equals(table.id()))))throw new IllegalArgumentException("Porcentajes reales solo para mobs normales; esta tabla está usada por un jefe, cofre o finalización de zona");
             mobs.forEach((k,v)->{if(!k.equals(v.id()))throw new IllegalArgumentException("ID incorrecto");});loot.forEach((k,v)->{if(!k.equals(v.id()))throw new IllegalArgumentException("ID incorrecto");});zones.forEach((k,v)->{if(!k.equals(v.id()))throw new IllegalArgumentException("ID incorrecto");});
         }
     }
     private final Path path;private Data data;
-    public ManagerStore(Path path) throws IOException{this.path=path;data=AtomicJson.read(path,Data.class,new Data(1,Map.of(),Map.of(),Map.of(),Map.of(),Map.of()));if(data==null)throw new IOException("Datos vacíos; archivo conservado");}
+    public ManagerStore(Path path) throws IOException{this.path=path;data=AtomicJson.read(path,Data.class,new Data(2,Map.of(),Map.of(),Map.of(),Map.of(),Map.of()));if(data==null)throw new IOException("Datos vacíos; archivo conservado");if(data.schema()==1){var backup=path.resolveSibling("definitions-before-consolidation-v2.json");if(!com.ianblk.zianmanager.storage.StorageFiles.exists(backup))AtomicJson.write(backup,data);data=new Data(2,data.mobs(),data.loot(),data.zones(),data.chests(),data.npcs());AtomicJson.write(path,data);}}
     public Data data(){return data;}
     public void put(Object value) throws IOException{
         var mobs=new LinkedHashMap<>(data.mobs);var loot=new LinkedHashMap<>(data.loot);var zones=new LinkedHashMap<>(data.zones);var chests=new LinkedHashMap<>(data.chests);var npcs=new LinkedHashMap<>(data.npcs);
         if(value instanceof MobSpec m)mobs.put(m.id(),m);else if(value instanceof LootSpec l)loot.put(l.id(),l);else if(value instanceof ZoneSpec z)zones.put(z.id(),z);else if(value instanceof ChestSpec c)chests.put(c.uuid(),c);else if(value instanceof NpcSpec n)npcs.put(n.uuid(),n);else throw new IllegalArgumentException("Tipo desconocido");
-        var next=new Data(1,mobs,loot,zones,chests,npcs);AtomicJson.write(path,next);data=next;
+        var next=new Data(2,mobs,loot,zones,chests,npcs);AtomicJson.write(path,next);data=next;
     }
     public void remove(String type,String id) throws IOException{
         var mobs=new LinkedHashMap<>(data.mobs);var loot=new LinkedHashMap<>(data.loot);var zones=new LinkedHashMap<>(data.zones);var chests=new LinkedHashMap<>(data.chests);var npcs=new LinkedHashMap<>(data.npcs);
         switch(type){case "mob"->mobs.remove(id);case "loot"->loot.remove(id);case "zone"->zones.remove(id);case "chest"->chests.remove(UUID.fromString(id));case "npc"->npcs.remove(UUID.fromString(id));default->throw new IllegalArgumentException("Tipo desconocido");}
-        var next=new Data(1,mobs,loot,zones,chests,npcs);AtomicJson.write(path,next);data=next;
+        var next=new Data(2,mobs,loot,zones,chests,npcs);AtomicJson.write(path,next);data=next;
     }
 }

@@ -10,6 +10,8 @@ neoForge {
  runs {
   client { client() }
   server { server(); programArgument '--nogui' }
+  npcTradeClientSmoke { client(); gameDirectory=project.file('build/npc-trade-client-smoke'); programArguments.addAll '--width','1920','--height','1080' }
+  npcTradeSmoke { server(); gameDirectory=project.file('build/npc-trade-smoke'); programArgument '--nogui' }
   managerSmoke { server(); gameDirectory=project.file(project.findProperty('smokeDir') ?: 'build/manager-smoke'); programArgument '--nogui' }
  }
  mods { zianmanager { sourceSet sourceSets.main } }

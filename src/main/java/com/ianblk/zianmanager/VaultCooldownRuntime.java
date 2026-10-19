@@ -100,6 +100,11 @@ public final class VaultCooldownRuntime {
             source.sendSuccess(()->Component.literal("Bóvedas "+(next.enabled()?"activadas":"en modo vanilla")+": "+next.normalMinutes()+" min normales, "+next.ominousMinutes()+" min ominosas. Para cambiar tu espera actual, mira la bóveda y usa /zianmanager vaults cooldown 1."),true);return 1;
         }catch(Exception error){fail(error);source.sendFailure(Component.literal("No se pudo guardar la configuración de bóvedas."));return 0;}
     }
+    public Settings settingsSnapshot(){return settings==null?Settings.defaults():settings;}
+    public String statusText(){return failed||ledger==null||!ledger.healthy()?"Bóvedas bloqueadas por error":settingsSnapshot().enabled()?"Reutilización activada":"Comportamiento vanilla";}
+    public void saveFromUi(net.minecraft.server.level.ServerPlayer p,Settings next){if(!ManagerPermissions.allows(p.createCommandSourceStack(),"admin",true))throw new IllegalArgumentException("Necesitas permiso administrativo");if(configure(p.createCommandSourceStack(),next)!=1)throw new IllegalStateException("No se guardaron los ajustes de bóvedas");}
+    public void adjustFromUi(net.minecraft.server.level.ServerPlayer p,int minutes)throws com.mojang.brigadier.exceptions.CommandSyntaxException{if(minutes<0||minutes>43200||!ManagerPermissions.allows(p.createCommandSourceStack(),"admin",true))throw new IllegalArgumentException("Espera o permiso inválidos");if(adjustLookedAt(p.createCommandSourceStack(),minutes)!=1)throw new IllegalArgumentException("Mira una bóveda a un máximo de 6 bloques");}
+    public void reloadFromUi(){reload();if(failed)throw new IllegalStateException("No se pudo recargar la configuración de bóvedas");}
     private void click(PlayerInteractEvent.RightClickBlock e){
         if(e.isCanceled() || !(e.getLevel() instanceof ServerLevel level) || !level.getBlockState(e.getPos()).is(net.minecraft.world.level.block.Blocks.VAULT) || !enabled())return;
         if(!(level.getBlockEntity(e.getPos()) instanceof VaultBlockEntity vault))return;

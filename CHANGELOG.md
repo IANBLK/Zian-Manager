@@ -1,26 +1,17 @@
-# Changelog
+# Zian Manager 0.3.0 — 2026-10-19
 
-## 0.1.1
+## Dungeon configuration moved to Zian Mobs / Configuración de dungeons trasladada
 
-- Bóvedas vanilla reutilizables por jugador y ubicación; valores predeterminados de 30 minutos para normales y 60 para ominosas. Conserva las llaves, recompensas y animaciones originales.
-- Tiempos persistentes tras reinicios, ayuda y autocompletado administrativo, configuración por tipo y reset individual de la bóveda que mira el administrador.
-- Ocho skins nuevas con nombres en el editor; 18 apariencias en total. Los NPC existentes conservan sus IDs y apariencias.
-- Renderizado con brazos clásicos o delgados según cada skin nueva.
+Dungeon zones, mobs, bosses, waves, encounters and mob/boss loot tables have moved from **Zian Manager to Zian Mobs**. Configure combat in Zian Mobs. Manager retains chest loot, vaults, NPCs/trades, entrances and world time limits. For existing Manager definitions, use the guarded import preview in Mobs after backing up the world; pending delivery receipts are not moved.
 
-## 0.1.1-beta.2 — administración de bóvedas
+La configuración de zonas de dungeon, mobs, jefes, oleadas, encuentros y tablas de loot de mobs/jefes pasó de **Zian Manager a Zian Mobs**. Las definiciones antiguas se conservan para importarlas con la vista previa protegida de Mobs; respalda el mundo antes y no elimines los datos antiguos. Los recibos de entregas pendientes no se trasladan.
 
-- Configuración independiente con `vaults times normal <minutos>` y `vaults times ominous <minutos>`.
-- Sugerencias de tipos y minutos con Tab; ayuda desde `vaults` y `vaults help`.
-- Conserva el formato anterior de dos números y permite un número para ambas clases.
-- `vaults reset` termina la espera del administrador en la bóveda que mira.
-- `vaults cooldown <minutos>` ajusta la espera del administrador en la bóveda que mira; cero la termina conservando el historial. Las esperas de otros jugadores y bóvedas se conservan.
-- Las configuraciones generales siguen afectando a aperturas nuevas; los mensajes explican cómo ajustar una espera que ya empezó.
+Manager now focuses on personal dungeon chests and chest reward tables, reusable vaults with GUI and commands, dialogue/trading NPCs, dungeon entrances and per-world time limits. Combat editing belongs to Zian Mobs. Legacy combat definitions remain available for guarded import; existing active encounters retain their completion and delivery handling. Physical NPC trades exchange 1–4 payment stacks for 1–4 result stacks with unlimited stock, including modded item components. Administrator setup copies hotbar slots 1–4 as payment and 6–9 as output; slot 5 is ignored. The trading GUI has more spacing and full hover details. Protocol manager20: update both sides.
 
-## 0.1.0-beta.2 — candidata de almacenamiento
+## Español
 
-- Índices de recompensas y escritura JSON sin serialización duplicada.
-- Migración offline opcional de recibos y llaves a archivos por jugador con caché acotada y protección de entregas activas.
-- Conserva todos los pagos, ciclos, costes y estados inciertos; los formatos anteriores continúan funcionando.
-- HUD: Tiempo Ilimitado y alineación a la izquierda.
-- 85 pruebas aprobadas, incluyendo 22.000 recibos, y dos arranques aislados con Lootr y reinicio. No desplegado ni migrado en producción.
+Manager conserva cofres y sus tablas de loot, bóvedas con GUI/comandos, NPC y comercios, entradas y tiempos por mundo. Mobs, jefes, zonas y sus tablas de combate se gestionan en Zian Mobs. Intercambios físicos ilimitados de hasta cuatro pagos por cuatro resultados, con objetos de mods y componentes. Solo los administradores configuran las ofertas; los jugadores intercambian.
 
+## Installation / Instalación
+
+Minecraft 1.21.1 · NeoForge · Java 21. Install the same mod version on client and server. Back up your world before upgrading; replace the old JAR instead of keeping both copies.

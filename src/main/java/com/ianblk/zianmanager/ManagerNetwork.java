@@ -42,9 +42,9 @@ public final class ManagerNetwork {
     }
     public static void sendTimer(ServerPlayer player,Timer data){PacketDistributor.sendToPlayer(player,data);}
     public static void register(IEventBus bus){bus.addListener((RegisterPayloadHandlersEvent event)->{
-        var channel=event.registrar("manager15");
-        channel.playToServer(Request.TYPE,Request.CODEC,(v,c)->c.enqueueWork(()->{if(c.player() instanceof ServerPlayer player)ManagerRuntime.get().request(player,v.section,v.id);}));
-        channel.playToServer(Action.TYPE,Action.CODEC,(v,c)->c.enqueueWork(()->{if(c.player() instanceof ServerPlayer player)ManagerRuntime.get().action(player,v);}));
+        var channel=event.registrar("manager20");
+        channel.playToServer(Request.TYPE,Request.CODEC,(v,c)->c.enqueueWork(()->{if(c.player() instanceof ServerPlayer player){if(v.section.equals("my_rewards"))PersonalRewards.open(player);else ManagerRuntime.get().request(player,v.section,v.id);}}));
+        channel.playToServer(Action.TYPE,Action.CODEC,(v,c)->c.enqueueWork(()->{if(c.player() instanceof ServerPlayer player){if(NpcTrading.handles(player,v.token))NpcTrading.get().action(player,v);else if(PersonalRewards.handles(player,v.token))PersonalRewards.claim(player,v.token,v.operation,v.json);else ManagerRuntime.get().action(player,v);}}));
         channel.playToClient(Timer.TYPE,Timer.CODEC,(v,c)->c.enqueueWork(()->com.ianblk.zianmanager.client.DungeonTimerHud.accept(v)));
         channel.playToClient(View.TYPE,View.CODEC,(v,c)->c.enqueueWork(()->com.ianblk.zianmanager.client.ManagerClient.accept(v.json)));
     });}

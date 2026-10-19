@@ -15,7 +15,7 @@ public final class ZoneHolograms {
  public void clear(){displays.values().forEach(Entity::discard);displays.clear();}
  public void update(MinecraftServer server,ManagerStore store,EncounterLedger ledger,long now){
   var active=new HashSet<String>();
-  for(var zone:store.data().zones().values()){var run=ledger.get(zone.id());if(zone.first()==null || zone.second()==null)continue;
+  for(var zone:store.data().zones().values()){var run=ledger.get(zone.id());if(run==null||run.phase()==Phase.COMPLETE||run.phase()==Phase.CANCELLED)continue;if(zone.first()==null || zone.second()==null)continue;
    var level=server.getLevel(net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.DIMENSION,net.minecraft.resources.ResourceLocation.parse(zone.dimension())));if(level==null)continue;
    double x=zone.center()!=null?zone.center().x()+0.5:(zone.first().x()+zone.second().x()+1)/2,z=zone.center()!=null?zone.center().z()+0.5:(zone.first().z()+zone.second().z()+1)/2,y=(zone.center()!=null?zone.center().y():Math.min(zone.first().y(),zone.second().y()))+3;
    if(!level.getChunkSource().hasChunk(BlockPos.containing(x,y,z).getX()>>4,BlockPos.containing(x,y,z).getZ()>>4))continue;active.add(zone.id());

@@ -1,0 +1,37 @@
+{
+  "name": "Zian Manager",
+  "projectId": 1738223,
+  "version": "0.3.0",
+  "jar": "zianmanager-0.3.0.jar",
+  "sha256": "18fbdff12d8e7060f4135684d5d5e3fa589218f2b3177fb67530211ab42ad8c6",
+  "dependencies": {
+    "zianmanager": [
+      {
+        "modId": "minecraft",
+        "type": "required",
+        "versionRange": "[1.21.1]",
+        "side": "BOTH"
+      },
+      {
+        "modId": "neoforge",
+        "type": "required",
+        "versionRange": "[21.1.252,)",
+        "side": "BOTH"
+      },
+      {
+        "modId": "lootr",
+        "type": "optional",
+        "versionRange": "[0,)",
+        "ordering": "AFTER",
+        "side": "BOTH"
+      }
+    ]
+  },
+  "license": "MIT (code); separate artwork permissions \u00e2\u20ac\u201d see META-INF/ARTWORK-NOTICE.txt",
+  "uploaded": true,
+  "descriptionVerified": true,
+  "fileId": 9252527,
+  "authorFileUrl": "https://authors.curseforge.com/#/projects/1738223/files/9252527",
+  "status": "Processing",
+  "verifiedAt": "2026-10-19T05:23:22.284101+00:00"
+}

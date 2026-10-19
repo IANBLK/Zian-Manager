@@ -9,7 +9,7 @@ displayName="Zian Manager"
 displayURL="https://github.com/IANBLK/Zian-Manager"
 logoFile="icon.png"
 authors="IANBLK"
-description="Dungeon encounters, delayed personal loot, dialogue NPCs, random arrival points and configurable daily world time."
+description="Personal loot chests, reusable vanilla vaults, dialogue NPCs with unlimited item trades, safe arrival points and configurable world time."
 [[dependencies.zianmanager]]
 modId="minecraft"
 type="required"

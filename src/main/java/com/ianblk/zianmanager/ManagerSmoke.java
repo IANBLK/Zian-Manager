@@ -45,7 +45,7 @@ public final class ManagerSmoke {
                 var c=store.data().chests().get(CHEST);if(c==null || !level.getBlockState(new BlockPos(c.x(),c.y(),c.z())).is(ManagerBlocks.CRATES.get("loot_common_crate").get()))throw new IllegalStateException("Chest missing after restart");
                 if(runtime.loot().remaining(first,"chest."+CHEST,10)<=0 || !runtime.loot().pending(firstId).isEmpty())throw new IllegalStateException("Personal cooldown/receipt missing after restart");
                 if(store.data().npcs().get(NPC)==null || !(level.getEntity(NPC) instanceof ManagerNpcs.DialogueNpc))throw new IllegalStateException("Dialogue NPC missing after restart");
-                EquipmentSmoke.verifyRestart(runtime,first);runtime.view(first,"loot","smoke_chest",null,"");runtime.view(first,"mob","smoke_guard",null,"");runtime.view(first,"zone","smoke_room",null,"");runtime.view(first,"npc",NPC.toString(),null,"");
+                EquipmentSmoke.verifyRestart(runtime,first);runtime.view(first,"loot","smoke_chest",null,"");runtime.view(first,"npc",NPC.toString(),null,"");
                 ZianManager.LOGGER.info("Zian Manager native smoke passed: restart preserves chest, NPC, personal loot and cooldown; Lootr={}",net.neoforged.fml.ModList.get().isLoaded("lootr"));done=true;return;
             }
             runtime.cancel("smoke_room");
@@ -65,13 +65,12 @@ public final class ManagerSmoke {
             if(server.getRecipeManager().getRecipes().stream().anyMatch(r->r.value().getResultItem(server.registryAccess()).is(ManagerBlocks.CRATES.get("loot_common_crate").get().asItem())))throw new IllegalStateException("Chest has a crafting recipe");
             int before=first.getInventory().items.stream().mapToInt(ItemStack::getCount).sum();runtime.loot().grant(first,"chest."+CHEST,"smoke_chest",10,chest);int after=first.getInventory().items.stream().mapToInt(ItemStack::getCount).sum();if(after-before!=10 || !runtime.loot().pending(firstId).isEmpty())throw new IllegalStateException("Ten-item personal chest delivery failed");
             runtime.loot().grant(second,"chest."+CHEST,"smoke_chest",10,chest);runtime.loot().grant(first,"chest."+CHEST,"smoke_chest",10,chest);if(first.getInventory().items.stream().mapToInt(ItemStack::getCount).sum()!=after)throw new IllegalStateException("Personal chest duplicate payout");
-            DungeonEntrancesSmoke.verify(runtime,first);CenteredZoneSmoke.verify(runtime,first);EquipmentSmoke.setup(runtime,first);EquipmentSmoke.directOverflow(runtime,first,false);EquipmentSmoke.directOverflow(runtime,second,true);
+            DungeonEntrancesSmoke.verify(runtime,first);EquipmentSmoke.setup(runtime,first);EquipmentSmoke.directOverflow(runtime,first,false);EquipmentSmoke.directOverflow(runtime,second,true);
             store.put(new NpcSpec(NPC,"minecraft:overworld",new Point(x+10,y,z,90),"Guía de prueba","Bienvenido a la dungeon."));
             var points=List.of(new Point(x+2.5,y,z+4.5,0),new Point(x+5.5,y,z+4.5,0),new Point(x+8.5,y,z+4.5,0));
             store.put(new ZoneSpec("smoke_room","minecraft:overworld",new Point(x-2,y,z-2,0),new Point(x+12,y+6,z+8,0),List.of(),List.of("smoke_guard"),2,3,10,"smoke_boss",true,null,0,0,0,0,"Cripta de prueba"));
             level.setBlockAndUpdate(chest,net.minecraft.world.level.block.Blocks.AIR.defaultBlockState());phase=1;ticks=0;return;
         }
-        var run=runtime.encounter("smoke_room");
         if(phase==1 && ++ticks>120){
             if(!level.getBlockState(chest).is(ManagerBlocks.CRATES.get("loot_common_crate").get()))throw new IllegalStateException("Registered chest did not recover");
             EquipmentSmoke.verify(runtime,first);CommandSuggestionsSmoke.verify(runtime,first,second);
@@ -86,21 +85,9 @@ public final class ManagerSmoke {
             int breadBefore=first.getInventory().countItem(Items.BREAD);runtime.openDialogue(first,store.data().npcs().get(NPC));session=sessions.get(firstId);token=(UUID)tokenMethod.invoke(session);runtime.action(first,new ManagerNetwork.Action(token,"npc_command","{\"button\":\"bonus\"}"));if(first.getInventory().countItem(Items.BREAD)!=breadBefore+1)throw new IllegalStateException("Second NPC button blocked by main cooldown");runtime.openDialogue(first,store.data().npcs().get(NPC));session=sessions.get(firstId);token=(UUID)tokenMethod.invoke(session);runtime.action(first,new ManagerNetwork.Action(token,"npc_command","{\"button\":\"bonus\"}"));if(first.getInventory().countItem(Items.BREAD)!=breadBefore+1)throw new IllegalStateException("Second NPC button ignored its own cooldown");ZianManager.LOGGER.info("Zian Manager multiple NPC buttons smoke passed: independent commands, non-OP access and cooldowns");
 
 
-            if(run==null || run.phase()!=Phase.ACTIVE || run.spawns().size()<1 || run.spawns().size()>3)throw new IllegalStateException("Single-template automatic zone did not create 1-3 mobs");originalRun=run.uuid();initialMobs=run.spawns().size();
-            for(var e:level.getAllEntities())if(e instanceof net.minecraft.world.entity.Display.TextDisplay && e.saveWithoutId(new net.minecraft.nbt.CompoundTag()).getString("text").contains("Cripta de prueba")){labelId=e.getUUID();labelPos=e.position();}if(labelId==null)throw new IllegalStateException("Public named active dungeon label missing");
-            phase=5;ticks=0;return;
+            phase=4;ticks=0;return;
         }
-        if(phase==5 && ++ticks>40){
-            if(run.spawns().size()!=initialMobs+2 || run.scaledPlayers()!=2 || !run.uuid().equals(originalRun))throw new IllegalStateException("Second player did not add exactly two mobs to shared encounter");
-            if(level.getEntity(labelId)==null || !level.getEntity(labelId).position().equals(labelPos))throw new IllegalStateException("Dungeon label moved or disappeared across updates");
-            var zone=store.data().zones().get("smoke_room");
-            for(var slot:run.spawns()){var mob=(Mob)level.getEntity(slot.uuid());if(mob==null || mob.getMaxHealth()!=40 || mob.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.HEAD).isEmpty() || !zone.contains(zone.dimension(),slot.point().x(),slot.point().y(),slot.point().z()))throw new IllegalStateException("Automatic spawn outside zone or missing configured attributes");mob.hurt(level.damageSources().playerAttack(first),1000);}
-            phase=2;ticks=0;return;
-        }
-        if(phase==2 && run.phase()==Phase.WAITING){for(var e:level.getAllEntities())if(e instanceof net.minecraft.world.entity.Display.TextDisplay && e.saveWithoutId(new net.minecraft.nbt.CompoundTag()).getString("text").contains("Oleada 2 en "))waveLabelChecked=true;}
-        if(phase==2 && ++ticks>400)throw new IllegalStateException("Second wave did not become active within the integration deadline");
-        if(phase==2 && run.wave()==2 && run.phase()==Phase.ACTIVE){if(!waveLabelChecked)throw new IllegalStateException("Next wave countdown label missing");if(run.wave()!=2 || run.phase()!=Phase.ACTIVE || !run.uuid().equals(originalRun))throw new IllegalStateException("Second wave missing or duplicate encounter");for(var slot:run.spawns())((Mob)level.getEntity(slot.uuid())).hurt(level.damageSources().playerAttack(first),1000);phase=3;ticks=0;return;}
-        if(phase==3 && ++ticks>25){if(run.phase()!=Phase.COMPLETE)throw new IllegalStateException("Zone did not complete");boolean hologram=false;for(var e:level.getAllEntities())if(e instanceof net.minecraft.world.entity.Display.TextDisplay && e.getPersistentData().getBoolean("ZianManagerCountdown")){var tag=e.saveWithoutId(new net.minecraft.nbt.CompoundTag());if(tag.getString("text").contains("La zona se regenerar"))hologram=true;}if(!hologram)throw new IllegalStateException("Dungeon regeneration countdown hologram missing");ZianManager.LOGGER.info("Zian Manager countdown hologram smoke passed");ZoneRefreshSmoke.verify(runtime,first);phase=4;ticks=0;return;}
-        if(phase==4){if(run.uuid().equals(originalRun)){if(++ticks>400)throw new IllegalStateException("Cooldown did not spawn a fresh encounter");return;}if(run.phase()!=Phase.ACTIVE)throw new IllegalStateException("Respawn not active");runtime.cancel("smoke_room");if(!runtime.loot().pending(firstId).isEmpty())throw new IllegalStateException("Native loot remained unconfirmed");EquipmentSmoke.verifyDelayedEnd(runtime,first);DailyTimeSmoke.verify(runtime,first);TimeAdminSmoke.verify(runtime,first);WorldTimeSmoke.verify(runtime,first);StorageFiles.writeString(marker,firstId+"\n"+secondId+"\n");ZianManager.LOGGER.info("Zian Manager native smoke passed: shared automatic single-template zone, 1-3 mobs plus two per extra player, respawn, item readback, personal chest, survival protection/creative admin removal/no recipe, dialogue NPC; Lootr={}",net.neoforged.fml.ModList.get().isLoaded("lootr"));done=true;}
+        // Encounters (waves, mobs, respawn) moved to Zian Mobs; Manager only keeps their data archived.
+        if(phase==4 && ++ticks>200){if(!runtime.loot().pending(firstId).isEmpty())throw new IllegalStateException("Native loot remained unconfirmed");EquipmentSmoke.verifyDelayedEnd(runtime,first);DailyTimeSmoke.verify(runtime,first);TimeAdminSmoke.verify(runtime,first);WorldTimeSmoke.verify(runtime,first);StorageFiles.writeString(marker,firstId+"\n"+secondId+"\n");ZianManager.LOGGER.info("Zian Manager native smoke passed: item readback, personal chest, survival protection/creative admin removal/no recipe, dialogue NPC; Lootr={}",net.neoforged.fml.ModList.get().isLoaded("lootr"));done=true;}
     }catch(Exception error){done=true;ZianManager.LOGGER.error("Zian Manager native smoke FAILED",error);}}
 }

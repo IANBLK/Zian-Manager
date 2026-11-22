@@ -34,6 +34,12 @@ public final class Definitions {
     public record NpcSpec(UUID uuid,String dimension,Point point,String name,String text,String skin,String button,String command,int cooldownSeconds,List<NpcButton> extraActions){
         public NpcSpec(UUID uuid,String dimension,Point point,String name,String text,String skin,String button,String command,int cooldownSeconds){this(uuid,dimension,point,name,text,skin,button,command,cooldownSeconds,List.of());}
         public NpcSpec(UUID uuid,String dimension,Point point,String name,String text){this(uuid,dimension,point,name,text,"heraldo_real","Continuar","",60);}
+        /** True si {@code next} añade o cambia un comando ejecutable respecto a {@code old}; los enlaces "@entrada" no son comandos. */
+        public static boolean commandsChanged(NpcSpec old,NpcSpec next){
+            if(runs(next.command()) && (old==null || !next.command().equals(old.command())))return true;
+            return next.extraActions().stream().anyMatch(b->runs(b.command()) && (old==null || old.extraActions().stream().noneMatch(o->o.id().equals(b.id()) && o.command().equals(b.command()))));
+        }
+        private static boolean runs(String c){return !c.isBlank() && !c.startsWith(DungeonEntrances.PREFIX);}
         public NpcSpec{extraActions=List.copyOf(extraActions==null?List.of():extraActions);if(extraActions.size()>7 || extraActions.stream().map(NpcButton::id).distinct().count()!=extraActions.size())throw new IllegalArgumentException("Máximo 7 botones adicionales con IDs distintos");Objects.requireNonNull(uuid);Objects.requireNonNull(point);resource(dimension);if(name==null || name.isBlank() || name.length()>80 || text==null || text.isBlank() || text.length()>1024)throw new IllegalArgumentException("Diálogo inválido");
             skin=skin==null || skin.isBlank()?"heraldo_real":skin;button=button==null || button.isBlank()?"Continuar":button;command=command==null?"":command.trim();
             if(!NPC_SKINS.contains(skin) || button.length()>64 || command.length()>2048 || command.chars().anyMatch(Character::isISOControl) || cooldownSeconds<0 || cooldownSeconds>2592000)throw new IllegalArgumentException("Acción o skin inválida");

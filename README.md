@@ -16,7 +16,7 @@ Build the services around your dungeon with native administrator menus: personal
 Configure chest reward tables, per-player renewal and key requirements in game. Each player receives their own reward roll and cooldown. Vaults support independent normal/ominous cooldown settings through both GUI and commands. Pending deliveries retain their recorded result for recovery and review.
 
 ## Dialogue NPCs and unlimited trades
-Administrators configure appearance, dialogue and command buttons. Merchants exchange up to four payment stacks for up to four result stacks with fixed quantities and unlimited stock. Vanilla and modded items keep their components. Setup copies hotbar slots 1–4 for payment and 6–9 for results without consuming them; slot 5 separates both sides. Players use their inventory to pay and must have room for the complete result. The GUI separates offers, payment, rewards and inventory.
+Administrators configure appearance, dialogue and command buttons. Merchants exchange up to four payment stacks for up to four result stacks with fixed quantities and unlimited stock. Vanilla and modded items keep their components. Setup copies hotbar slots 1–4 for payment and 6–9 for results without consuming them; slot 5 separates both sides. Players use their inventory to pay and must have room for the complete result. The GUI separates offers, payment, rewards and inventory. Saving or changing NPC command buttons (executed with console-level permission) also requires OP level 4 and `zianmanager.admin.npc-commands`; a LuckPerms grant alone (even `*`) is not enough, and an explicit deny blocks it.
 
 ## Dungeon services
 Configure entrances and daily time by world. Players can consult their own remaining time; configuration remains administrator-only. Combat definitions, mobs, bosses, waves, encounters and combat reward tables are now managed by **Zian Mobs**, a separate mod. Existing Manager combat definitions are retained for its guarded import workflow.
@@ -33,6 +33,6 @@ Manager now focuses on personal dungeon chests and chest reward tables, reusable
 
 ## Novedades — Español
 
-Manager conserva cofres y sus tablas de loot, bóvedas con GUI/comandos, NPC y comercios, entradas y tiempos por mundo. Mobs, jefes, zonas y sus tablas de combate se gestionan en Zian Mobs. Intercambios físicos ilimitados de hasta cuatro pagos por cuatro resultados, con objetos de mods y componentes. Solo los administradores configuran las ofertas; los jugadores intercambian.
+Manager conserva cofres y sus tablas de loot, bóvedas con GUI/comandos, NPC y comercios, entradas y tiempos por mundo. Mobs, jefes, zonas y sus tablas de combate se gestionan en Zian Mobs. Intercambios físicos ilimitados de hasta cuatro pagos por cuatro resultados, con objetos de mods y componentes. Solo los administradores configuran las ofertas; los jugadores intercambian. Guardar o cambiar comandos de botones de NPC (se ejecutan con permiso de consola) exige además OP nivel 4 y el nodo `zianmanager.admin.npc-commands`; un permiso de LuckPerms solo (ni siquiera `*`) no basta, y una denegación explícita lo bloquea.
 
 Minecraft 1.21.1 · NeoForge · Java 21. Install the same mod version on client and server. Back up your world before upgrading; replace the old JAR instead of keeping both copies.

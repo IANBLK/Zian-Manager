@@ -18,7 +18,7 @@ Open `/zianmanager`. In **Cofres de dungeon** (Dungeon chests), configure the ch
 - `vaults reset`: end your own wait at the targeted vault; no reward is generated.
 - `vaults enabled false`/`true`: disable/enable reuse without erasing history.
 
-Existing waits keep their deadline when durations change. OP does not bypass cooldowns. Administration uses `zianmanager.admin` or the supported fallback.
+Existing waits keep their deadline when durations change. OP does not bypass cooldowns. Administration uses `zianmanager.admin` or the supported fallback. Saving NPC button commands (they run with console-level permission) additionally requires OP level 4 and the node `zianmanager.admin.npc-commands`; a LuckPerms grant (including `*`) is not enough without OP 4, and an explicit deny blocks it. Editing an NPC without changing its commands does not require it.
 
 ## Administrators: dialogue and unlimited trades
 

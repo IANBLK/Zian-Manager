@@ -17,6 +17,21 @@ public final class ManagerPermissions {
         });
     }
 
+    /** Guardar comandos de NPC (se ejecutan con nivel 4): exige OP 4 y que LuckPerms no lo deniegue; un TRUE solo no basta. */
+    public static boolean allowsNpcCommands(CommandSourceStack source) {
+        if (!source.hasPermission(4)) return false;
+        if (source.getPlayer() == null) return true;
+        try {
+            return npcCommandsDecision(true, LuckPermsLookup.lookup(source.getPlayer(), "zianmanager.admin.npc-commands"));
+        } catch (ReflectiveOperationException | RuntimeException | LinkageError exception) {
+            return false;
+        }
+    }
+
+    static boolean npcCommandsDecision(boolean op4, LuckPermsLookup.Decision decision) {
+        return op4 && decision != LuckPermsLookup.Decision.FALSE;
+    }
+
     static boolean evaluate(boolean fallback, Supplier<LuckPermsLookup.Decision> lookup) {
         try {
             return switch (lookup.get()) {

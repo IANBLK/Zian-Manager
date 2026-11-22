@@ -2,7 +2,7 @@ from pathlib import Path
 import hashlib,json,math,struct
 ROOT=Path(__file__).resolve().parents[1]
 ASSETS=ROOT/'src/main/resources/assets/zianmanager'
-report=json.loads((ROOT/'docs/imported-assets.json').read_text(encoding='utf-8'))
+report=json.loads((ROOT/'tools/imported-assets.json').read_text(encoding='utf-8'))
 for model in report['models']:
  id=model['id'];obj=ASSETS/f'models/imported/{id}.obj';lines=obj.read_text(encoding='utf-8').splitlines();vertices=[line for line in lines if line.startswith('v ')];faces=[line for line in lines if line.startswith('f ')];assert len(vertices)==model['vertices'] and len(faces)*4==len(vertices)
  for line in lines:

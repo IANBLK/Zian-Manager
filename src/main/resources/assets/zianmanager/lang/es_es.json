@@ -278,5 +278,12 @@
   "flavor.zianmanager.reimagined_diamond_axe.short": "Cada golpe abre un sendero en el bosque, forjado en el cristal eterno.",
   "flavor.zianmanager.reimagined_diamond_pickaxe.short": "Su canto despierta los secretos de la piedra, forjado en el cristal eterno.",
   "flavor.zianmanager.reimagined_diamond_shovel.short": "La tierra revela senderos olvidados, forjado en el cristal eterno.",
-  "flavor.zianmanager.reimagined_diamond_sword.short": "Su filo custodia el valor del viajero, forjado en el cristal eterno."
+  "flavor.zianmanager.reimagined_diamond_sword.short": "Su filo custodia el valor del viajero, forjado en el cristal eterno.",
+  "tooltip.zianmanager.shift": "Mantén Mayús para más detalles",
+  "tooltip.zianmanager.ability": "✧ Habilidad (clic derecho)",
+  "tooltip.zianmanager.duration": "✧ Duración: %s s",
+  "tooltip.zianmanager.rarity.common": "Rareza: Común",
+  "tooltip.zianmanager.rarity.rare": "Rareza: Rara",
+  "tooltip.zianmanager.rarity.epic": "Rareza: Épica",
+  "tooltip.zianmanager.rarity.cosmetic": "Rareza: Cosmética"
 }

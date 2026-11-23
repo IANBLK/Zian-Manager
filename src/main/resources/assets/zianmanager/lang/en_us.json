@@ -219,5 +219,12 @@
   "item.zianmanager.reimagined_diamond_axe": "Hacha del Cristal Eterno",
   "item.zianmanager.reimagined_diamond_pickaxe": "Pico del Cristal Eterno",
   "item.zianmanager.reimagined_diamond_shovel": "Pala del Cristal Eterno",
-  "item.zianmanager.reimagined_diamond_sword": "Filo del Cristal Eterno"
+  "item.zianmanager.reimagined_diamond_sword": "Filo del Cristal Eterno",
+  "tooltip.zianmanager.shift": "Hold Shift for details",
+  "tooltip.zianmanager.ability": "✧ Ability (right-click)",
+  "tooltip.zianmanager.duration": "✧ Duration: %s s",
+  "tooltip.zianmanager.rarity.common": "Rarity: Common",
+  "tooltip.zianmanager.rarity.rare": "Rarity: Rare",
+  "tooltip.zianmanager.rarity.epic": "Rarity: Epic",
+  "tooltip.zianmanager.rarity.cosmetic": "Rarity: Cosmetic"
 }

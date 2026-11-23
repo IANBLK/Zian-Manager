@@ -98,7 +98,8 @@ def import_extra_weapons():
     model(id,d,tx,pack+' :: '+n)
 
 def import_hats_tools():
- for pack in ['Free_Hats_Final_EN.zip','Reimagined Vanilla Tools.zip']:
+ # Lote F: los sombreros hat_* se retiraron (D7); solo se importan las herramientas.
+ for pack in ['Reimagined Vanilla Tools.zip']:
   with ZipFile(DOWNLOADS/pack) as z:
    for n in z.namelist():
     if not n.endswith('.bbmodel') or pack.startswith('Free_') and not n.startswith('Blockbench/'):continue
@@ -111,7 +112,7 @@ if '--hats-tools' in sys.argv:
  report=json.loads((ROOT/'docs/imported-assets.json').read_text(encoding='utf-8'))
  manifest=[m for m in report['models'] if not m['id'].startswith(('hat_','reimagined_'))]
  import_hats_tools()
- names=['Free_Hats_Final_EN.zip','Reimagined Vanilla Tools.zip']
+ names=['Reimagined Vanilla Tools.zip']
  archives=[a for a in report['archives'] if a['name'] not in names]+[{'name':n,'sha256':hashlib.sha256((DOWNLOADS/n).read_bytes()).hexdigest()} for n in names]
  write(ROOT/'docs/imported-assets.json',{'models':manifest,'archives':archives})
  print('Imported hats and tools; original PNGs and display transforms retained.')

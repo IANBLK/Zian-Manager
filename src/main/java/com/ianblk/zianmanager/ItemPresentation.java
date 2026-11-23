@@ -11,7 +11,7 @@ public final class ItemPresentation {
   var stack=event.getItemStack();var id=BuiltInRegistries.ITEM.getKey(stack.getItem());if(!id.getNamespace().equals("zianmanager")||event.getToolTip().isEmpty())return;
   if(!stack.has(DataComponents.CUSTOM_NAME))event.getToolTip().set(0,event.getToolTip().getFirst().copy().withStyle(s->s.withBold(true).withItalic(false).withColor(event.getToolTip().getFirst().getStyle().getColor()==null?net.minecraft.network.chat.TextColor.fromLegacyFormat(ChatFormatting.GOLD):event.getToolTip().getFirst().getStyle().getColor())));
   var lore=stack.get(DataComponents.LORE);if(lore!=null&&!lore.lines().isEmpty())return;
-  if(!id.getPath().startsWith("hat_")&&!id.getPath().startsWith("reimagined_"))return;
+  if(!id.getPath().startsWith("reimagined_"))return;
   String fallback=stack.getItem() instanceof net.minecraft.world.item.ArmorItem?"Una promesa de protección acompaña cada paso.":stack.getItem() instanceof net.minecraft.world.item.TieredItem?"Forjado para escribir tu próxima aventura.":stack.getItem() instanceof net.minecraft.world.item.SpawnEggItem?"Una criatura aguarda al otro lado del sello.":"Un vestigio de historias aún por descubrir.";
   event.getToolTip().add(1,Component.translatableWithFallback("flavor.zianmanager."+id.getPath()+".short",fallback).withStyle(ChatFormatting.GRAY));
  }

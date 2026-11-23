@@ -10,6 +10,7 @@ import net.minecraft.world.effect.*;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.SmallFireball;
+import com.ianblk.zianmanager.core.WeaponBalance;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.level.Level;
@@ -32,8 +33,8 @@ public final class ManagerEquipment {
  public static boolean retired(Item item){return RETIRED.contains(net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(item).getPath()) && net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(item).getNamespace().equals("zianmanager");}
  public static final Map<String,DeferredItem<? extends Item>> ALL=new LinkedHashMap<>();
  public static final DeferredHolder<EntityType<?>,EntityType<FlameBolt>> BOLT=ENTITIES.register("flame_bolt",()->EntityType.Builder.<FlameBolt>of(FlameBolt::new,MobCategory.MISC).sized(0.3125f,0.3125f).clientTrackingRange(8).updateInterval(1).build("zianmanager:flame_bolt"));
- static final int EFFECT_TICKS=600;
- public enum Power{NONE(0),FLAME(1),SONIC(10),GLADIATOR(90),REGEN(90),NIGHT(90),TIDE(90),DRAGON(90),WITHER(90),WARRIOR(90),NECROMANCER(90),NINJA(90),CHAINSAW(90);public final int seconds;Power(int seconds){this.seconds=seconds;}public int durationSeconds(){return this==NONE||this==FLAME||this==SONIC?0:EFFECT_TICKS/20;}}
+ static final int EFFECT_TICKS=WeaponBalance.EFFECT_SECONDS*20;
+ public enum Power{NONE(0),FLAME(WeaponBalance.FLAME_COOLDOWN_SECONDS),SONIC(WeaponBalance.SONIC_COOLDOWN_SECONDS),GLADIATOR(WeaponBalance.EFFECT_COOLDOWN_SECONDS),REGEN(WeaponBalance.EFFECT_COOLDOWN_SECONDS),NIGHT(WeaponBalance.EFFECT_COOLDOWN_SECONDS),TIDE(WeaponBalance.EFFECT_COOLDOWN_SECONDS),DRAGON(WeaponBalance.EFFECT_COOLDOWN_SECONDS),WITHER(WeaponBalance.EFFECT_COOLDOWN_SECONDS),WARRIOR(WeaponBalance.EFFECT_COOLDOWN_SECONDS),NECROMANCER(WeaponBalance.EFFECT_COOLDOWN_SECONDS),NINJA(WeaponBalance.EFFECT_COOLDOWN_SECONDS),CHAINSAW(WeaponBalance.EFFECT_COOLDOWN_SECONDS);public final int seconds;Power(int seconds){this.seconds=seconds;}public int durationSeconds(){return this==NONE||this==FLAME||this==SONIC?0:EFFECT_TICKS/20;}}
  private record Hit(BlockPos pos,Direction face,long at){}
  private record Job(ServerPlayer player,BlockPos pos,BlockState before,Direction face,Item item){}
  private static final Map<UUID,Hit> HITS=new HashMap<>();private static final Map<UUID,Job> JOBS=new HashMap<>();private static final Set<UUID> MINING=new HashSet<>();

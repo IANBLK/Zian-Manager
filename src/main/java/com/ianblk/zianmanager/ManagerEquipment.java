@@ -32,7 +32,8 @@ public final class ManagerEquipment {
  public static boolean retired(Item item){return RETIRED.contains(net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(item).getPath()) && net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(item).getNamespace().equals("zianmanager");}
  public static final Map<String,DeferredItem<? extends Item>> ALL=new LinkedHashMap<>();
  public static final DeferredHolder<EntityType<?>,EntityType<FlameBolt>> BOLT=ENTITIES.register("flame_bolt",()->EntityType.Builder.<FlameBolt>of(FlameBolt::new,MobCategory.MISC).sized(0.3125f,0.3125f).clientTrackingRange(8).updateInterval(1).build("zianmanager:flame_bolt"));
- public enum Power{NONE(0),FLAME(1),SONIC(10),GLADIATOR(90),REGEN(90),NIGHT(90),TIDE(90),DRAGON(90),WITHER(90),WARRIOR(90),NECROMANCER(90),NINJA(90),CHAINSAW(90);public final int seconds;Power(int seconds){this.seconds=seconds;}}
+ static final int EFFECT_TICKS=600;
+ public enum Power{NONE(0),FLAME(1),SONIC(10),GLADIATOR(90),REGEN(90),NIGHT(90),TIDE(90),DRAGON(90),WITHER(90),WARRIOR(90),NECROMANCER(90),NINJA(90),CHAINSAW(90);public final int seconds;Power(int seconds){this.seconds=seconds;}public int durationSeconds(){return this==NONE||this==FLAME||this==SONIC?0:EFFECT_TICKS/20;}}
  private record Hit(BlockPos pos,Direction face,long at){}
  private record Job(ServerPlayer player,BlockPos pos,BlockState before,Direction face,Item item){}
  private static final Map<UUID,Hit> HITS=new HashMap<>();private static final Map<UUID,Job> JOBS=new HashMap<>();private static final Set<UUID> MINING=new HashSet<>();
@@ -70,13 +71,13 @@ public final class ManagerEquipment {
   public final Power power;public AbilitySword(Tier t,Properties p,Power power){super(t,p);this.power=power;}
   @Override public InteractionResultHolder<ItemStack> use(Level level,Player player,InteractionHand hand){var stack=player.getItemInHand(hand);if(power==Power.NONE)return InteractionResultHolder.pass(stack);if(level.isClientSide)return InteractionResultHolder.success(stack);return player instanceof ServerPlayer p && activate(power,p,stack,hand,true)?InteractionResultHolder.success(stack):InteractionResultHolder.fail(stack);}
   @Override public void postHurtEnemy(ItemStack stack,LivingEntity target,LivingEntity attacker){super.postHurtEnemy(stack,target,attacker);if(power==Power.WITHER && !target.level().isClientSide && target.isAlive())target.addEffect(new MobEffectInstance(MobEffects.WITHER,100,0),attacker);}
-  @Override public Component getName(ItemStack s){return WeaponFlavor.name(s);}@Override public void appendHoverText(ItemStack s,TooltipContext c,List<Component> lines,TooltipFlag f){WeaponFlavor.append(s,lines,power.seconds);}
+  @Override public Component getName(ItemStack s){return WeaponFlavor.name(s);}@Override public void appendHoverText(ItemStack s,TooltipContext c,List<Component> lines,TooltipFlag f){WeaponFlavor.append(s,lines,power.seconds,power.durationSeconds());}
  }
  public static final DeferredHolder<EntityType<?>,EntityType<TideProjectile>> TIDE_PROJECTILE=ENTITIES.register("tide_projectile",()->EntityType.Builder.<TideProjectile>of(TideProjectile::new,MobCategory.MISC).sized(0.5f,0.5f).clientTrackingRange(8).updateInterval(1).build("zianmanager:tide_projectile"));
  public static final class TideTrident extends TridentItem {
   public TideTrident(Properties properties){super(properties);}
   @Override public InteractionResultHolder<ItemStack> use(Level level,Player player,InteractionHand hand){if(player instanceof ServerPlayer p)activate(Power.TIDE,p,player.getItemInHand(hand),hand,false);return super.use(level,player,hand);}
-  @Override public Component getName(ItemStack s){return WeaponFlavor.name(s);}@Override public void appendHoverText(ItemStack s,TooltipContext c,List<Component> lines,TooltipFlag f){WeaponFlavor.append(s,lines,Power.TIDE.seconds);}
+  @Override public Component getName(ItemStack s){return WeaponFlavor.name(s);}@Override public void appendHoverText(ItemStack s,TooltipContext c,List<Component> lines,TooltipFlag f){WeaponFlavor.append(s,lines,Power.TIDE.seconds,Power.TIDE.durationSeconds());}
  }
  public static final class TideProjectile extends net.minecraft.world.entity.projectile.ThrownTrident {
   public TideProjectile(EntityType<? extends TideProjectile> type,Level level){super(type,level);}
@@ -97,7 +98,7 @@ public final class ManagerEquipment {
   else if(power==Power.TIDE){effect(p,MobEffects.REGENERATION,0);effect(p,MobEffects.DAMAGE_BOOST,0);}
   stack.hurtAndBreak(1,p,hand==InteractionHand.MAIN_HAND?EquipmentSlot.MAINHAND:EquipmentSlot.OFFHAND);return true;
  }
- private static void effect(ServerPlayer p,Holder<net.minecraft.world.effect.MobEffect> effect,int amplifier){p.addEffect(new MobEffectInstance(effect,600,amplifier));}
+ private static void effect(ServerPlayer p,Holder<net.minecraft.world.effect.MobEffect> effect,int amplifier){p.addEffect(new MobEffectInstance(effect,EFFECT_TICKS,amplifier));}
  private static void syncCooldowns(ServerPlayer p){long now=System.currentTimeMillis();for(var ref:ALL.values())if(ref.get() instanceof AbilitySword item){long wait=p.getPersistentData().getCompound(COOLDOWNS).getLong(item.power.name())-now;if(wait>0)p.getCooldowns().addCooldown(item,(int)Math.min(Integer.MAX_VALUE,(wait+49)/50));}}
  public static void sonic(ServerPlayer p){var start=p.getEyePosition();var direction=p.getLookAngle().normalize();LivingEntity target=null;double nearest=16;for(var e:p.serverLevel().getEntitiesOfClass(LivingEntity.class,p.getBoundingBox().expandTowards(direction.scale(15)).inflate(1.5),e->e!=p && e.isAlive() && !e.isSpectator())){double along=e.getBoundingBox().getCenter().subtract(start).dot(direction);if(along<0 || along>15 || along>=nearest || !e.getBoundingBox().inflate(0.5).clip(start,start.add(direction.scale(15))).isPresent())continue;if(e instanceof Player other && (!p.server.isPvpAllowed() || !p.canHarmPlayer(other)))continue;target=e;nearest=along;}for(int i=1;i<=15;i++){var v=start.add(direction.scale(i));p.serverLevel().sendParticles(ParticleTypes.SONIC_BOOM,v.x,v.y,v.z,1,0,0,0,0);}p.serverLevel().playSound(null,p.blockPosition(),SoundEvents.WARDEN_SONIC_BOOM,SoundSource.PLAYERS,1,1);if(target!=null && target.hurt(p.serverLevel().damageSources().sonicBoom(p),10)){double resistance=target.getAttributeValue(net.minecraft.world.entity.ai.attributes.Attributes.KNOCKBACK_RESISTANCE);target.push(direction.x*2.5*(1-resistance),0.5*(1-resistance),direction.z*2.5*(1-resistance));}}
  public static final class FlameBolt extends SmallFireball {public FlameBolt(EntityType<? extends FlameBolt> type,Level level){super(type,level);} @Override protected void onHitBlock(BlockHitResult hit){discard();} @Override public void tick(){super.tick();if(tickCount>100)discard();}}

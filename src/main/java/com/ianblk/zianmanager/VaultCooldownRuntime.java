@@ -63,7 +63,7 @@ public final class VaultCooldownRuntime {
         return new Settings(current.enabled(),kind.equals("ominous")?current.normalMinutes():value,kind.equals("normal")?current.ominousMinutes():value);
     }
     private int help(net.minecraft.commands.CommandSourceStack source){
-        source.sendSuccess(()->Component.literal("Bóvedas: times normal|ominous <minutos>, times <normal> <ominous>, reset (quita tu espera en la bóveda que miras), cooldown <minutos> (ajusta tu espera), status, enabled true|false, reload. Usa Tab para completar. Cambiar times solo afecta a las siguientes aperturas."),false);return 1;
+        source.sendSuccess(()->Component.translatableWithFallback("zianmanager.vault.help","Bóvedas: times normal|ominous <minutos>, times <normal> <ominous>, reset (quita tu espera en la bóveda que miras), cooldown <minutos> (ajusta tu espera), status, enabled true|false, reload. Usa Tab para completar. Cambiar times solo afecta a las siguientes aperturas."),false);return 1;
     }
     private void commands(RegisterCommandsEvent event){
         var times=Commands.literal("times").executes(c->help(c.getSource()));
@@ -75,30 +75,30 @@ public final class VaultCooldownRuntime {
         for(String kind:List.of("normal","ominous","both"))times.then(Commands.literal(kind).then(minutes("minutes",1).executes(c->configure(c.getSource(),changeTimes(kind,number(c,"minutes"))))));
         var root=Commands.literal("zianmanager").then(Commands.literal("vaults").requires(s->ManagerPermissions.allows(s,"admin",true)).executes(c->help(c.getSource()))
             .then(Commands.literal("help").executes(c->help(c.getSource())))
-            .then(Commands.literal("status").executes(c->{c.getSource().sendSuccess(()->Component.literal("Bóvedas: "+(failed || ledger==null || !ledger.healthy()?"bloqueadas por error":settings.enabled()?"activadas":"vanilla")+" · normales "+(settings==null?"?":settings.normalMinutes())+" min · ominosas "+(settings==null?"?":settings.ominousMinutes())+" min · sin excepción para OP"),false);return 1;}))
+            .then(Commands.literal("status").executes(c->{c.getSource().sendSuccess(()->Component.translatableWithFallback("zianmanager.vault.status","Bóvedas: %s · normales %s min · ominosas %s min · sin excepción para OP",(failed || ledger==null || !ledger.healthy()?Component.translatableWithFallback("zianmanager.vault.state.blocked","bloqueadas por error"):settings.enabled()?Component.translatableWithFallback("zianmanager.vault.state.enabled","activadas"):Component.translatableWithFallback("zianmanager.vault.state.vanilla","vanilla")),(settings==null?"?":settings.normalMinutes()),(settings==null?"?":settings.ominousMinutes())),false);return 1;}))
             .then(times)
             .then(Commands.literal("reset").executes(c->adjustLookedAt(c.getSource(),0)))
             .then(Commands.literal("cooldown").executes(c->help(c.getSource())).then(minutes("minutes",0).executes(c->adjustLookedAt(c.getSource(),number(c,"minutes")))))
             .then(Commands.literal("enabled").then(Commands.argument("enabled",com.mojang.brigadier.arguments.BoolArgumentType.bool()).executes(c->configure(c.getSource(),new Settings(com.mojang.brigadier.arguments.BoolArgumentType.getBool(c,"enabled"),settings==null?30:settings.normalMinutes(),settings==null?60:settings.ominousMinutes())))))
-            .then(Commands.literal("reload").executes(c->{reload();if(failed){c.getSource().sendFailure(Component.literal("Configuración inválida; revisa el registro."));return 0;}c.getSource().sendSuccess(()->Component.literal("Configuración de bóvedas recargada. Los tiempos ya iniciados se conservan; usa cooldown mirando una bóveda para ajustar tu espera."),false);return 1;})));
+            .then(Commands.literal("reload").executes(c->{reload();if(failed){c.getSource().sendFailure(Component.translatableWithFallback("zianmanager.vault.invalid_config","Configuración inválida; revisa el registro."));return 0;}c.getSource().sendSuccess(()->Component.translatableWithFallback("zianmanager.vault.reloaded","Configuración de bóvedas recargada. Los tiempos ya iniciados se conservan; usa cooldown mirando una bóveda para ajustar tu espera."),false);return 1;})));
         event.getDispatcher().register(root);
     }
     private int adjustLookedAt(net.minecraft.commands.CommandSourceStack source,int minutes) throws com.mojang.brigadier.exceptions.CommandSyntaxException {
         var player=source.getPlayerOrException();var hit=player.pick(6,1,false);
         if(!(hit instanceof net.minecraft.world.phys.BlockHitResult block) || hit.getType()!=net.minecraft.world.phys.HitResult.Type.BLOCK || !(source.getLevel().getBlockEntity(block.getBlockPos()) instanceof VaultBlockEntity)){
-            source.sendFailure(Component.literal("Mira una bóveda a un máximo de 6 bloques para ajustar tu espera."));return 0;
+            source.sendFailure(Component.translatableWithFallback("zianmanager.vault.look_at","Mira una bóveda a un máximo de 6 bloques para ajustar tu espera."));return 0;
         }
         try{
             if(failed || ledger==null || !ledger.healthy())throw new IllegalStateException("Vault ledger unavailable");
             ledger.adjust(id(source.getLevel(),block.getBlockPos()),player.getUUID(),clock.millis(),minutes*60000L);
-            source.sendSuccess(()->Component.literal(minutes==0?"Tu espera en esta bóveda terminó. Puedes usar una llave cuando esté disponible.":"Tu espera en esta bóveda queda en "+minutes+" min desde ahora. Los demás jugadores conservan su tiempo."),false);return 1;
-        }catch(Exception error){fail(error);source.sendFailure(Component.literal("No se pudo ajustar la espera; revisa el registro."));return 0;}
+            source.sendSuccess(()->(minutes==0?Component.translatableWithFallback("zianmanager.vault.cooldown_cleared","Tu espera en esta bóveda terminó. Puedes usar una llave cuando esté disponible."):Component.translatableWithFallback("zianmanager.vault.cooldown_set","Tu espera en esta bóveda queda en %s min desde ahora. Los demás jugadores conservan su tiempo.",minutes)),false);return 1;
+        }catch(Exception error){fail(error);source.sendFailure(Component.translatableWithFallback("zianmanager.vault.adjust_failed","No se pudo ajustar la espera; revisa el registro."));return 0;}
     }
     private int configure(net.minecraft.commands.CommandSourceStack source,Settings next){
         try{if(config==null || ledger==null || !ledger.healthy())throw new IllegalStateException("Revisa el almacenamiento antes de cambiar la configuración.");
             AtomicJson.write(config,next);settings=next;failed=false;
-            source.sendSuccess(()->Component.literal("Bóvedas "+(next.enabled()?"activadas":"en modo vanilla")+": "+next.normalMinutes()+" min normales, "+next.ominousMinutes()+" min ominosas. Para cambiar tu espera actual, mira la bóveda y usa /zianmanager vaults cooldown 1."),true);return 1;
-        }catch(Exception error){fail(error);source.sendFailure(Component.literal("No se pudo guardar la configuración de bóvedas."));return 0;}
+            source.sendSuccess(()->Component.translatableWithFallback("zianmanager.vault.configured","Bóvedas %s: %s min normales, %s min ominosas. Para cambiar tu espera actual, mira la bóveda y usa /zianmanager vaults cooldown 1.",(next.enabled()?Component.translatableWithFallback("zianmanager.vault.state.enabled_f","activadas"):Component.translatableWithFallback("zianmanager.vault.state.vanilla_mode","en modo vanilla")),next.normalMinutes(),next.ominousMinutes()),true);return 1;
+        }catch(Exception error){fail(error);source.sendFailure(Component.translatableWithFallback("zianmanager.vault.save_failed","No se pudo guardar la configuración de bóvedas."));return 0;}
     }
     public Settings settingsSnapshot(){return settings==null?Settings.defaults():settings;}
     public String statusText(){return failed||ledger==null||!ledger.healthy()?"Bóvedas bloqueadas por error":settingsSnapshot().enabled()?"Reutilización activada":"Comportamiento vanilla";}

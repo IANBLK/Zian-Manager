@@ -24,7 +24,7 @@ public final class NpcTradeMenu extends AbstractContainerMenu {
  public NpcTradeMenu(int id,Inventory inventory,RegistryFriendlyByteBuf buffer){this(id,inventory,null,0,List.of(),readLabels(buffer));}
  public NpcTradeMenu(int id,Inventory inventory,ManagerNpcs.DialogueNpc npc,long revision,List<NpcTrading.Stacks> rows,List<String> labels){
   super(TYPE.get(),id);this.owner=inventory.player;bindHybridOwner(owner);this.npc=npc;this.revision=revision;this.rows=List.copyOf(rows);this.labels=List.copyOf(labels);if(labels.size()>64)throw new IllegalArgumentException("Demasiadas ofertas");
-  for(int i=0;i<8;i++){int index=i;addSlot(new Slot(previews,index,164+(i%4)*40,i<4?43:79){@Override public boolean mayPlace(ItemStack stack){return false;}@Override public boolean mayPickup(Player p){return false;}});}
+  for(int i=0;i<8;i++){int index=i;addSlot(new Slot(previews,index,164+(i%4)*40,i<4?43:81){@Override public boolean mayPlace(ItemStack stack){return false;}@Override public boolean mayPickup(Player p){return false;}});}
   for(int i=0;i<3;i++)for(int j=0;j<9;j++)addSlot(new Slot(inventory,j+i*9+9,150+j*18,143+i*18));
   for(int j=0;j<9;j++)addSlot(new Slot(inventory,j,150+j*18,201));
   addDataSlot(selection);addDataSlot(status);if(!rows.isEmpty())select(0);

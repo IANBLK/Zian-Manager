@@ -18,6 +18,7 @@ public final class Messages {
   }catch(Exception error){org.slf4j.LoggerFactory.getLogger("zianmanager").warn("No se pudo leer messages.json; se conserva el último prefijo válido: {}",error.toString());}
   return prefix;
  }
+ public static Component error(Exception e,String key,String fallback){return e.getMessage()==null?Component.translatableWithFallback(key,fallback):Component.translatableWithFallback("zianmanager.error.message","%s",e.getMessage());}
  public static Component format(Component original){
   String text=original.getString();if(text.isBlank()||text.startsWith("✦"))return original;
   var body=original.copy();if(body.getStyle().getColor()==null)body.withStyle(ChatFormatting.GRAY);

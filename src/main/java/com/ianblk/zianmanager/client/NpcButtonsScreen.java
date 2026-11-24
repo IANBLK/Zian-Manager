@@ -14,5 +14,5 @@ public final class NpcButtonsScreen extends ManagerThemedScreen {
  }
  private void edit(int at){JsonObject old=at<0?null:buttons.get(at);minecraft.setScreen(new NpcButtonEditor(this,old,v->{if(at<0)buttons.add(v);else buttons.set(at,v);minecraft.setScreen(this);}));}
  @Override public void onClose(){minecraft.setScreen(parent);}
- @Override protected void renderCanvas(GuiGraphics g,int mx,int my,float dt){panel(g,left,top,w,h);g.drawString(font,"Hasta 7 adicionales; el principal se edita en Acción.",left+12,top+36,0xFFAAAAAA);renderWidgets(g,mx,my,dt);}
+ @Override protected void renderCanvas(GuiGraphics g,int mx,int my,float dt){panel(g,left,top,w,h);g.drawString(font,Component.translatableWithFallback("zianmanager.buttons.help","Hasta 7 adicionales; el principal se edita en Acción.").getString(),left+12,top+36,0xFFAAAAAA);renderWidgets(g,mx,my,dt);}
 }

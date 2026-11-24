@@ -66,6 +66,6 @@ public final class NpcTrading {
             // Close a live trade before stale result packets can be processed.
             for(var viewer:p.getServer().getPlayerList().getPlayers())if(viewer.containerMenu instanceof NpcTradeMenu menu&&edit.npc().equals(menu.npcId()))viewer.closeContainer();
             show(p,edit.npc(),null,"Ofertas guardadas · intercambios ilimitados");
-        }catch(Exception error){p.sendSystemMessage(Messages.format(Component.literal(error.getMessage()==null?"No se pudo guardar":error.getMessage())));try{show(p,edit.npc(),edit.draft(),error.getMessage());}catch(Exception ignored){}}
+        }catch(Exception error){p.sendSystemMessage(Messages.format(Messages.error(error,"zianmanager.error.save_failed","No se pudo guardar")));try{show(p,edit.npc(),edit.draft(),error.getMessage());}catch(Exception ignored){}}
     }
 }

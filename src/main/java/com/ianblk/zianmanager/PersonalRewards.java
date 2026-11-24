@@ -25,7 +25,7 @@ public final class PersonalRewards {
    }
    var token=UUID.randomUUID();sessions.put(p.getUUID(),new Session(token,now+120000,Set.copyOf(ids)));
    var view=new JsonObject();view.addProperty("type","personal_rewards");view.addProperty("token",token.toString());view.addProperty("notice",notice);view.add("entries",rows);ManagerNetwork.send(p,view.toString());
-  }catch(Exception error){p.sendSystemMessage(Messages.format(Component.literal(error.getMessage()==null?"No se pudieron consultar tus premios":error.getMessage())));}
+  }catch(Exception error){p.sendSystemMessage(Messages.format(Messages.error(error,"zianmanager.error.rewards_query_failed","No se pudieron consultar tus premios")));}
  }
  public static void claim(ServerPlayer p,UUID token,String operation,String json){
   var session=sessions.remove(p.getUUID());if(session==null||!session.token().equals(token)||session.expires()<System.currentTimeMillis())return;

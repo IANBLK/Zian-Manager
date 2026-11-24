@@ -386,5 +386,8 @@
   "zianmanager.button.command": "Comando",
   "zianmanager.button.cooldown": "Espera",
   "zianmanager.buttons.help": "Hasta 7 adicionales; el principal se edita en Acción.",
-  "zianmanager.timer.unlimited": "Tiempo Ilimitado"
+  "zianmanager.timer.unlimited": "Tiempo Ilimitado",
+  "zianmanager.rewards.waiting": "Esperando respuesta. Consultar estado no repite la entrega.",
+  "zianmanager.rewards.empty": "No tienes recompensas pendientes.",
+  "zianmanager.rewards.separate": "Pendientes y entregas en revisión se muestran por separado."
 }

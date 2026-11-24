@@ -386,5 +386,8 @@
   "zianmanager.button.command": "Command",
   "zianmanager.button.cooldown": "Cooldown",
   "zianmanager.buttons.help": "Up to 7 additional; the main one is edited in Action.",
-  "zianmanager.timer.unlimited": "Unlimited Time"
+  "zianmanager.timer.unlimited": "Unlimited Time",
+  "zianmanager.rewards.waiting": "Waiting for a reply. Checking the status does not repeat the delivery.",
+  "zianmanager.rewards.empty": "You have no pending rewards.",
+  "zianmanager.rewards.separate": "Pending rewards and deliveries under review are shown separately."
 }

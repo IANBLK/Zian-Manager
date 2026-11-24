@@ -11,7 +11,7 @@ import net.minecraft.world.entity.player.Inventory;
 public final class NpcTradeScreen extends AbstractContainerScreen<NpcTradeMenu> {
  private static final int PAGE_SIZE=4;
  private int page,waiting=-1;private Button exchange;
- public NpcTradeScreen(NpcTradeMenu menu,Inventory inventory,Component title){super(menu,inventory,title);imageWidth=320;imageHeight=238;}
+ public NpcTradeScreen(NpcTradeMenu menu,Inventory inventory,Component title){super(menu,inventory,title);imageWidth=320;imageHeight=242;}
  @Override protected void init(){super.init();buttons();}
  private void send(int id){if(minecraft.gameMode!=null)minecraft.gameMode.handleInventoryButtonClick(menu.containerId,id);}
  private void buttons(){clearWidgets();int count=menu.labels().size();page=Math.min(page,Math.max(0,(count-1)/PAGE_SIZE));
@@ -20,14 +20,14 @@ public final class NpcTradeScreen extends AbstractContainerScreen<NpcTradeMenu> 
   addRenderableWidget(ManagerThemedScreen.themed(leftPos+114,topPos+199,26,18,Component.literal(">"),b->{page++;buttons();})).active=(page+1)*PAGE_SIZE<count;
   exchange=addRenderableWidget(ManagerThemedScreen.themed(leftPos+150,topPos+104,162,20,Component.translatableWithFallback("zianmanager.trade.exchange","Intercambiar"),b->send(64)));exchange.active=count>0&&(waiting<0||waiting==menu.selected());
   exchange.setTooltip(Tooltip.create(Component.translatableWithFallback("zianmanager.trade.exchange_tooltip","Entrega los materiales y recibe todos los resultados.\nIntercambios ilimitados; se cobra desde tu inventario.")));
-  addRenderableWidget(ManagerThemedScreen.themed(leftPos+240,topPos+220,72,16,Component.translatableWithFallback("zianmanager.common.close","Cerrar"),b->onClose()));
+  addRenderableWidget(ManagerThemedScreen.themed(leftPos+240,topPos+224,72,16,Component.translatableWithFallback("zianmanager.common.close","Cerrar"),b->onClose()));
  }
  @Override protected void containerTick(){super.containerTick();if(exchange!=null)exchange.active=!menu.labels().isEmpty()&&(waiting<0||waiting==menu.selected());}
  @Override protected void renderBg(GuiGraphics g,float partial,int mx,int my){g.fill(leftPos,topPos,leftPos+imageWidth,topPos+imageHeight,0xFF181818);g.fill(leftPos,topPos,leftPos+imageWidth,topPos+3,0xFFF2C14E);
   g.fill(leftPos+144,topPos+27,leftPos+145,topPos+217,0xFF433C2A);
   for(var slot:menu.slots){int x=leftPos+slot.x,y=topPos+slot.y;g.fill(x-1,y-1,x+17,y+17,slot.index<8?0xFFF2C14E:0xFF77623A);g.fill(x,y,x+16,y+16,0xFF292929);}
   g.drawString(font,Component.translatableWithFallback("zianmanager.trade.offers","Ofertas · %s",menu.labels().size()).getString(),leftPos+8,topPos+25,0xFFF2C14E,false);
-  g.drawString(font,Component.translatableWithFallback("zianmanager.trade.you_give","Entregas").getString(),leftPos+150,topPos+28,0xFFDDDDDD,false);g.drawString(font,Component.translatableWithFallback("zianmanager.trade.you_receive","Recibes").getString(),leftPos+150,topPos+68,0xFFDDDDDD,false);
+  g.drawString(font,Component.translatableWithFallback("zianmanager.trade.you_give","Entregas").getString(),leftPos+150,topPos+28,0xFFDDDDDD,false);g.drawString(font,Component.translatableWithFallback("zianmanager.trade.you_receive","Recibes").getString(),leftPos+150,topPos+66,0xFFDDDDDD,false);
   g.drawCenteredString(font,(page+1)+"/"+Math.max(1,(menu.labels().size()+PAGE_SIZE-1)/PAGE_SIZE),leftPos+74,topPos+204,0xFFDDDDDD);
  }
  @Override protected void renderLabels(GuiGraphics g,int x,int y){g.drawCenteredString(font,fit(title.getString(),304),160,10,0xFFF2C14E);g.drawString(font,playerInventoryTitle,150,130,0xFFBBBBBB,false);String message=switch(menu.status()){case 1->Component.translatableWithFallback("zianmanager.trade.status.done","Intercambio completado").getString();case 2->Component.translatableWithFallback("zianmanager.trade.status.missing","Te faltan materiales").getString();case 3->Component.translatableWithFallback("zianmanager.trade.status.no_room","No caben las recompensas").getString();case 4->Component.translatableWithFallback("zianmanager.trade.status.unavailable","Oferta no disponible").getString();case 5->Component.translatableWithFallback("zianmanager.trade.status.changed","Inventario cambió; reintenta").getString();default->Component.translatableWithFallback("zianmanager.trade.status.unlimited","Intercambios sin límite").getString();};g.drawString(font,fit(message,224),8,226,menu.status()==1?0xFF97D99D:menu.status()>1?0xFFFFAA88:0xFFBBBBBB,false);}

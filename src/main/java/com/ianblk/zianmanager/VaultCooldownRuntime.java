@@ -118,9 +118,9 @@ public final class VaultCooldownRuntime {
             }
             long left=ledger.remaining(vaultId,uuid,clock.millis());
             if(left>0){e.setCanceled(true);message(e.getEntity(),left);}
-        }catch(Exception error){fail(error);e.setCanceled(true);e.getEntity().displayClientMessage(Component.literal("Bóveda temporalmente no disponible."),true);}
+        }catch(Exception error){fail(error);e.setCanceled(true);e.getEntity().displayClientMessage(Component.translatableWithFallback("zianmanager.vault.unavailable","Bóveda temporalmente no disponible."),true);}
     }
-    private static void message(Player player,long millis){long seconds=(millis+999)/1000;player.displayClientMessage(Component.literal("Puedes volver a usar esta bóveda en "+seconds/60+" min "+seconds%60+" s."),true);}
+    private static void message(Player player,long millis){long seconds=(millis+999)/1000;player.displayClientMessage(Component.translatableWithFallback("zianmanager.vault.cooldown","Puedes volver a usar esta bóveda en %s min %s s.",seconds/60,seconds%60),true);}
     public void insert(ServerLevel level,BlockPos pos,BlockState state,VaultConfig config,VaultServerData data,VaultSharedData shared,Player player,ItemStack stack,Runnable vanilla){
         if(!enabled()){vanilla.run();return;}
         if(failed || ledger==null)return;

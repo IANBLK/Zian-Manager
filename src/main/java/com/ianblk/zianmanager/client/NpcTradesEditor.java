@@ -14,9 +14,9 @@ public final class NpcTradesEditor extends ManagerThemedScreen {
         for(int i=page*4;i<Math.min(rows.size(),page*4+4);i++){int index=i;addRenderableWidget(themed(left+12,top+87+(i%4)*24,w-24,21,Component.literal((selected==i?"✓ ":"")+(i+1)+". "+rows.get(i).getAsString()),b->{selected=index;confirm=false;rebuildWidgets();}));}
         addRenderableWidget(themed(left+12,top+h-178,30,20,Component.literal("<"),b->{page--;rebuildWidgets();})).active=page>0;addRenderableWidget(themed(left+48,top+h-178,30,20,Component.literal(">"),b->{page++;rebuildWidgets();})).active=(page+1)*4<rows.size();
         addRenderableWidget(themed(left+84,top+h-178,w-96,20,Component.literal(confirm?"Confirmar quitar oferta "+(selected+1):"Quitar seleccionada"),b->{if(confirm)send("trade_remove");else{confirm=true;rebuildWidgets();}})).active=selected>=0;
-        addRenderableWidget(themed(left+12,top+h-60,(w-30)/2,22,Component.literal("Preparar desde inventario"),b->send("trade_prepare")));
-        addRenderableWidget(themed(left+18+(w-30)/2,top+h-60,(w-30)/2,22,Component.literal("Guardar oferta preparada"),b->send("trade_add"))).active=!data.get("draft").getAsString().isBlank()&&rows.size()<64;
-        addRenderableWidget(themed(left+w-90,top+h-30,78,20,Component.literal("Cerrar"),b->onClose()));
+        addRenderableWidget(themed(left+12,top+h-60,(w-30)/2,22,Component.translatableWithFallback("zianmanager.trades.prepare","Preparar desde inventario"),b->send("trade_prepare")));
+        addRenderableWidget(themed(left+18+(w-30)/2,top+h-60,(w-30)/2,22,Component.translatableWithFallback("zianmanager.trades.save_offer","Guardar oferta preparada"),b->send("trade_add"))).active=!data.get("draft").getAsString().isBlank()&&rows.size()<64;
+        addRenderableWidget(themed(left+w-90,top+h-30,78,20,Component.translatableWithFallback("zianmanager.common.close","Cerrar"),b->onClose()));
     }
     @Override protected void renderCanvas(GuiGraphics g,int mx,int my,float partial){panel(g,left,top,w,h);g.drawString(font,"Ranuras 1–4: pagos · 5: separador · 6–9: recompensas",left+12,top+35,0xFFDDDDDD);g.drawString(font,"La cantidad es la de cada pila; las ranuras vacías se ignoran.",left+12,top+48,0xFFDDDDDD);g.drawString(font,"Configurar no consume objetos. Existencias ilimitadas.",left+12,top+61,0xFFF2C14E);g.drawString(font,font.plainSubstrByWidth(data.get("notice").getAsString(),w-24),left+12,top+74,0xFFAAAAAA);
         g.drawString(font,"Oferta preparada: pagos → recompensas",left+12,top+h-145,0xFFF2C14E);int bx=left+(w-9*28)/2,by=top+h-125;

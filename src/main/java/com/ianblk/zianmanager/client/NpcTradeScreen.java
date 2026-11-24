@@ -18,9 +18,9 @@ public final class NpcTradeScreen extends AbstractContainerScreen<NpcTradeMenu> 
   for(int i=page*PAGE_SIZE;i<Math.min(count,page*PAGE_SIZE+PAGE_SIZE);i++){final int index=i;addRenderableWidget(new OfferButton(leftPos+8,topPos+38+(i%PAGE_SIZE)*39,index,menu.labels().get(i)));}
   addRenderableWidget(ManagerThemedScreen.themed(leftPos+8,topPos+199,26,18,Component.literal("<"),b->{page--;buttons();})).active=page>0;
   addRenderableWidget(ManagerThemedScreen.themed(leftPos+114,topPos+199,26,18,Component.literal(">"),b->{page++;buttons();})).active=(page+1)*PAGE_SIZE<count;
-  exchange=addRenderableWidget(ManagerThemedScreen.themed(leftPos+150,topPos+104,162,20,Component.literal("Intercambiar"),b->send(64)));exchange.active=count>0&&(waiting<0||waiting==menu.selected());
-  exchange.setTooltip(Tooltip.create(Component.literal("Entrega los materiales y recibe todos los resultados.\nIntercambios ilimitados; se cobra desde tu inventario.")));
-  addRenderableWidget(ManagerThemedScreen.themed(leftPos+240,topPos+220,72,16,Component.literal("Cerrar"),b->onClose()));
+  exchange=addRenderableWidget(ManagerThemedScreen.themed(leftPos+150,topPos+104,162,20,Component.translatableWithFallback("zianmanager.trade.exchange","Intercambiar"),b->send(64)));exchange.active=count>0&&(waiting<0||waiting==menu.selected());
+  exchange.setTooltip(Tooltip.create(Component.translatableWithFallback("zianmanager.trade.exchange_tooltip","Entrega los materiales y recibe todos los resultados.\nIntercambios ilimitados; se cobra desde tu inventario.")));
+  addRenderableWidget(ManagerThemedScreen.themed(leftPos+240,topPos+220,72,16,Component.translatableWithFallback("zianmanager.common.close","Cerrar"),b->onClose()));
  }
  @Override protected void containerTick(){super.containerTick();if(exchange!=null)exchange.active=!menu.labels().isEmpty()&&(waiting<0||waiting==menu.selected());}
  @Override protected void renderBg(GuiGraphics g,float partial,int mx,int my){g.fill(leftPos,topPos,leftPos+imageWidth,topPos+imageHeight,0xFF181818);g.fill(leftPos,topPos,leftPos+imageWidth,topPos+3,0xFFF2C14E);

@@ -11,7 +11,7 @@ import net.minecraft.world.entity.player.Inventory;
 public final class NpcTradeScreen extends AbstractContainerScreen<NpcTradeMenu> {
  private static final int PAGE_SIZE=4;
  private int page,waiting=-1;private Button exchange;
- public NpcTradeScreen(NpcTradeMenu menu,Inventory inventory,Component title){super(menu,inventory,title);imageWidth=320;imageHeight=242;}
+ public NpcTradeScreen(NpcTradeMenu menu,Inventory inventory,Component title){super(menu,inventory,title);imageWidth=320;imageHeight=246;}
  @Override protected void init(){super.init();buttons();}
  private void send(int id){if(minecraft.gameMode!=null)minecraft.gameMode.handleInventoryButtonClick(menu.containerId,id);}
  private void buttons(){clearWidgets();int count=menu.labels().size();page=Math.min(page,Math.max(0,(count-1)/PAGE_SIZE));

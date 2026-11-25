@@ -3,6 +3,8 @@ import java.util.*;
 /** Semantic groups shared by presentation and coverage checks. */
 public final class EditorSections {
  private EditorSections(){}
+ /** Los nombres de pestaña de groups() son identificadores internos (en español); esto es solo la etiqueta que se dibuja. */
+ public static String tabLabel(String id){return Ui.t(id);}
  public static Map<String,List<String>> groups(String type){var m=new LinkedHashMap<String,List<String>>();switch(type){
   case "mob"->{m.put("Básico",List.of("name","entity","boss","loot"));m.put("Combate",List.of("health","damage","armor","toughness","knockback"));m.put("Equipo",List.of("slot"));m.put("Efectos",List.of());m.put("Avanzado",List.of("id","effects"));}
   case "loot"->{m.put("Tabla",List.of("id","category","rolls"));m.put("Objetos",List.of("weight","min","max"));m.put("Avanzado",List.of("table"));}
@@ -13,5 +15,5 @@ public final class EditorSections {
   case "vault"->{m.put("Ajustes",List.of("enabled","normalMinutes","ominousMinutes"));m.put("Mi espera",List.of("adjustMinutes"));}
   case "chest"->m.put("Cofre",List.of("loot","noCooldown","minutes"));
  }return Collections.unmodifiableMap(m);}
- public static String title(String type){return switch(type){case "entrances"->"Entradas de dungeon";case "entrance"->"Configurar entradas";case "vault"->"Bóvedas vanilla";case "root"->"Zian Manager";case "times"->"Tiempos por mundo";case "time"->"Configurar tiempo diario";case "mobs"->"Mobs y jefes";case "lootlist"->"Recompensas de cofres";case "zones"->"Zonas de dungeon";case "npcs"->"Personajes y diálogos";case "chests"->"Cofres de dungeon";case "mob"->"Editar mob o jefe";case "loot"->"Editar recompensas";case "zone"->"Editar zona";case "npc"->"Editar personaje";case "chest"->"Configurar cofre";case "claim"->"Tus recompensas";default->"Zian Manager";};}
+ public static String title(String type){return switch(type){case "entrances"->Ui.t("Entradas de dungeon");case "entrance"->Ui.t("Configurar entradas");case "vault"->Ui.t("Bóvedas vanilla");case "root"->"Zian Manager";case "times"->Ui.t("Tiempos por mundo");case "time"->Ui.t("Configurar tiempo diario");case "mobs"->Ui.t("Mobs y jefes");case "lootlist"->Ui.t("Recompensas de cofres");case "zones"->Ui.t("Zonas de dungeon");case "npcs"->Ui.t("Personajes y diálogos");case "chests"->Ui.t("Cofres de dungeon");case "mob"->Ui.t("Editar mob o jefe");case "loot"->Ui.t("Editar recompensas");case "zone"->Ui.t("Editar zona");case "npc"->Ui.t("Editar personaje");case "chest"->Ui.t("Configurar cofre");case "claim"->Ui.t("Tus recompensas");default->"Zian Manager";};}
 }

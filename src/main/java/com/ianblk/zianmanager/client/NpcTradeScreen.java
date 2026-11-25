@@ -15,7 +15,7 @@ public final class NpcTradeScreen extends AbstractContainerScreen<NpcTradeMenu> 
  @Override protected void init(){super.init();buttons();}
  private void send(int id){if(minecraft.gameMode!=null)minecraft.gameMode.handleInventoryButtonClick(menu.containerId,id);}
  private void buttons(){clearWidgets();int count=menu.labels().size();page=Math.min(page,Math.max(0,(count-1)/PAGE_SIZE));
-  for(int i=page*PAGE_SIZE;i<Math.min(count,page*PAGE_SIZE+PAGE_SIZE);i++){final int index=i;addRenderableWidget(new OfferButton(leftPos+8,topPos+38+(i%PAGE_SIZE)*39,index,menu.labels().get(i)));}
+  for(int i=page*PAGE_SIZE;i<Math.min(count,page*PAGE_SIZE+PAGE_SIZE);i++){final int index=i;addRenderableWidget(new OfferButton(leftPos+8,topPos+38+(i%PAGE_SIZE)*39,index,Ui.offer(menu.labels().get(i))));}
   addRenderableWidget(ManagerThemedScreen.themed(leftPos+8,topPos+199,26,18,Component.literal("<"),b->{page--;buttons();})).active=page>0;
   addRenderableWidget(ManagerThemedScreen.themed(leftPos+114,topPos+199,26,18,Component.literal(">"),b->{page++;buttons();})).active=(page+1)*PAGE_SIZE<count;
   exchange=addRenderableWidget(ManagerThemedScreen.themed(leftPos+150,topPos+104,162,20,Component.translatableWithFallback("zianmanager.trade.exchange","Intercambiar"),b->send(64)));exchange.active=count>0&&(waiting<0||waiting==menu.selected());

@@ -35,9 +35,20 @@ public final class Ui {
   if(colon>0){String head=part.substring(0,colon+2)+"%s";if(keys().containsKey(head))return t(head,part.substring(colon+2));}
   return part;
  }
+ /** Nombre armado por el servidor con "dato del admin · detalles": el primer tramo se deja tal cual y solo se traducen los detalles. */
+ public static String name(String text){
+  if(text==null)return "";
+  int cut=text.indexOf(" · ");
+  return cut<0?text:text.substring(0,cut+3)+notice(text.substring(cut+3));
+ }
+ /** "Comercio · nombre del NPC": se traduce la palabra fija y el nombre se deja tal cual. */
+ public static String title(String text){
+  String head="Comercio · ";
+  return text!=null&&text.startsWith(head)?t("Comercio")+" · "+text.substring(head.length()):text==null?"":text;
+ }
  /** Etiquetas de oferta que genera el servidor ("ninguno", "⚠ objeto no disponible"); el resto es nombre de objeto y no se toca. */
  public static String offer(String text){
   if(text==null)return "";
-  return text.replaceAll("(?<=^|\\+ |→ )ninguno(?= |$)",java.util.regex.Matcher.quoteReplacement(t("ninguno"))).replace("⚠ objeto no disponible",t("⚠ objeto no disponible"));
+  return text.replaceAll("(?<=^|\\+ |→ )ninguno(?= |$)",java.util.regex.Matcher.quoteReplacement(t("ninguno"))).replaceAll("(?<=^|\\+ |→ )⚠ objeto no disponible(?= |$)",java.util.regex.Matcher.quoteReplacement(t("⚠ objeto no disponible")));
  }
 }

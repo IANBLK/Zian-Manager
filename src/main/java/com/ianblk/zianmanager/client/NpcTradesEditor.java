@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public final class NpcTradesEditor extends ManagerThemedScreen {
     private final JsonObject data;private int page,selected=-1,left,top,w,h;private boolean confirm;
-    public NpcTradesEditor(JsonObject data){super(Component.literal(Ui.notice(data.get("title").getAsString())));this.data=data;}
+    public NpcTradesEditor(JsonObject data){super(Component.literal(Ui.title(data.get("title").getAsString())));this.data=data;}
     private void send(String op){var json=new JsonObject();json.addProperty("index",selected);PacketDistributor.sendToServer(new ManagerNetwork.Action(UUID.fromString(data.get("token").getAsString()),op,json.toString()));clearWidgets();}
     @Override protected void init(){fitViewport(680,450);w=Math.min(610,width-24);h=Math.min(400,height-24);left=(width-w)/2;top=(height-h)/2;var rows=data.getAsJsonArray("offers");
         for(int i=page*4;i<Math.min(rows.size(),page*4+4);i++){int index=i;addRenderableWidget(themed(left+12,top+87+(i%4)*24,w-24,21,Component.literal((selected==i?"✓ ":"")+(i+1)+". "+Ui.offer(rows.get(i).getAsString())),b->{selected=index;confirm=false;rebuildWidgets();}));}

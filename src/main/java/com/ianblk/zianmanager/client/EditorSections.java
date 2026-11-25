@@ -3,6 +3,8 @@ import java.util.*;
 /** Semantic groups shared by presentation and coverage checks. */
 public final class EditorSections {
  private EditorSections(){}
+ /** Los nombres de pestaña de groups() son identificadores internos (en español); esto es solo la etiqueta que se dibuja. */
+ public static String tabLabel(String id){return Ui.t(id);}
  public static Map<String,List<String>> groups(String type){var m=new LinkedHashMap<String,List<String>>();switch(type){
   case "mob"->{m.put("Básico",List.of("name","entity","boss","loot"));m.put("Combate",List.of("health","damage","armor","toughness","knockback"));m.put("Equipo",List.of("slot"));m.put("Efectos",List.of());m.put("Avanzado",List.of("id","effects"));}
   case "loot"->{m.put("Tabla",List.of("id","category","rolls"));m.put("Objetos",List.of("weight","min","max"));m.put("Avanzado",List.of("table"));}

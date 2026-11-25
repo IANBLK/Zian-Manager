@@ -16,7 +16,7 @@ public final class ManagerScreen extends ManagerThemedScreen {
  @Override protected void init(){fitViewport(600,360);w=Math.min(430,width-24);h=Math.min(294,height-16);left=(width-w)/2;top=(height-h)/2;inputs.clear();labels.clear();
   if(list()){listWidgets();return;}
   var groups=EditorSections.groups(type);if(!groups.containsKey(tab))tab=groups.keySet().iterator().next();int i=0,tw=(w-24)/Math.max(1,groups.size());
-  for(String name:groups.keySet()){var b=button(left+12+i++*tw,top+32,tw-3,name,()->{tab=name;LAST_TAB.put(type,tab);page=0;rebuildWidgets();});b.active=!name.equals(tab);}
+  for(String name:groups.keySet()){var b=button(left+12+i++*tw,top+32,tw-3,EditorSections.tabLabel(name),()->{tab=name;LAST_TAB.put(type,tab);page=0;rebuildWidgets();});b.active=!name.equals(tab);}
   List<String> keys=groups.get(tab).stream().filter(values::containsKey).toList();int pages=Math.max(1,(keys.size()+3)/4);page=Math.min(page,pages-1);
   int col=(w-36)/2;
   for(i=page*4;i<Math.min(keys.size(),(page+1)*4);i++){String key=keys.get(i);int index=i-page*4;field(key,left+12+(index%2)*(col+12),top+98+(index/2)*42,col);}
